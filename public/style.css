@@ -1,10 +1,88 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    text-align: center;
-    padding: 50px;
+    background-color: #866a67;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #e6dbc8;
+}
+
+.header {
+    background-color: #e6dbc8;
+}
+
+.header .logo {
+    height: 50px;
+}
+
+.header .d-flex a {
+    padding: 10px; /* Mehr Abstand um die Icons */
+    border-radius: 50%; /* Runde Form für den Hintergrund */
+    transition: background-color 0.3s, transform 0.3s; /* Übergangseffekt */
+}
+
+.header .d-flex a:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Hintergrundfarbe beim Hover */
+    transform: scale(1.1); /* Vergrößerung beim Hover */
+}
+
+.icon-size {
+    font-size: 1.75rem;
+}
+
+button.btn-primary {
+    background-color: #776b58; /* Auffällige Farbe */
+    border-color: #7d6235;
+    transition: background-color 0.3s ease; /* Übergangseffekt */
+}
+
+button.btn-primary:hover {
+    background-color: #694c32; /* Farbänderung beim Hover */
 }
 
 h1 {
-    color: #333;
+    font-size: 3rem; /* Größere Schriftgröße für mehr Auffälligkeit */
+    color: #e6dbc8;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Schatten für mehr Tiefe */
+    margin-bottom: 20px; /* Abstand nach unten */
+}
+
+p {
+    line-height: 1.6;
+}
+
+.separator {
+    height: 5px; /* Höhe der Trennlinie */
+    background: linear-gradient(to right, #866a67, #e6dbc8); /* Farbverlauf */
+    margin-top: 0; /* Kein negativer Abstand */
+    margin-bottom: -5px; /* Leicht negative Marge, um sie näher an den Header zu bringen */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Schatten für die Trennlinie */
+}
+
+.main-content {
+    background-color: rgba(255, 255, 255, 0.9); /* Leichter Hintergrund für den Hauptinhalt */
+    border-radius: 15px; /* Abgerundete Ecken */
+    padding: 30px; /* Innenabstand */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Schatten für Tiefe */
+}
+
+.carousel-item {
+    padding: 15px; /* Abstand vom Rand */
+}
+
+.carousel-item img {
+    height: 500px; /* Höhe des Bildes */
+    object-fit: cover; /* Bildanpassung */
+    border-radius: 15px; /* Abgerundete Ecken */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Schattierung für einen 3D-Effekt */
+}
+
+footer {
+    background-color: #e6dbc8;
+}
+
+/* Testimonial Cards */
+.card {
+    background-color: rgba(255, 255, 255, 0.8); /* Leichter Hintergrund für die Karten */
+    border-radius: 10px; /* Abgerundete Ecken für die Karten */
+    margin-bottom: 20px; /* Abstand zwischen den Karten */
+    padding: 20px; /* Innenabstand für die Karten */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Schatten für Tiefe */
 }

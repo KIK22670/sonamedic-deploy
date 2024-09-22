@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SonaMedic Startseite</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header text-light p-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <img src="logo.png" width="130" alt="SonaMedic Logo" class="logo">
+            </div>
+            <div class="d-flex align-items-center">
+                <a href="#" class="text-light mx-3 icon-size"><i class="bi bi-calendar3"></i></a>
+                <a href="#" class="text-light mx-3 icon-size"><i class="bi bi-headphones"></i></a>
+                <a href="#" class="text-light mx-3 icon-size"><i class="bi bi-person"></i></a>
+                <a href="#" class="text-light mx-3 icon-size"><i class="bi bi-info-circle"></i></a> <!-- Info Icon -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Separator -->
+    <div class="separator"></div>
+
+    <!-- Main Content -->
+<main class="container mt-5">
+    <h1 class="text-center mb-4 highlighted-title">SonaMedic - Ihre Nummer 1 bei audiometrischen Hörtests</h1>
+
+    <div class="text-center mt-4">
+        <p class="lead mb-4">Buchen Sie jetzt Ihren kostenlosen Hörtest bei Dr. Edlinger!</p>
+        <button class="btn btn-primary position-relative btn-lg">
+            Jetzt Buchen!
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                <i class="bi bi-calendar3"></i>
+            </span>
+        </button>
+    </div>
+
+    <!-- Testimonials Section -->
+    <section class="mt-5">
+        <h2 class="text-center mb-4">Was unsere Kunden sagen</h2>
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="card text-center testimonial-card shadow-lg">
+                    <div class="card-body">
+                        <p class="card-text">„Ich habe einen hervorragenden Service erlebt!“</p>
+                        <h5 class="card-title">Max Mustermann</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center testimonial-card shadow-lg">
+                    <div class="card-body">
+                        <p class="card-text">„Der Hörtest war schnell und unkompliziert.“</p>
+                        <h5 class="card-title">Erika Mustermann</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center testimonial-card shadow-lg">
+                    <div class="card-body">
+                        <p class="card-text">„Ich kann SonaMedic nur empfehlen!“</p>
+                        <h5 class="card-title">Hans Müller</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+    <!-- Bildkarussell -->
+    <div id="carouselExampleIndicators" class="carousel slide mt-5" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="image1.jpg" class="d-block w-100 rounded" alt="Slide 1">
+            </div>
+            <div class="carousel-item">
+                <img src="image2.jpg" class="d-block w-100 rounded" alt="Slide 2">
+            </div>
+            <div class="carousel-item">
+                <img src="image3.jpg" class="d-block w-100 rounded" alt="Slide 3">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-light text-center py-3 mt-5">
+        <p>&copy; 2024 SonaMedic. Alle Rechte vorbehalten.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
