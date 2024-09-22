@@ -1,117 +1,292 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SonaMedic Startseite</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8">
+    <title>SonaMedic</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/stylehome.css" rel="stylesheet">
 </head>
+
 <body>
 
-    <!-- Header -->
-    <header class="header text-light p-3">
-        <div class="container d-flex justify-content-between align-items-center">
-            <div>
-                <img src="logo.png" width="130" alt="SonaMedic Logo" class="logo">
-            </div>
-            <div class="d-flex align-items-center">
-                <a href="#" class="text-light mx-3 icon-size"><i class="bi bi-calendar3"></i></a>
-                <a href="#" class="text-light mx-3 icon-size"><i class="bi bi-headphones"></i></a>
-                <a href="#" class="text-light mx-3 icon-size"><i class="bi bi-person"></i></a>
-                <a href="#" class="text-light mx-3 icon-size"><i class="bi bi-info-circle"></i></a> <!-- Info Icon -->
-            </div>
-        </div>
-    </header>
-
-    <!-- Separator -->
-    <div class="separator"></div>
-
-    <!-- Main Content -->
-    <div class="container mt-5">
-        <!-- Haupttitel außerhalb der Box -->
-        <h1 class="text-center mb-4 highlighted-title standalone-title">SonaMedic - Ihre Nummer 1 bei audiometrischen Hörtests</h1>
-
-        <!-- Box für den restlichen Hauptinhalt -->
-        <div class="main-content">
-            <div class="text-center mt-4">
-                <h2 class="lead mb-4">Buchen Sie jetzt Ihren kostenlosen Hörtest bei Dr. Edlinger!</h2>
-                <button class="btn btn-primary position-relative btn-lg">
-                    Jetzt Buchen!
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
-                        <i class="bi bi-calendar3"></i>
-                    </span>
+    <!-- Navbar Start -->
+    <div class="container-fluid sticky-top bg-white shadow-sm">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
+                <a href="home.html" class="navbar-brand">
+                    <img src="img/logo.png" class="logo-img">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
                 </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto py-0">
+                        <a href="home.html" class="nav-item nav-link active">Home</a>
+                        <a href="aboutus.html" class="nav-item nav-link">About Us</a>
+                        <a href="faq.html" class="nav-item nav-link">FAQ</a>
+                        <a href="login.html" class="nav-item nav-link">Login</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+    <!-- Hero Start -->
+    <div class="container-fluid bg-primary py-5 mb-5 hero-header">
+        <div class="container py-5">
+            <div class="row justify-content-start">
+                <div class="col-lg-8 text-center text-lg-start">
+                    <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5"
+                        style="border-color: rgba(256, 256, 256, .3) !important;">Wilkommen bei SonaMedic</h5>
+                    <h1 id="firsttitle" class="display-1 text-white mb-md-4" style="font-size: 60px;">SonaMedic - Ihre Nummer 1 für hochqualitative Hörtests<br><i style="color: #1B9AAA;">Schnell und einfach </i>ihr Gehör testen</h1>
+                    <div class="pt-2">
+                        <a href="../doctorsearch" class="btn btn-outline-light rounded-pill py-md-3 px-md-5 mx-2">Hörtest starten</a>
+                        <a href="../doctorsearch"
+                            class="btn btn-outline-light rounded-pill py-md-3 px-md-5 mx-2">Termin buchen</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <!-- Hero End -->
 
-    <!-- Testimonials Section -->
-    <section class="mt-5">
-        <h2 class="text-center mb-4">Was unsere Kunden sagen</h2>
-        <div class="row mt-3">
-            <div class="col-md-4">
-                <div class="card text-center testimonial-card shadow-lg">
-                    <div class="card-body">
-                        <p class="card-text">„Ich habe einen hervorragenden Service erlebt!“</p>
-                        <h5 class="card-title">Max Mustermann</h5>
+    <!-- About Start -->s
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="row gx-5">
+                <div class="col-lg-5 mb-5 mb-lg-0" style="min-height: 500px;">
+                    <div class="position-relative h-100">
+                        <img class="position-absolute w-100 h-100 rounded" src="img/about.jpg"
+                            style="object-fit: cover;">
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center testimonial-card shadow-lg">
-                    <div class="card-body">
-                        <p class="card-text">„Der Hörtest war schnell und unkompliziert.“</p>
-                        <h5 class="card-title">Erika Mustermann</h5>
+                <div class="col-lg-7">
+                    <div class="mb-4">
+                        <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5">Über uns</h5>
+                        <h1 class="display-4">Mit ein paar Klicks einen kostenlosen Hörtest bei dem Arzt Ihres Vertrauens!</h1>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center testimonial-card shadow-lg">
-                    <div class="card-body">
-                        <p class="card-text">„Ich kann SonaMedic nur empfehlen!“</p>
-                        <h5 class="card-title">Hans Müller</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                    <p>Willkommen bei SonaMedic! Unsere Webapplikation wurde entwickelt, um Ihr Hörvermögen einfach und effektiv 
+                    zu überwachen. Mit regelmäßigen, interaktiven Online-Hörtests und kontinuierlichem Tracking helfen wir Ihnen, 
+                    frühzeitig Hörveränderungen zu erkennen. SonaMedic bietet Ihnen personalisierte Empfehlungen und ermöglicht 
+                    den Zugang zu medizinischer Betreuung, wenn Sie sie benötigen. Unser Ziel ist es, Ihre Hörgesundheit umfassend 
+                    zu fördern und Ihnen ein besseres Hörerlebnis zu ermöglichen.
+                    </p>
+                    <div class="row g-3 pt-3">
+                        <div class="col-sm-3 col-6">
+                            <div class="bg-light text-center rounded-circle py-4">
+                                <i class="fa fa-3x fa-user-md text-primary mb-3"></i>
+                                <h6 class="mb-0">Qualifzierter Arzt<small class="d-block text-primary">Arzt</small></h6>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="bg-light text-center rounded-circle py-4">
+                                <i class="fa fa-3x fa-procedures text-primary mb-3"></i>
+                                <h6 class="mb-0">Schnelle<small class="d-block text-primary">Termine</small></h6>
+                            </div>
+                        </div>
 
-    <!-- Bildkarussell -->
-    <div id="carouselExampleIndicators" class="carousel slide mt-5" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="image1.jpg" class="d-block w-100 rounded" alt="Slide 1">
-            </div>
-            <div class="carousel-item">
-                <img src="image2.jpg" class="d-block w-100 rounded" alt="Slide 2">
-            </div>
-            <div class="carousel-item">
-                <img src="image3.jpg" class="d-block w-100 rounded" alt="Slide 3">
+                    </div>
+                </div>
             </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        </button>
     </div>
+    <!-- About End -->
 
-    <!-- Footer -->
-    <footer class="text-light text-center py-3 mt-5">
-        <p>&copy; 2024 SonaMedic. Alle Rechte vorbehalten.</p>
-    </footer>
+    <!-- Services Start -->
+    <div class="container-fluid py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <!-- Erste Karte: Arztsuche -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <!-- Links: User Icon + Überschrift -->
+                            <div>
+                                <i class="bi bi-person-fill fs-3 text-primary me-3"></i>
+                                <h5 class="card-title">Online Hörtest</h5>
+                            </div>
+                            <!-- Text: Wir finden Ihren Arzt für Sie in paar Sekunden! -->
+                            <p class="card-text">Starten Sie hier ganz einfach mit einem Hörtest Ihrer Wahl</p>
+                            <!-- Link/Button -->
+                            <a href="doctorsearch" class="btn btn-primary mt-3">Mehr erfahren</a>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                <!-- Zweite Karte: Terminvereinbarung -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <!-- Links: Kalender Icon + Überschrift -->
+                            <div>
+                                <i class="bi bi-calendar3 fs-3 text-primary me-3"></i>
+                                <h5 class="card-title">Terminvereinbarung</h5>
+                            </div>
+                            <!-- Text: Sie können selbständig einen Termin bei Ihrem präferierten Arzt machen -->
+                            <p class="card-text">Sie können selbständig einen Termin bei Dr. Edlinger buchen.
+                            </p>
+                            <!-- Link/Button -->
+                            <a href="doctorsearch" class="btn btn-primary mt-3">Mehr erfahren</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Services End -->
+
+    <!-- Team Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="text-center mx-auto mb-5" style="max-width: 500px;">
+                <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5">Dr. Stefan Edlinger</h5>
+                <h1 style="font-size: 30px;" class="display-4">Qualifizierter HNO - Arzt</h1>
+            </div>
+            <div class="owl-carousel team-carousel position-relative">
+                <div class="team-item">
+                    <div class="row g-0 bg-light rounded overflow-hidden">
+                        <div class="col-12 col-sm-5 h-100">
+                            <img class="img-fluid h-100" src="img/edlinger.jpg" style="object-fit: cover;">
+                        </div>
+                        <div class="col-12 col-sm-7 h-100 d-flex flex-column">
+                            <div class="mt-auto p-4">
+                                <h3>Dr. Stefan Edlinger</h3>
+                                <h6 class="fw-normal fst-italic text-primary mb-4">Facharzt für HNO</h6>
+                                <p class="m-0">Es ist mir ein großes Anliegen, dass Sie sich in meiner Ordination
+                                    wohlfühlen und ausreichend Zeit für die Untersuchung,
+                                    das Informationsgespräch sowie Fragen zur Behandlung zur Verfügung steht.</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <!-- Team End -->
+
+    <!-- Testimonial Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="text-center mx-auto mb-5" style="max-width: 500px;">
+                <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5">Bewertungen</h5>
+                <h1 class="display-4">Was sagen Benutzer über unseren Service?</h1>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="owl-carousel testimonial-carousel">
+                        <div class="testimonial-item text-center">
+                            <div class="position-relative mb-5">
+                                <img class="img-fluid rounded-circle mx-auto" src="img/testimonial-1.jpg" alt="">
+                                <div class="position-absolute top-100 start-50 translate-middle d-flex align-items-center justify-content-center bg-white rounded-circle"
+                                    style="width: 60px; height: 60px;">
+                                    <i class="fa fa-quote-left fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                            <p class="fs-4 fw-normal">Hervorragender Service! Die Plattform hat mir geholfen, schnell
+                                und einfach einen Hörtest durchzuführen. Die
+                                Benutzeroberfläche ist benutzerfreundlich, und die Terminvereinbarung verlief
+                                reibungslos</p>
+                            <hr class="w-25 mx-auto">
+                            <h3>Andrea Leinz</h3>
+                            <h6 class="fw-normal text-primary mb-3">Biochemikerin</h6>
+                        </div>
+                        <div class="testimonial-item text-center">
+                            <div class="position-relative mb-5">
+                                <img class="img-fluid rounded-circle mx-auto" src="img/testimonial-2.jpg" alt="">
+                                <div class="position-absolute top-100 start-50 translate-middle d-flex align-items-center justify-content-center bg-white rounded-circle"
+                                    style="width: 60px; height: 60px;">
+                                    <i class="fa fa-quote-left fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                            <p class="fs-4 fw-normal">ConLink macht die Arztsuche wirklich einfach. Die Filteroptionen
+                                für Fachrichtung und Standort ermöglichen es mir,
+                                gezielt nach den passenden Ärzten zu suchen. Ich bin sehr zufrieden mit der Effizienz
+                                und dem Komfort dieser Plattform.</p>
+                            <hr class="w-25 mx-auto">
+                            <h3>Markus Klein</h3>
+                            <h6 class="fw-normal text-primary mb-3">Backend Entwickler</h6>
+                        </div>
+                        <div class="testimonial-item text-center">
+                            <div class="position-relative mb-5">
+                                <img class="img-fluid rounded-circle mx-auto" src="img/testimonial-3.jpg" alt="">
+                                <div class="position-absolute top-100 start-50 translate-middle d-flex align-items-center justify-content-center bg-white rounded-circle"
+                                    style="width: 60px; height: 60px;">
+                                    <i class="fa fa-quote-left fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                            <p class="fs-4 fw-normal">Diese Plattform hat meinen Alltag erleichtert. Die Möglichkeit,
+                                selbständig Termine zu vereinbaren, spart Zeit, und die
+                                klare Darstellung der verfügbaren Ärzte macht die Auswahl einfach. Sehr empfehlenswert.
+                            </p>
+                            <hr class="w-25 mx-auto">
+                            <h3>Rebekah Klos</h3>
+                            <h6 class="fw-normal text-primary mb-3">Friseurin</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Testimonial End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light border-top border-secondary py-4">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-md-0">&copy; <a class="text-primary" href="#">ConLink</a>. All Rights Reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="impressum.html" style="margin-right: 10px;">Impressum</a>
+                    <a href="datenschutz.html">Datenschutz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
 </body>
+
 </html>

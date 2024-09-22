@@ -1,0 +1,60 @@
+  /* Additional Styles für die oberste Navbar */
+  .top-navbar {
+      background-color: #f8f9fa;
+      padding: 15px 0;
+      border-bottom: 1px solid #dee2e6;
+  }
+
+  .top-navbar .navbar-nav {
+      margin-left: auto;
+  }
+
+  .top-navbar .navbar-nav a {
+      margin: 0 15px;
+  }
+
+  /* Styles für die linke Navbar */
+  .left-navbar {
+      height: 100vh;
+      width: 200px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #F5F1E3;
+      padding-top: 20px;
+      border-right: 1px solid #dee2e6;
+      font-family: 'Jost', sans-serif;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      font-weight: 700;
+      font-size: 20px;
+  }
+
+  .left-navbar .navbar-nav {
+      flex-direction: column;
+  }
+
+  .left-navbar .navbar-nav a {
+      margin: 15px 0;
+  }
+
+  .left-navbar .navbar-brand img {
+      max-height: 40px;
+  }
+
+  /* Styles für den Content Bereich */
+  .content {
+      margin-left: 220px;
+      /* Breite der linken Navbar + Abstand */
+      padding: 20px;
+
+  }
+
+  /* Formatierung der Icons in der linken Navbar */
+  .left-navbar .navbar-nav a i {
+      margin-right: 8px;
+      /* Abstand zwischen Icon und Text anpassen */
+      font-size: 20px;
+      /* Größe des Icons anpassen */
+      color: white;
+      /* Farbe des Icons anpassen */
+  }
