@@ -1,5 +1,5 @@
 body {
-    background-color: #866a67;
+    background-color: #c5bcac;
     font-family: 'Helvetica Neue', Arial, sans-serif;
     color: #e6dbc8;
 }
@@ -13,14 +13,14 @@ body {
 }
 
 .header .d-flex a {
-    padding: 10px; /* Mehr Abstand um die Icons */
-    border-radius: 50%; /* Runde Form für den Hintergrund */
-    transition: background-color 0.3s, transform 0.3s; /* Übergangseffekt */
+    padding: 10px;
+    border-radius: 50%;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 .header .d-flex a:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Hintergrundfarbe beim Hover */
-    transform: scale(1.1); /* Vergrößerung beim Hover */
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.8);
 }
 
 .icon-size {
@@ -28,20 +28,34 @@ body {
 }
 
 button.btn-primary {
-    background-color: #776b58; /* Auffällige Farbe */
-    border-color: #7d6235;
-    transition: background-color 0.3s ease; /* Übergangseffekt */
+    background-color: #e6dbc8;
+    border-color: #000000;
+    transition: background-color 0.3s ease;
 }
 
 button.btn-primary:hover {
-    background-color: #694c32; /* Farbänderung beim Hover */
+    background-color: #000000;
 }
 
 h1 {
-    font-size: 3rem; /* Größere Schriftgröße für mehr Auffälligkeit */
-    color: #e6dbc8;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Schatten für mehr Tiefe */
-    margin-bottom: 20px; /* Abstand nach unten */
+    font-size: 3rem;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: #000000;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: #000000;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.standalone-title {
+    background-color: #866a67;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 p {
@@ -49,29 +63,29 @@ p {
 }
 
 .separator {
-    height: 5px; /* Höhe der Trennlinie */
-    background: linear-gradient(to right, #866a67, #e6dbc8); /* Farbverlauf */
-    margin-top: 0; /* Kein negativer Abstand */
-    margin-bottom: -5px; /* Leicht negative Marge, um sie näher an den Header zu bringen */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Schatten für die Trennlinie */
+    height: 5px;
+    background: linear-gradient(to right, #866a67, #e6dbc8);
+    margin-top: 0;
+    margin-bottom: -5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .main-content {
-    background-color: rgba(255, 255, 255, 0.9); /* Leichter Hintergrund für den Hauptinhalt */
-    border-radius: 15px; /* Abgerundete Ecken */
-    padding: 30px; /* Innenabstand */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Schatten für Tiefe */
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .carousel-item {
-    padding: 15px; /* Abstand vom Rand */
+    padding: 15px;
 }
 
 .carousel-item img {
-    height: 500px; /* Höhe des Bildes */
-    object-fit: cover; /* Bildanpassung */
-    border-radius: 15px; /* Abgerundete Ecken */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Schattierung für einen 3D-Effekt */
+    height: 500px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 footer {
@@ -79,10 +93,42 @@ footer {
 }
 
 /* Testimonial Cards */
-.card {
-    background-color: rgba(255, 255, 255, 0.8); /* Leichter Hintergrund für die Karten */
-    border-radius: 10px; /* Abgerundete Ecken für die Karten */
-    margin-bottom: 20px; /* Abstand zwischen den Karten */
-    padding: 20px; /* Innenabstand für die Karten */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Schatten für Tiefe */
+.testimonial-card {
+    background-color: #e6dbc8;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-family: 'Georgia', serif;
+}
+
+.testimonial-card .card-text {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 1.1rem;
+}
+
+.testimonial-card .card-title {
+    font-family: 'Georgia', serif;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* Grid Layout for Testimonials */
+.row.mt-3 {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.row.mt-3 > div {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.row.mt-3 .col-md-4 {
+    padding: 15px;
+}
+
+.testimonial-card {
+    height: 100%;
 }
