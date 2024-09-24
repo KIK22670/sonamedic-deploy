@@ -6,6 +6,8 @@
     --dark: #1D2A4D;
 }
 
+
+
 .btn {
     font-weight: 700;
     transition: .5s;
@@ -97,9 +99,28 @@
 }
 
 .hero-header {
-    background: url(../img/hintergrund.png) top right no-repeat;
+    background: url(../img/hintergrundhno.png) top right no-repeat;
     background-size: cover;
     background-position: center;
+}
+
+.welcome-text {
+    color: #4e5560;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+#firsttitle {
+    font-size: 60px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.highlight-text {
+    color: #4e5560;
+    /* Die neue Farbe statt Türkis */
 }
 
 .service-item {
@@ -248,18 +269,105 @@
 
 .styled-text {
     font-family: 'Arial', sans-serif;
-    font-size: 44px; /* Große Schrift, um gut sichtbar zu sein */
-    color: #000000; /* Dunkles Grau für Kontrast */
-    font-weight: bold; /* Fett, um den Text hervorzuheben */
-    text-transform: uppercase; /* Großbuchstaben für Klarheit */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Leichter Schatten, um den Text vom Hintergrund abzuheben */
-  }
+    font-size: 44px;
+    /* Große Schrift, um gut sichtbar zu sein */
+    color: #000000;
+    /* Dunkles Grau für Kontrast */
+    font-weight: bold;
+    /* Fett, um den Text hervorzuheben */
+    text-transform: uppercase;
+    /* Großbuchstaben für Klarheit */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    /* Leichter Schatten, um den Text vom Hintergrund abzuheben */
+}
 
-  .text-dark-brown {
-    color: #866a67; /* Beispiel für einen dunkelbraunen Farbcode */
+.text-dark-brown {
+    color: #866a67;
+    /* Beispiel für einen dunkelbraunen Farbcode */
 }
 
 .btn-dark-brown {
-    background-color: #866a67; /* Beispiel für dunkelbraun */
-    border-color: #4B3C3B; /* Optional: um die Rahmenfarbe zu ändern */
+    background-color: #866a67;
+    /* Beispiel für dunkelbraun */
+    border-color: #4B3C3B;
+    /* Optional: um die Rahmenfarbe zu ändern */
+}
+
+/* Styles für die Karten */
+.card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+    font-weight: 600;
+    /* Etwas dickerer Text */
+}
+
+.card-text {
+    color: #555;
+    /* Dunklerer Text für bessere Lesbarkeit */
+}
+
+/* Button-Stil */
+.btn {
+    border-radius: 25px;
+    /* Abgerundete Ecken für Buttons */
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border: none;
+    /* Keine Rahmen */
+}
+
+.btn-dark-brown {
+    background-color: #866a67;
+    /* Dunkelbraun */
+    border-color: #4B3C3B;
+    /* Optional: Rahmenfarbe */
+}
+
+.btn-dark-brown:hover {
+    background-color: #735e5b;
+    /* Etwas hellere Farbe beim Hover */
+}
+
+.carousel-inner {
+    padding: 2rem 0;
+    /* Abstand oben und unten */
+}
+
+.testimonial-item {
+    transition: transform 0.3s;
+    /* Animationsübergang */
+}
+
+.carousel-item img {
+    width: 100px;
+    /* Bildgröße */
+    height: 100px;
+    /* Bildgröße */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #9a9385;
+    /* Hintergrundfarbe der Pfeile */
+    border-radius: 50%;
+    /* Runde Pfeile */
+    width: 40px;
+    /* Breite der Pfeile */
+    height: 40px;
+    /* Höhe der Pfeile */
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+    /* Breite der Schaltflächen */
 }
