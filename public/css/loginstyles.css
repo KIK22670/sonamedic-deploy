@@ -1,7 +1,7 @@
 /* Grundlegende Stile */
 body {
     font-family: 'Lato', sans-serif;
-    background-color: #f8f9fa;
+    background-color: #fafaf8;
     /* Helles Hintergrundfarbe */
     color: #343a40;
     /* Dunkle Textfarbe */
@@ -108,3 +108,9 @@ footer {
     color: #ffffff;
     /* Weiße Schrift für dunkle Hintergründe */
 }
+
+.text-dark-brown {
+    background-color: #e6dbc8;
+}
+
+
