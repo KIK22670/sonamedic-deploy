@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Registration</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="css/stylehome.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/stylelogin.css">
+    <link rel="stylesheet" href="css/stylehome.css">
+
+
+    <style>
+        .password-strength-indicator {
+            margin-top: 5px;
+            font-size: 12px;
+            height: 5px;
+            border-radius: 2px;
+            background-color: transparent;
+            overflow: hidden;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .password-strength-weak {
+            background-color: #ff6347;
+            /* Rot für schwach */
+            width: 33.33%;
+        }
+
+        .password-strength-normal {
+            background-color: #ffd700;
+            /* Gelb für normal */
+            width: 66.66%;
+        }
+
+        .password-strength-strong {
+            background-color: #32cd32;
+            /* Grün für stark */
+            width: 100%;
+        }
+
+        .password-match-indicator {
+            font-size: 12px;
+            color: #6c757d;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.querySelector('.signin-form');
+
+            form.addEventListener('submit', function (event) {
+                var password = form.querySelector('input[name="passwortregister"]').value;
+                var confirmPassword = form.querySelector('input[name="passwort_confirm"]').value;
+
+                if (password !== confirmPassword) {
+                    alert('Die Passwörter stimmen nicht überein. Bitte überprüfen Sie Ihre Eingaben.');
+                    event.preventDefault(); // Verhindert das Absenden des Formulars
+                }
+            });
+
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                const formDataObject = {};
+                formData.forEach((value, key) => {
+                    formDataObject[key] = value;
+                });
+
+                try {
+                    const response = await axios.post('/registration', formDataObject);
+                    console.log(response.data);
+                    window.location.href = "/email-verification";
+                } catch (error) {
+                    console.error(error);
+                    alert('Fehler bei der Registrierung: ' + error.message);
+                }
+            });
+
+            const passwordInput = document.getElementById('password-input');
+            const passwordStrengthIndicator = document.getElementById('password-strength-indicator');
+            const confirmPasswordInput = document.getElementById('confirm-password-input');
+            const passwordMatchIndicator = document.getElementById('password-match-indicator');
+
+            passwordInput.addEventListener('input', function () {
+                const password = passwordInput.value;
+                const passwordStrengthClass = getPasswordStrengthClass(password);
+                const strengthText = passwordStrengthClass.charAt(0).toUpperCase() + passwordStrengthClass.slice(1);
+                passwordStrengthIndicator.textContent = 'Password Strength: ' + strengthText;
+                passwordStrengthIndicator.className = 'password-strength-indicator password-strength-' + passwordStrengthClass;
+            });
+
+            confirmPasswordInput.addEventListener('input', function () {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (password === confirmPassword) {
+                    passwordMatchIndicator.textContent = 'Passwörter stimmen überein';
+                    passwordMatchIndicator.style.color = '#28a745';
+                } else {
+                    passwordMatchIndicator.textContent = 'Passwörter stimmen nicht überein';
+                    passwordMatchIndicator.style.color = '#dc3545';
+                }
+            });
+        });
+
+        function getPasswordStrengthClass(password) {
+            const weakRegex = /^(?=.*[a-zA-Z]).{1,}$/;
+            const normalRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+            const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+            if (strongRegex.test(password)) {
+                return 'strong';
+            } else if (normalRegex.test(password)) {
+                return 'normal';
+            } else if (weakRegex.test(password)) {
+                return 'weak';
+            } else {
+                return '';
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <!-- Navbar aus der Home-Seite -->
+    <div class="container-fluid sticky-top bg-white shadow-sm">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
+                <a href="home.html" class="navbar-brand">
+                    <img src="img/logo.png" class="logo-img">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto py-0">
+                        <a href="home.html" class="nav-item nav-link ">Home</a>
+                        <a href="aboutus.html" class="nav-item nav-link">About Us</a>
+                        <a href="faq.html" class="nav-item nav-link">FAQ</a>
+                        <a href="login.html" class="nav-item nav-link active">Login</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Ende Navbar -->
+
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section"></h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-12 col-lg-10">
+                    <div class="wrap d-md-flex">
+                        <div class="text-wrap p-4 p-lg-5 text-center d-flex align-items-center order-md-last">
+                            <div class="text w-100">
+                                <h2>Already have an account?</h2>
+                                <a href="login.html" class="btn btn-white btn-outline-white">Sign In</a>
+                            </div>
+                        </div>
+                        <div class="login-wrap p-4 p-lg-5">
+                            <div class="d-flex">
+                                <div class="w-100">
+                                    <h3 class="mb-4">Sign Up</h3>
+                                </div>
+                            </div>
+                            <form action="/registration" method="post" class="signin-form" id="emailForm">
+                                <div class="form-group mb-3">
+                                    <label class="label">Email</label>
+                                    <input class="form-control" name="emailregister" id="recipientEmail"
+                                        placeholder="Email" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="label" for="password">Passwort</label>
+                                    <input type="password" class="form-control" name="passwortregister"
+                                        id="password-input" placeholder="Password" required>
+                                    <div id="password-strength-indicator" class="password-strength-indicator"></div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="label" for="password_confirm">Passwort bestätigen</label>
+                                    <input type="password" class="form-control" name="passwort_confirm"
+                                        id="confirm-password-input" placeholder="Confirm Password" required>
+                                    <div id="password-match-indicator" class="password-match-indicator"></div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <button type="submit" value="Registration" id="sendEmailButton"
+                                        class="form-control btn btn-primary submit px-3">Sign Up</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="verificationMessage" style="display: none;">
+        <p>Bitte überprüfen Sie Ihre E-Mail-Adresse, um Ihren Account zu verifizieren. Eine Verifizierungs-E-Mail wurde
+            an
+            Ihre E-Mail-Adresse gesendet.</p>
+    </div>
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light border-top border-secondary py-4">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-md-0">&copy; <a class="text-primary" href="#">ConLink</a>. All Rights Reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="impressum.html" style="margin-right: 10px;">Impressum</a>
+                    <a href="datenschutz.html">Datenschutz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- jQuery einbinden -->
+</body>
+
+</html>

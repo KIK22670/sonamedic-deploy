@@ -1,0 +1,110 @@
+/* Grundlegende Stile */
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: #f8f9fa;
+    /* Helles Hintergrundfarbe */
+    color: #343a40;
+    /* Dunkle Textfarbe */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* Vollständige Höhe */
+    margin: 0;
+    /* Kein Margin für den Body */
+}
+
+h2,
+h3 {
+    color: #343a40;
+    /* Einheitliche Überschriftenfarbe */
+}
+
+/* Abschnitt Stil */
+.custom-section {
+    padding: 60px 0;
+    /* Abstand oben und unten */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Kartenstil für die Login-Box */
+.login-wrap {
+    background: white;
+    /* Weiße Hintergrundfarbe für die Karte */
+    border-radius: 15px;
+    /* Abgerundete Ecken */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    /* Schatten für Tiefe */
+    transition: box-shadow 0.3s;
+    /* Sanfte Übergänge */
+}
+
+/* Hover-Effekt für die Karte */
+.login-wrap:hover {
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+    /* Dunklerer Schatten beim Hover */
+}
+
+/* Button-Stile */
+.btn-primary {
+    background-color: #007bff;
+    /* Primärfarbe */
+    border-color: #007bff;
+    /* Primäre Rahmenfarbe */
+    transition: background-color 0.3s, border-color 0.3s;
+    /* Sanfte Übergänge */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    /* Dunklerer Farbton beim Hover */
+    border-color: #004085;
+    /* Dunklerer Rahmenfarbe */
+}
+
+.btn-outline-primary {
+    color: #007bff;
+    /* Primäre Textfarbe */
+    border-color: #007bff;
+    /* Primäre Rahmenfarbe */
+    transition: background-color 0.3s, color 0.3s;
+    /* Sanfte Übergänge */
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    /* Primärfarbe */
+    color: #fff;
+    /* Weiße Textfarbe */
+}
+
+/* Formularfeld-Stile */
+.form-control {
+    border-radius: 5px;
+    /* Abgerundete Ecken */
+    border: 1px solid #ced4da;
+    /* Graue Rahmenfarbe */
+    transition: border-color 0.3s;
+    /* Sanfte Übergänge */
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    /* Primärfarbe bei Fokus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    /* Schatten bei Fokus */
+}
+
+/* Fußzeilen-Stil */
+footer {
+    background-color: #343a40;
+    /* Dunkler Hintergrund */
+}
+
+/* Zusätzliche Stile */
+.text-light {
+    color: #ffffff;
+    /* Weiße Schrift für dunkle Hintergründe */
+}
