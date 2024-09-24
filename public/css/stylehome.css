@@ -1,7 +1,7 @@
 /********** Template CSS **********/
 :root {
-    --primary: #c5bfa7;
-    --secondary: #c5bfa7;
+    --primary: #866a67;
+    --secondary: #866a67;
     --light: #EFF5F9;
     --dark: #1D2A4D;
 }
@@ -18,7 +18,7 @@
 }
 
 .btn-primary {
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 .btn-square {
@@ -97,7 +97,7 @@
 }
 
 .hero-header {
-    background: url(../img/hintergund.jpg) top right no-repeat;
+    background: url(../img/hintergrund.png) top right no-repeat;
     background-size: cover;
     background-position: center;
 }
@@ -244,4 +244,22 @@
 .testimonial-carousel .owl-item img {
     width: 150px;
     height: 150px;
+}
+
+.styled-text {
+    font-family: 'Arial', sans-serif;
+    font-size: 44px; /* Große Schrift, um gut sichtbar zu sein */
+    color: #000000; /* Dunkles Grau für Kontrast */
+    font-weight: bold; /* Fett, um den Text hervorzuheben */
+    text-transform: uppercase; /* Großbuchstaben für Klarheit */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Leichter Schatten, um den Text vom Hintergrund abzuheben */
+  }
+
+  .text-dark-brown {
+    color: #866a67; /* Beispiel für einen dunkelbraunen Farbcode */
+}
+
+.btn-dark-brown {
+    background-color: #866a67; /* Beispiel für dunkelbraun */
+    border-color: #4B3C3B; /* Optional: um die Rahmenfarbe zu ändern */
 }
