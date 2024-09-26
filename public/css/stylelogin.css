@@ -1,3 +1,4 @@
+/* General Styles */
 * {
     margin: 0;
     padding: 0;
@@ -9,9 +10,70 @@ body {
     background-color: #f5f5f5;
 }
 
+/* Header */
+.header {
+    background-color: white;
+    border-bottom: 2px solid #ddd;
+    height: 109px;
+
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    margin-right: 40px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li {
+    font-family: Arial, sans-serif;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #9a9385;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.nav-links a.active {
+    border-bottom: 2px solid #9a9385;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 55px;
+}
+
+.logo-img {
+    width: 280px;
+    /* Größe des Logos anpassen */
+}
+
+.slogan {
+    font-family: Arial, sans-serif;
+    color: #9a9385;
+    font-weight: bold;
+}
+
+/* Main Container */
 .container {
     display: flex;
-    flex-direction: column; /* Vertikale Ausrichtung */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -21,9 +83,9 @@ body {
     text-align: center;
     font-size: 32px;
     margin-bottom: 20px;
-    background: linear-gradient(to right, #e6dbc8, #9a9385); /* Hellerer Farbverlauf */
-    -webkit-background-clip: text; /* Text mit Verlauf füllen */
-    -webkit-text-fill-color: transparent; /* Textfarbe transparent machen */
+    background: linear-gradient(to right, #e6dbc8, #9a9385);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .login-box {
@@ -34,7 +96,8 @@ body {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.left-box, .right-box {
+.left-box,
+.right-box {
     padding: 40px;
     width: 50%;
 }
@@ -55,7 +118,8 @@ label {
     display: block;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"],
+input[type="password"] {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
@@ -67,7 +131,7 @@ input[type="text"], input[type="password"] {
 .btn {
     width: 100%;
     padding: 10px;
-    background: linear-gradient(to right, #e6dbc8, #9a9385); /* Hellerer Farbverlauf */
+    background: linear-gradient(to right, #e6dbc8, #9a9385);
     border: none;
     border-radius: 5px;
     color: white;
@@ -76,7 +140,7 @@ input[type="text"], input[type="password"] {
 }
 
 .btn:hover {
-    background: linear-gradient(to right, #9a9385, #e6dbc8); /* Umgekehrter Farbverlauf für Hover-Effekt */
+    background: linear-gradient(to right, #9a9385, #e6dbc8);
 }
 
 .forgot-password {
@@ -92,7 +156,7 @@ input[type="text"], input[type="password"] {
 }
 
 .right-box {
-    background: linear-gradient(to right, #e6dbc8, #9a9385); /* Hellerer Farbverlauf */
+    background: linear-gradient(to right, #e6dbc8, #9a9385);
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -100,25 +164,72 @@ input[type="text"], input[type="password"] {
 }
 
 .right-box h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    font-size: 28px;
+    color: white;
 }
 
 .right-box p {
-    margin-bottom: 10px;
-    color: #6c6c6c;
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: white;
 }
 
-.signup-btn {
-    padding: 10px 30px;
-    background-color: transparent;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    color: #6c6c6c;
+.right-box .btn {
+    background-color: white;
+    color: #9a9385;
 }
 
 .signup-btn:hover {
-    background-color: #ddd;
+    background-color: white;
+    color: #9a9385;
+}
+
+/* Footer */
+.footer {
+    background-color: #9a9385;
+    padding: 20px 0;
+    width: 100%;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.footer .container {
+    max-width: 1200px;
+    /* Maximalbreite des Containers im Footer */
+    margin: 0 auto;
+    padding: 0 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    /* Setze die Höhe des Containers auf eine Textzeile */
+}
+
+.footer p,
+.footer a {
+    color: white;
+}
+
+.footer-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    /* Kein zusätzliches Margin oben, da es jetzt im selben Container ist */
+}
+
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    background-color: #0072ff;
+    color: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
 }
