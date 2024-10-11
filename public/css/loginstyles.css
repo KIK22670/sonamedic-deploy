@@ -1,0 +1,170 @@
+ body {
+     margin: 0;
+     padding: 0;
+     font-family: 'Arial', sans-serif;
+     background-color: #f0f4fa;
+     /* Hintergrundfarbe */
+ }
+
+ .login-container {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     height: 100vh;
+ }
+
+ .login-box {
+     display: flex;
+     background-color: #fff;
+     border-radius: 12px;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+     overflow: hidden;
+     max-width: 900px;
+     width: 100%;
+ }
+
+ /* Linker Bereich mit Bild */
+ .login-left {
+     position: relative;
+     width: 50%;
+     overflow: hidden;
+     /* Überlauf des Bildes verstecken */
+ }
+
+ .login-left img {
+     width: 100%;
+     /* Bild nimmt die volle Breite ein */
+     height: 100%;
+     /* Bild nimmt die volle Höhe ein */
+     object-fit: cover;
+     /* Bild bleibt im Verhältnis */
+     transition: transform 0.5s ease;
+     /* Übergangseffekt */
+ }
+
+
+ .login-right {
+     padding: 40px;
+     width: 50%;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+ }
+
+ /* Eingabefelder und Icons */
+ .login-right label {
+     color: #4e5560;
+     margin-bottom: 5px;
+     font-size: 14px;
+     display: block;
+ }
+
+ .input-icon {
+     position: relative;
+     margin-bottom: 20px;
+ }
+
+ .input-icon input {
+     width: calc(100% - 40px);
+     /* Breite der Eingabefelder anpassen */
+     padding: 12px;
+     border: 1px solid #ccc;
+     border-radius: 8px;
+     font-size: 14px;
+     padding-left: 40px;
+     /* Platz für das Icon */
+     background-color: #f5f6fa;
+ }
+
+ /* Icons */
+ .input-icon i {
+     position: absolute;
+     left: 10px;
+     top: 50%;
+     transform: translateY(-50%);
+     font-size: 18px;
+     color: #4e5560;
+ }
+
+ .remember-forgot {
+     display: flex;
+     justify-content: space-between;
+     /* Abstand zwischen den Elementen */
+     align-items: center;
+     /* Vertikale Ausrichtung */
+     margin-bottom: 20px;
+     /* Abstand nach unten */
+ }
+
+ .remember-me {
+     display: flex;
+     align-items: center;
+     /* Vertikale Ausrichtung */
+     font-size: 12px;
+     color: #4e5560;
+ }
+
+ .forgot-password {
+     color: #4e5560;
+     text-decoration: none;
+     font-size: 12px;
+ }
+
+ /* Buttons */
+ .login-right button {
+     width: 100%;
+     padding: 12px;
+     background-color: #4e5560;
+     color: white;
+     border: none;
+     border-radius: 8px;
+     cursor: pointer;
+     font-size: 16px;
+     margin-bottom: 20px;
+ }
+
+ .login-right button:hover {
+     background-color: #3e464f;
+ }
+
+ .google-btn {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background-color: white;
+     color: #4e5560;
+     border: 1px solid #ccc;
+     padding: 12px;
+     font-size: 14px;
+     cursor: pointer;
+     border-radius: 8px;
+ }
+
+ .google-btn img {
+     margin-right: 10px;
+     width: 20px;
+     height: 20px;
+ }
+
+ /* Anmelde-Link */
+ .signup-link {
+     text-align: center;
+     font-size: 12px;
+     color: #4e5560;
+     margin-top: 20px;
+ }
+
+ .signup-link a {
+     color: #866a67;
+     text-decoration: none;
+ }
+
+ .signup-link a:hover {
+     text-decoration: underline;
+ }
+
+ /* Übergangseffekt zwischen den beiden Bereichen */
+ .login-box:hover .login-left img {
+     transform: scale(1.1);
+     /* Bild leicht vergrößern bei Hover */
+ }

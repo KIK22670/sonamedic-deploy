@@ -5,13 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <meta content="Free HTML Templates" name="keywords">
-    <meta content="Free HTML Templates" name="description">
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
+    <!-- Einbindung von Font Awesome für die Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;700&display=swap"
         rel="stylesheet">
@@ -30,77 +32,105 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="css/stylelogin.css">
+    <link rel="stylesheet" href="css/loginstyles.css"> <!-- Link your custom login CSS -->
+    <link rel="stylesheet" href="css/stylehome.css"> <!-- Assuming you're reusing styleshome.css -->
 </head>
 
 <body>
 
-    <!-- Header -->
-    <header class="header d-flex justify-content-between align-items-center p-3">
-        <div class="logo">
-            <img src="img/logo.jpeg" alt="SonaMedic Logo" class="logo-img">
+    <!-- Navbar Start -->
+    <div class="container-fluid sticky-top bg-white shadow-sm">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
+                <a href="home.html" class="navbar-brand">
+                    <img src="img/logo.jpeg" class="logo-img" width="280">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto py-0">
+                        <a href="home.html" class="nav-item nav-link active">Home</a>
+                        <a href="aboutus.html" class="nav-item nav-link">About Us</a>
+                        <a href="faq.html" class="nav-item nav-link">FAQ</a>
+                        <a href="login.html" class="nav-item nav-link">Login</a>
+                    </div>
+                </div>
+            </nav>
         </div>
-        <nav class="nav">
-            <ul class="nav-links d-flex align-items-center gap-4">
-                <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="faq.html">FAQ</a></li>
-                <li><a href="login.html">Login</a></li>
-            </ul>
-        </nav>
-    </header>
+    </div>
+    <!-- Navbar End -->
 
-    <!-- Main Content -->
-    <div class="container my-5">
-        <div class="login-box d-flex justify-content-center">
-            <div class="left-box p-4 shadow-sm">
-                <h2>Sign In</h2>
-                <form>
-                    <label for="email">EMAIL</label>
-                    <input type="text" id="email" placeholder="Username" class="form-control mb-3">
-                    <label for="password">PASSWORD</label>
-                    <input type="password" id="password" placeholder="Password" class="form-control mb-3">
-                    <button type="submit" class="btn btn-primary w-100">Sign In</button>
-                    <a href="#" class="forgot-password d-block mt-2 text-center">Forgot Password?</a>
-                </form>
+    <div class="login-container">
+        <div class="login-box">
+            <!-- Linker Bereich mit Bild -->
+            <div class="login-left">
+                <img src="img/loginpicture2.png" alt="Illustration für Sonamedic"> <!-- Hier den Bild-Link einfügen -->
             </div>
-            <div class="right-box p-4 shadow-sm text-center">
-                <h2>Welcome to login</h2>
-                <p>Don't have an account?</p>
-                <a href="registration.html" class="btn btn-secondary">Sign Up</a>
+
+
+            <!-- Rechter Bereich -->
+            <div class="login-right">
+                <form>
+                    <!-- E-Mail Eingabefeld mit Label und Icon -->
+                    <label for="email">Email</label>
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i> <!-- Font Awesome E-Mail Icon -->
+                        <input type="email" id="email" placeholder="Email" required>
+                    </div>
+
+                    <!-- Passwort Eingabefeld mit Label und Icon -->
+                    <label for="password">Password</label>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i> <!-- Font Awesome Passwort Icon -->
+                        <input type="password" id="password" placeholder="Password" required>
+                    </div>
+
+                    <!-- Remember Me und Forgot Password Links in einer Zeile -->
+                    <div class="remember-forgot">
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember-me">
+                            <label for="remember-me">Remember Me</label>
+                        </div>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit">Login</button>
+
+                    <!-- Google Login Button -->
+                    <div class="google-btn">
+                        <img src="https://www.gstatic.com/images/branding/product/1x/gsa_48dp.png" alt="Google Logo">
+                        Login with Google
+                    </div>
+                </form>
+
+                <!-- Sign Up Link -->
+                <div class="signup-link">
+                    Don't have an account? <a href="registration.html">Sign Up</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer py-3">
-        <div class="container d-flex justify-content-between align-items-center">
-            <p class="mb-0">© SonaMedic. All Rights Reserved.</p>
-            <div class="footer-links">
-                <a href="impressum.html">Impressum</a> |
-                <a href="datenschutz.html">Datenschutz</a>
+
+    <!-- Footer Start -->
+    <div class="container-fluid text-light border-top border-secondary py-4" style="background-color: #9a9385;">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-md-0" style="color: #ffffff;">&copy; <a class="text-light" href="#">SonaMedic</a>. All
+                        Rights Reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="impressum.html" style="margin-right: 10px; color: #ffffff;">Impressum</a>
+                    <a href="datenschutz.html" style="color: #ffffff;">Datenschutz</a>
+                </div>
             </div>
         </div>
-    </footer>
+    </div>
+    <!-- Footer End -->
 
-
-
-
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
 </body>
 
 </html>
