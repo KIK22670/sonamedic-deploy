@@ -71,19 +71,19 @@
 
             <!-- Rechter Bereich -->
             <div class="login-right">
-                <form>
+                <form action="/login" method="post">
                     <!-- E-Mail Eingabefeld mit Label und Icon -->
                     <label for="email">Email</label>
                     <div class="input-icon">
                         <i class="fas fa-envelope"></i> <!-- Font Awesome E-Mail Icon -->
-                        <input type="email" id="email" placeholder="Email" required>
+                        <input type="text" name="email" placeholder="Email" required>
                     </div>
 
                     <!-- Passwort Eingabefeld mit Label und Icon -->
                     <label for="password">Password</label>
                     <div class="input-icon">
                         <i class="fas fa-lock"></i> <!-- Font Awesome Passwort Icon -->
-                        <input type="password" id="password" placeholder="Password" required>
+                        <input type="password" id="password" name="password" placeholder="Password" required>
                     </div>
 
                     <!-- Remember Me und Forgot Password Links in einer Zeile -->
@@ -92,7 +92,7 @@
                             <input type="checkbox" id="remember-me">
                             <label for="remember-me">Remember Me</label>
                         </div>
-                        <a href="#" class="forgot-password">Forgot Password?</a>
+                        <a href="passwordreset.html" class="forgot-password">Forgot Password?</a>
                     </div>
 
                     <!-- Login Button -->

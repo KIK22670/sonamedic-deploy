@@ -168,3 +168,36 @@
      transform: scale(1.1);
      /* Bild leicht vergrößern bei Hover */
  }
+
+ .password-strength-indicator {
+     margin-top: 5px;
+     font-size: 12px;
+     height: 5px;
+     border-radius: 2px;
+     background-color: transparent;
+     overflow: hidden;
+     transition: width 0.3s ease-in-out;
+ }
+
+ .password-strength-weak {
+     background-color: #ff6347;
+     /* Rot für schwach */
+     width: 33.33%;
+ }
+
+ .password-strength-normal {
+     background-color: #ffd700;
+     /* Gelb für normal */
+     width: 66.66%;
+ }
+
+ .password-strength-strong {
+     background-color: #32cd32;
+     /* Grün für stark */
+     width: 100%;
+ }
+
+ .password-match-indicator {
+     font-size: 12px;
+     color: #6c757d;
+ }
