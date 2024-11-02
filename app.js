@@ -311,3 +311,68 @@ app.get('/logout', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server läuft auf http://localhost:${PORT}`);
 });
+
+
+
+// Route für das Abrufen von Patientendaten
+app.get('/api/patient/:id', async (req, res) => {
+    const patientId = req.params.id;
+    try {
+        const query = {
+            text: 'SELECT p_vorname, p_nachname, p_geburtsdatum, p_geschlecht FROM p_patient WHERE p_id = $1',
+            values: [patientId],
+        };
+        const { rows } = await client.query(query);
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Patient nicht gefunden' });
+        }
+        res.json(rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Route für Fragen des Speech in Noise Tests
+app.get('/api/speech_in_noise_test/questions', async (req, res) => {
+    try {
+        const query = {
+            text: 'SELECT sinf_id, sinf_frage FROM sinf_frage',
+        };
+        const { rows } = await client.query(query);
+        res.json(rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Route für das Speichern der Antworten des Speech in Noise Tests
+app.post('/api/speech_in_noise_test/submit', async (req, res) => {
+    const answers = req.body; // Antworten aus dem Frontend
+    try {
+        // Logik zum Speichern der Antworten
+        for (const [questionId, answer] of Object.entries(answers)) {
+            const query = {
+                text: 'INSERT INTO sin_speech_in_noise_test (sin_id, sin_antwort) VALUES ($1, $2)',
+                values: [questionId, answer],
+            };
+            await client.query(query);
+        }
+        res.status(200).send('Antworten gespeichert');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Route für das Abrufen von Audiodateien
+app.get('/audios/:filename', (req, res) => {
+    console.log(`Anfrage nach Audio-Datei: ${req.params.filename}`);
+    res.sendFile(path.join(__dirname, 'public', 'audios', req.params.filename));
+});
+
+// Server starten
+app.listen(PORT, () => {
+    console.log(`Server läuft auf http://localhost:${PORT}`);
+});
