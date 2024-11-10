@@ -1,0 +1,81 @@
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Linke Sidebar */
+.left-navbar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 200px;
+    height: 100%;
+    background-color: #343a40;
+    padding-top: 20px;
+    z-index: 1;
+}
+
+.left-navbar .nav-link {
+    color: #fff;
+    padding: 15px;
+    display: block;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.left-navbar .nav-link:hover,
+.left-navbar .nav-link.active {
+    background-color: #4e5560;
+}
+
+/* Hauptinhalt */
+.main-content {
+    margin-left: 220px;
+    padding: 20px;
+}
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-left: 27%;
+    margin-bottom: 10%;
+}
+
+.card-header {
+    background-color: #866a67;
+    color: #ffffff;
+    border-bottom: none;
+    border-radius: 15px 15px 0 0;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+    color: #866a67;
+}
+
+.btn-primary {
+    background-color: #866a67;
+    border: none;
+    padding: 10px 20px;
+}
+
+.btn-primary:hover {
+    background-color: #786765;
+}
+
+.btn-success {
+    background-color: #786765;
+    border-color: #786765;
+}
+
+textarea[readonly] {
+    background-color: #e9ecef;
+}

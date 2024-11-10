@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SonaMedic - Stammdaten</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="img/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/stammdaten.css" rel="stylesheet" />
+    <link href="css/stylehome.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Navbar Start -->
+    <div class="container-fluid sticky-top bg-white shadow-sm">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
+                <a href="home.html" class="navbar-brand">
+                    <img src="img/logo.jpeg" class="logo-img" width="280">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto py-0">
+                        <a href="home.html" class="nav-item nav-link active">Home</a>
+                        <a href="aboutus.html" class="nav-item nav-link">About Us</a>
+                        <a href="faq.html" class="nav-item nav-link">FAQ</a>
+                        <a href="login.html" class="nav-item nav-link">Login</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+    <!-- Linke Navbar Start -->
+<nav class="navbar left-navbar">
+    <div class="container">
+        <div class="navbar-nav">
+            <a href="stammdaten.html" class="nav-item nav-link">
+                <i class="bi bi-person-badge"></i> Stammdaten
+            </a>
+            <a href="hearingtest/overview.html" class="nav-item nav-link">
+                <i class="fas fa-headset"></i> Hörtests
+            </a>
+            <a href="hearingtest/ergebnisse.html" class="nav-item nav-link">
+                <i class="fas fa-chart-line"></i> Ergebnisse
+            </a>
+            <a href="booking.html" class="nav-item nav-link">
+                <i class="bi bi-calendar-plus"></i> Terminbuchung
+            </a>
+            <a href="overview.html" class="nav-item nav-link">
+                <i class="bi bi-calendar-check"></i> Terminübersicht
+            </a>
+            <a href="information.html" class="nav-item nav-link">
+                <i class="fas fa-info-circle"></i> Informationen
+            </a>
+        </div>
+    </div>
+</nav>
+<!-- Linke Navbar End -->
+
+
+    <!-- Stammdaten Formular -->
+    <div class="container mt-5" style="max-width: 800px;">
+        <div class="card">
+            <div class="card-header">Stammdaten</div>
+            <div class="card-body">
+                <form id="stammdatenForm">
+                    <div class="mb-3">
+                        <label for="p_vorname" class="form-label">Vorname:</label>
+                        <input type="text" class="form-control" id="p_vorname" name="p_vorname" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="p_nachname" class="form-label">Nachname:</label>
+                        <input type="text" class="form-control" id="p_nachname" name="p_nachname" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="p_email" class="form-label">E-Mail:</label>
+                        <input type="email" class="form-control" id="p_email" name="p_email" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="p_telefonnummer" class="form-label">Telefonnummer:</label>
+                        <input type="tel" class="form-control" id="p_telefonnummer" name="p_telefonnummer" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="p_svnr" class="form-label">SVNR:</label>
+                        <input type="text" class="form-control" id="p_svnr" name="p_svnr" readonly maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+                    <div class="mb-3">
+                        <label for="p_allergien" class="form-label">Allergien:</label>
+                        <textarea class="form-control" id="p_allergien" name="p_allergien" rows="2" readonly></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="p_vorerkrankungen" class="form-label">Vorerkrankungen:</label>
+                        <textarea class="form-control" id="p_vorerkrankungen" name="p_vorerkrankungen" rows="2" readonly></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="p_medikamente" class="form-label">Medikamente:</label>
+                        <textarea class="form-control" id="p_medikamente" name="p_medikamente" rows="2" readonly></textarea>
+                    </div>
+
+                    <!-- Buttons für Bearbeiten und Speichern -->
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary me-2" id="editButton">Bearbeiten</button>
+                        <button type="button" class="btn btn-success d-none" id="saveButton" onclick="stammdatenSpeichern()">Speichern</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Erfolgs- und Fehler-Popups -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Erfolgreich gespeichert</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">Die Stammdaten wurden erfolgreich gespeichert.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Fehler beim Speichern</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skripte -->
+    <script>
+        window.onload = () => ladeStammdaten();
+
+        function ladeStammdaten() {
+            fetch('/ladeStammdaten')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const stammdaten = JSON.parse(data.stammdaten);
+                        Object.keys(stammdaten).forEach(key => {
+                            document.getElementById(`p_${key}`).value = stammdaten[key];
+                        });
+                    }
+                })
+                .catch(error => console.error('Fehler beim Laden:', error));
+        }
+
+        function toggleEditMode(editMode) {
+            document.getElementById('editButton').classList.toggle('d-none', editMode);
+            document.getElementById('saveButton').classList.toggle('d-none', !editMode);
+            document.querySelectorAll('#stammdatenForm input, #stammdatenForm textarea').forEach(el => el.readOnly = !editMode);
+        }
+
+        function stammdatenSpeichern() {
+            const formData = {};
+            ['vorname', 'nachname', 'email', 'telefonnummer', 'svnr', 'allergien', 'vorerkrankungen', 'medikamente'].forEach(id => {
+                formData[id] = document.getElementById(`p_${id}`).value;
+            });
+
+            fetch('/speichereStammdaten', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+                .then(response => response.ok ? $('#successModal').modal('show') : $('#errorModal').modal('show'))
+                .catch(() => $('#errorModal').modal('show'))
+                .finally(() => toggleEditMode(false));
+        }
+
+        document.getElementById('editButton').addEventListener('click', () => toggleEditMode(true));
+    </script>
+</body>
+
+
+<!-- Footer Start -->
+<div class="container-fluid text-light border-top border-secondary py-4" style="background-color: #9a9385;">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="mb-md-0" style="color: #ffffff;">&copy; <a class="text-light" href="#">SonaMedic</a>. 
+                  </p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <a href="impressum.html" style="margin-right: 10px; color: #ffffff;">Impressum</a>
+                <a href="datenschutz.html" style="color: #ffffff;">Datenschutz</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="lib/easing/easing.min.js"></script>
+<script src="lib/waypoints/waypoints.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="lib/tempusdominus/js/moment.min.js"></script>
+<script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+<script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
+</body>
+
+</html>

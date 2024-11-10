@@ -1,0 +1,63 @@
+/********** Navbar CSS **********/
+:root {
+    --primary: #866a67;
+    --secondary: #9a9385;
+    --light: #e6dbc8;
+    --dark: #4e5560;
+    --accent: #c5bfa7;
+}
+
+.left-navbar {
+    background-color: var(--light);
+    height: 100vh;
+    width: 220px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    z-index: 999;
+}
+
+.left-navbar .navbar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.left-navbar .nav-item {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark);
+    padding: 12px;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.left-navbar .nav-item:hover,
+.left-navbar .nav-item.active {
+    background-color: var(--primary);
+    color: #ffffff;
+}
+
+.left-navbar .nav-item i {
+    margin-right: 10px;
+    color: var(--accent);
+}
+
+.left-navbar .nav-item:hover i {
+    color: #ffffff;
+}
+
+@media (max-width: 992px) {
+    .left-navbar {
+        width: 180px;
+    }
+
+    .left-navbar .nav-item {
+        font-size: 16px;
+    }
+}

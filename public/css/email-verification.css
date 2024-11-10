@@ -1,0 +1,77 @@
+/* Farben nach Vorgabe */
+:root {
+    --primary-color: #866a67;
+    --secondary-color: #9a9385;
+    --accent-color: #c5bfa7;
+    --dark-color: #4e5560;
+    --light-color: #e6dbc8;
+    --white-color: #ffffff;
+}
+
+body {
+    background-color: var(--light-color);
+    font-family: 'Lato', sans-serif;
+    color: var(--dark-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.custom-card {
+    background-color: var(--white-color);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 500px;
+    border: none;
+    transition: transform 0.3s ease-in-out;
+}
+
+.custom-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-body {
+    text-align: center;
+}
+
+.icon-container {
+    width: 80px;
+    height: 80px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+    font-size: 36px;
+    color: var(--white-color);
+}
+
+h1 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    color: var(--secondary-color);
+}
+
+.logo {
+    width: 150px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
