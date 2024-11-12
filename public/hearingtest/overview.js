@@ -1,7 +1,9 @@
-document.getElementById('speechInNoiseBtn').addEventListener('click', function() {
-    window.location.href = 'speech_in_noise_test.html'; 
-});
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('speechInNoiseBtn').addEventListener('click', function() {
+        window.location.href = 'sin.html';  // Weiterleitung zum Speech in Noise Test
+    });
 
-document.getElementById('reintonaudiometrieBtn').addEventListener('click', function() {
-    window.location.href = 'reintonaudiometrie.html'; 
+    document.getElementById('reintonaudiometrieBtn').addEventListener('click', function() {
+        window.location.href = 'reintonaudiometrie.html';  // Weiterleitung zur Reintonaudiometrie
+    });
 });

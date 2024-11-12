@@ -25,6 +25,12 @@ app.use(session({
     cookie: { secure: false } // Use secure: true if using HTTPS
 }));
 
+
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'hearingtest', 'sin.html'));
+});
 // Set SendGrid API key
 sgMail.setApiKey(process.env.MY_API_KEY);
 
