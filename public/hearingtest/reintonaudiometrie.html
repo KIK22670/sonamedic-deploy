@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>SonaMedic - Reintonaudiometrie Test</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="img/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet" />
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/stylehome.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .card {
+            margin: 20px auto;
+            max-width: 600px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        .btn-primary {
+            background-color: #866a67;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        .btn-primary:hover {
+            background-color: #705a55;
+        }
+
+        .header {
+            text-align: center;
+            color: #866a67;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            background-color: #9a9385;
+            padding: 15px 0;
+            color: white;
+            text-align: center;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .instructions {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        .test-section {
+            display: none;
+        }
+
+        .form-check-label {
+            margin-left: 10px;
+        }
+
+        #controlButtons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        #nextEarButton {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #hearingButtons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        #resultsButton {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #resultsButton a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        #resultsButton a:hover {
+            background-color: #45a049;
+        }
+
+        #prevFrequencyButton {
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        #prevFrequencyButton i {
+            color: #866a67;
+        }
+
+        #prevFrequencyButton i:hover {
+            color: #705a55;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar Start -->
+    <div class="container-fluid sticky-top bg-white shadow-sm">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
+                <a href="home.html" class="navbar-brand">
+                    <img src="../img/logo.jpeg" class="logo-img" width="280">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto py-0">
+                        <a href="home.html" class="nav-item nav-link active">Home</a>
+                        <a href="aboutus.html" class="nav-item nav-link">About Us</a>
+                        <a href="faq.html" class="nav-item nav-link">FAQ</a>
+                        <a href="login.html" class="nav-item nav-link">Login</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+    <div class="container mt-5">
+        <div class="card">
+            <div class="instructions-section">
+                <h3 class="header">Anfangsinformationen</h3>
+                <ul class="instructions">
+                    <li>1. Finden Sie einen stillen Platz.</li>
+                    <li>2. Stellen Sie die Lautstärke Ihres Geräts auf mehr als 50% ein. (Idealerweise 70%)</li>
+                    <li>3. Empfohlene Kopfhörer:
+                        <ul>
+                            <li>Drahtgebundene In-Ear-Kopfhörer (z. B. JBL Ohrhörer T210 schwarz)</li>
+                            <li>Kabellose Kopfhörer (z. B. AirPods Pro)</li>
+                            <li>Over-Ear-Kopfhörer (z. B. Sony WH-1000XM4)</li>
+                        </ul>
+                    </li>
+                    <li>4. Der Hörbereich liegt zwischen 125 und 14.000 Hz.</li>
+                    <li>5. Ändern Sie die Lautstärke während dem Test nicht.</li>
+                    <li>6. Wählen Sie das Ohr, mit dem Sie beginnen möchten:</li>
+                </ul>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="earSelection" id="leftEar" value="left">
+                    <label class="form-check-label" for="leftEar">Linkes Ohr</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="earSelection" id="rightEar" value="right">
+                    <label class="form-check-label" for="rightEar">Rechtes Ohr</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="earSelection" id="binaural" value="binaural">
+                    <label class="form-check-label" for="binaural">Beide Ohren (binaural)</label>
+                </div>
+                <button class="btn btn-primary mt-3" id="startTestButton">Zum Test</button>
+            </div>
+
+            <div class="test-section">
+                <h3 class="header">Reintonaudiometrie Test</h3>
+                <p class="text-center">Der Test läuft jetzt. Bitte stoppen Sie den Ton, sobald Sie ihn gerade noch hören können.</p>
+
+                <div class="slider-container">
+                    <label for="volumeSlider">Lautstärke (dB):</label>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="50">
+                    <span id="volumeValue">50 dB</span>
+                </div>
+
+                <h4 id="frequencyDisplay" class="text-center">Frequenz: 750 Hz</h4>
+
+                <audio id="audioPlayer" src=""></audio>
+
+                <div id="controlButtons">
+                    <button class="btn btn-secondary" id="playButton">Ton abspielen</button>
+                </div>
+
+                <div id="hearingButtons">
+                    <button class="btn btn-success" id="hearButton">Ich höre</button>
+                    <button class="btn btn-danger" id="notHearButton">Ich höre nicht</button>
+                </div>
+
+                <button class="btn btn-primary mt-3" id="nextEarButton">Weiter mit nächstem Ohr</button>
+
+                <div id="resultsButton">
+                    <a href="../hearingtest/ergebnisse.html">Ergebnisse anzeigen</a>
+                </div>
+
+                <div id="prevFrequencyButton">
+                    <i class="fas fa-arrow-left"></i> Vorheriges Audio
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Start -->
+    <footer>
+        <div>&copy; SonaMedic. <a href="impressum.html">Impressum</a> | <a href="datenschutz.html">Datenschutz</a></div>
+    </footer>
+    <!-- Footer End -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const frequencies = [125, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000, 8000, 10000, 12000, 14000];
+            let currentFrequencyIndex = 0;
+            const allEars = ["left", "right", "binaural"];
+            let selectedEar = null;
+            let earOrder = [];
+    
+            const audioPlayer = document.getElementById('audioPlayer');
+            const frequencyDisplay = document.getElementById('frequencyDisplay');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const volumeValue = document.getElementById('volumeValue');
+            const playButton = document.getElementById('playButton');
+            const instructionsSection = document.querySelector('.instructions-section');
+            const testSection = document.querySelector('.test-section');
+            const nextEarButton = document.getElementById('nextEarButton');
+            const hearingButtons = document.getElementById('hearingButtons');
+            const resultsButton = document.getElementById('resultsButton');
+            const prevFrequencyButton = document.getElementById('prevFrequencyButton');
+    
+            let audioContext, source, panner;
+    
+            document.getElementById('startTestButton').addEventListener('click', function () {
+                const selectedEarInput = document.querySelector('input[name="earSelection"]:checked');
+                if (selectedEarInput) {
+                    selectedEar = selectedEarInput.value;
+                    earOrder = [selectedEar, ...allEars.filter(ear => ear !== selectedEar)];
+                    instructionsSection.style.display = 'none';
+                    testSection.style.display = 'block';
+                    initializeAudio();
+                    updateFrequencyDisplay();
+                } else {
+                    alert('Bitte wählen Sie ein Ohr aus, um fortzufahren.');
+                }
+            });
+    
+            nextEarButton.addEventListener('click', function () {
+                if (earOrder.length > 1) {
+                    earOrder.shift();
+                    selectedEar = earOrder[0];
+                    currentFrequencyIndex = 0;
+                    updateFrequencyDisplay();
+                    nextEarButton.style.display = 'none';
+                    hearingButtons.style.display = 'flex';
+                } else {
+                    audioPlayer.pause();
+                    nextEarButton.style.display = 'none';
+                    resultsButton.style.display = 'block';
+                }
+            });
+    
+            prevFrequencyButton.addEventListener('click', function () {
+                if (currentFrequencyIndex > 0) {
+                    currentFrequencyIndex--;
+                    hearingButtons.style.display = 'flex';
+                    resultsButton.style.display = 'none';
+                    nextEarButton.style.display = 'none';
+                    updateFrequencyDisplay();
+                }
+            });
+    
+            function initializeAudio() {
+                if (!audioContext) {
+                    audioContext = new AudioContext();
+                    source = audioContext.createMediaElementSource(audioPlayer);
+                    panner = audioContext.createStereoPanner();
+                    source.connect(panner).connect(audioContext.destination);
+                }
+            }
+    
+            function updateFrequencyDisplay() {
+                const frequency = frequencies[currentFrequencyIndex];
+                frequencyDisplay.textContent = `Frequenz: ${frequency} Hz - ${selectedEar}`;
+                audioPlayer.src = `Reintonaudios/${frequency}.wav`;
+                setAudioChannel(selectedEar);
+                audioPlayer.loop = true;
+                audioPlayer.play();
+                playButton.textContent = "Ton abschalten";
+            }
+    
+            function setAudioChannel(ear) {
+                if (ear === "left") {
+                    panner.pan.value = -1;
+                } else if (ear === "right") {
+                    panner.pan.value = 1;
+                } else {
+                    panner.pan.value = 0;
+                }
+            }
+    
+            volumeSlider.addEventListener('input', function () {
+                volumeValue.textContent = `${volumeSlider.value} dB`;
+                audioPlayer.volume = volumeSlider.value / 100;
+            });
+    
+            playButton.addEventListener('click', function () {
+                if (audioPlayer.paused) {
+                    audioPlayer.play();
+                    playButton.textContent = "Ton abschalten";
+                } else {
+                    audioPlayer.pause();
+                    playButton.textContent = "Ton abspielen";
+                }
+            });
+    
+            document.getElementById('hearButton').addEventListener('click', function () {
+                nextFrequency();
+            });
+    
+            document.getElementById('notHearButton').addEventListener('click', function () {
+                nextFrequency();
+            });
+    
+            function nextFrequency() {
+                if (currentFrequencyIndex < frequencies.length - 1) {
+                    currentFrequencyIndex++;
+                    updateFrequencyDisplay();
+                } else {
+                    hearingButtons.style.display = 'none';
+                    nextEarButton.style.display = earOrder.length > 1 ? 'block' : 'none';
+                    if (earOrder.length <= 1) {
+                        resultsButton.style.display = 'block';
+                    }
+                }
+            }
+    
+            updateFrequencyDisplay();
+        });
+    </script>
+    
+</body>
+
+</html>
