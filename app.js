@@ -444,11 +444,11 @@ app.get('/ladeStammdaten', async (req, res) => {
 
 // Route to get patient data
 app.get('/api/patient/:id', async (req, res) => {
-    const patientId = req.params.id;
+    const p_id = req.params.id;
     try {
         const query = {
             text: 'SELECT p_vorname, p_nachname, p_geburtsdatum, p_geschlecht FROM p_patienten WHERE p_id = $1',
-            values: [patientId],
+            values: [p_id],
         };
         const { rows } = await client.query(query);
         if (rows.length === 0) {
@@ -612,6 +612,52 @@ app.get('/reset-password/:token', async (req, res) => {
     } catch (error) {
         console.error('Error resetting password:', error);
         res.status(500).json("Internal Server Error");
+    }
+});
+
+// Endpunkt zum Speichern von Reintonaudiometrie-Ergebnissen
+app.post('/saveTestResult', async (req, res) => {
+    const { p_id, testNumber, frequency, result, ear } = req.body; 
+    console.log('Eingehende Daten:', req.body);
+
+    try {
+        const query = {
+            text: `
+                INSERT INTO reintonaudiometrie_ergebnisse (p_id, testnummer, frequenz, ergebnis, ohr)
+                VALUES ($1, $2, $3, $4, $5)
+            `,
+            values: [p_id, testNumber, frequency, result, ear], 
+        };
+
+        console.log('Query:', query);
+        await client.query(query);
+        res.status(200).json({ message: 'Ergebnis erfolgreich gespeichert.' });
+    } catch (error) {
+        console.error('Fehler beim Speichern des Testergebnisses:', error);
+        res.status(500).json({ error: 'Fehler beim Speichern des Ergebnisses.' });
+    }
+});
+
+// Endpunkt zum Abrufen von Reintonaudiometrie-Ergebnissen
+app.get('/getAudiometrieTests', async (req, res) => {
+    const { p_id } = req.query; 
+
+    try {
+        const query = {
+            text: `
+                SELECT testnummer, frequenz, ergebnis, ohr, erstellt_am
+                FROM reintonaudiometrie_ergebnisse
+                WHERE p_id = $1
+                ORDER BY testnummer, erstellt_am
+            `,
+            values: [p_id], 
+        };
+
+        const results = await client.query(query);
+        res.json(results.rows);
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Testergebnisse:', error);
+        res.status(500).json({ error: 'Fehler beim Abrufen der Ergebnisse.' });
     }
 });
 

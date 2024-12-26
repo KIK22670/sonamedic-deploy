@@ -1,4 +1,3 @@
-
 -- -----------------------------------------------------
 -- Table sonamedic.p_patienten
 -- -----------------------------------------------------
@@ -20,6 +19,19 @@ CREATE TABLE IF NOT EXISTS p_patienten (
 );
 
 -- -----------------------------------------------------
+-- Table sonamedic.reintonaudiometrie_ergebnisse
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS reintonaudiometrie_ergebnisse (
+  ergebnis_id SERIAL PRIMARY KEY,
+  p_id INT NOT NULL REFERENCES p_patienten(p_id) ON DELETE CASCADE,
+  testnummer INT NOT NULL,
+  frequenz INT NOT NULL,
+  ergebnis BOOLEAN NOT NULL,
+  ohr VARCHAR(10) NOT NULL, -- "left", "right", "binaural"
+  erstellt_am TIMESTAMP DEFAULT NOW()
+);
+
+-- -----------------------------------------------------
 -- Table sonamedic.u_userverwaltung
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS u_userverwaltung (
@@ -31,7 +43,7 @@ CREATE TABLE IF NOT EXISTS u_userverwaltung (
   u_verification_token VARCHAR(255),
   u_resetpasswordtoken VARCHAR(255),
   u_resetpasswordexpires TIMESTAMP WITHOUT TIME ZONE,
-  u_p_id INT REFERENCES p_patienten(p_id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  u_p_id INT NULL REFERENCES p_patienten(p_id) ON DELETE SET NULL ON UPDATE NO ACTION
 );
 
 -- -----------------------------------------------------
@@ -73,16 +85,16 @@ CREATE TABLE IF NOT EXISTS t_termine (
   z_zeitslots_z_id INT NOT NULL,
   CONSTRAINT fk_t_termine_p_patienten1 FOREIGN KEY (t_p_id)
     REFERENCES p_patienten (p_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT fk_t_termine_tt_termintyp1 FOREIGN KEY (tt_termintyp_tt_id)
     REFERENCES tt_termintyp (tt_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT fk_t_termine_z_zeitslots1 FOREIGN KEY (z_zeitslots_z_id)
     REFERENCES z_zeitslots (z_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 -- -----------------------------------------------------
@@ -117,8 +129,8 @@ CREATE TABLE IF NOT EXISTS sin_speech_in_noise_test (
   sin_p_id INT NOT NULL,
   CONSTRAINT fk_sin_speech_in_noise_test_p_patienten1 FOREIGN KEY (sin_p_id)
     REFERENCES p_patienten (p_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 -- -----------------------------------------------------
@@ -131,8 +143,8 @@ CREATE TABLE IF NOT EXISTS sine_ergebnisse (
   sine_sin_id INT NOT NULL,
   CONSTRAINT fk_sine_ergebnisse_sin_speech_in_noise_test1 FOREIGN KEY (sine_sin_id)
     REFERENCES sin_speech_in_noise_test (sin_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 -- -----------------------------------------------------
@@ -149,20 +161,20 @@ CREATE TABLE IF NOT EXISTS e_ergebnisse (
   e_sine_id INT NOT NULL,
   CONSTRAINT fk_e_ergebnisse_p_patienten1 FOREIGN KEY (e_p_id)
     REFERENCES p_patienten (p_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT fk_e_ergebnisse_h_hoertest1 FOREIGN KEY (e_h_id)
     REFERENCES h_hoertest (h_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT fk_e_ergebnisse_b_benachrichtigungen1 FOREIGN KEY (e_b_id)
     REFERENCES b_benachrichtigungen (b_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT fk_e_ergebnisse_sine_ergebnisse1 FOREIGN KEY (e_sine_id)
     REFERENCES sine_ergebnisse (ergebnis_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 -- -----------------------------------------------------
@@ -174,12 +186,12 @@ CREATE TABLE IF NOT EXISTS pl_p_has_l (
   PRIMARY KEY (pl_p_id, pl_l_id),
   CONSTRAINT fk_p_patienten_has_l_logging_p_patienten1 FOREIGN KEY (pl_p_id)
     REFERENCES p_patienten (p_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT fk_p_patienten_has_l_logging_l_logging1 FOREIGN KEY (pl_l_id)
     REFERENCES l_logging (l_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 -- -----------------------------------------------------
@@ -191,12 +203,12 @@ CREATE TABLE IF NOT EXISTS pb_p_hat_b (
   PRIMARY KEY (pb_p_id, pb_b_id),
   CONSTRAINT fk_p_patienten_has_b_benachrichtigungen_p_patienten1 FOREIGN KEY (pb_p_id)
     REFERENCES p_patienten (p_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT fk_p_patienten_has_b_benachrichtigungen_b_benachrichtigungen1 FOREIGN KEY (pb_b_id)
     REFERENCES b_benachrichtigungen (b_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 -- -----------------------------------------------------
@@ -211,8 +223,8 @@ CREATE TABLE IF NOT EXISTS sinf_frage (
   sinf_sin_id INT NOT NULL,
   CONSTRAINT fk_sinf_frage_sin_speech_in_noise_test1 FOREIGN KEY (sinf_sin_id)
     REFERENCES sin_speech_in_noise_test (sin_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 -- -----------------------------------------------------
@@ -226,10 +238,10 @@ CREATE TABLE IF NOT EXISTS sina_antwort (
   sina_p_id INT NOT NULL,
   CONSTRAINT fk_sina_antwort_sinf_frage1 FOREIGN KEY (sina_sinf_id)
     REFERENCES sinf_frage (sinf_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT fk_sina_antwort_p_patienten1 FOREIGN KEY (sina_p_id)
     REFERENCES p_patienten (p_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );

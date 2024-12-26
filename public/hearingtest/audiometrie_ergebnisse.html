@@ -2,7 +2,7 @@
 <html lang="de">
 
 <head>
-    <title>SonaMedic - Ergebnisse</title>
+    <title>SonaMedic - Audiometrie Ergebnisse</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="img/favicon.ico">
@@ -36,43 +36,37 @@
         }
 
         .card-body {
-            padding: 30px;
-            text-align: center;
+            padding: 25px;
         }
 
-        .button-container {
+        .result-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .result-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f7f2ee;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 20px;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 15px 40px;
-            font-size: 20px;
-            border-radius: 12px;
-            font-weight: bold;
-            color: white;
+        .result-item:hover {
+            background-color: #e9ded7;
+        }
+
+        .result-item a {
             text-decoration: none;
-            text-align: center;
-            transition: all 0.3s ease;
+            color: #8b6b61;
+            font-weight: bold;
         }
 
-        .btn-primary {
-            background-color: #8b6b61;
-        }
-
-        .btn-primary:hover {
-            background-color: #70574f;
-        }
-
-        .btn-secondary {
-            background-color: #ba9c8f;
-        }
-
-        .btn-secondary:hover {
-            background-color: #a18378;
+        .result-item a:hover {
+            color: #70574f;
         }
 
         footer {
@@ -91,12 +85,6 @@
 
         footer a:hover {
             text-decoration: underline;
-        }
-
-        .text-center {
-            font-size: 28px;
-            font-weight: bold;
-            color: #8b6b61;
         }
     </style>
 </head>
@@ -126,16 +114,14 @@
     <!-- Navbar End -->
 
     <div class="container">
-        <h2 class="text-center mb-4">Ihre Testergebnisse</h2>
+        <h2 class="text-center mb-4">Audiometrie Ergebnisse</h2>
 
         <div class="card">
-            <div class="card-header">Bitte wählen Sie aus</div>
+            <div class="card-header">Ihre Tests</div>
             <div class="card-body">
-                <div class="button-container">
-                    <!-- Buttons für die Auswahl -->
-                    <a href="../hearingtest/audiometrie_ergebnisse.html" class="btn btn-primary">Reintonaudiometrie Testergebnisse</a>
-                    <a href="../hearingtest/sin_ergebnisse.html" class="btn btn-secondary">Speech-in-Noise Testergebnisse</a>
-                </div>
+                <ul id="testList" class="result-list">
+                    <!-- Ergebnisse werden dynamisch geladen -->
+                </ul>
             </div>
         </div>
     </div>
@@ -145,6 +131,27 @@
         <div>&copy; SonaMedic. <a href="impressum.html">Impressum</a> | <a href="datenschutz.html">Datenschutz</a></div>
     </footer>
     <!-- Footer End -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const testList = document.getElementById('testList');
+
+            fetch(`/getAudiometrieTests?p_id=${sessionStorage.getItem('p_id')}`)
+                .then((response) => response.json())
+                .then((tests) => {
+                    if (tests.length === 0) {
+                        testList.innerHTML = '<li>Keine Testergebnisse verfügbar.</li>';
+                    } else {
+                        tests.forEach((test) => {
+                            const listItem = document.createElement('li');
+                            listItem.innerHTML = `<b>Testnummer ${test.testnummer}</b> - ${new Date(test.erstellt_am).toLocaleString()}`;
+                            testList.appendChild(listItem);
+                        });
+                    }
+                })
+                .catch((error) => console.error('Fehler:', error));
+        });
+    </script>
 </body>
 
 </html>
