@@ -661,6 +661,69 @@ app.get('/getAudiometrieTests', async (req, res) => {
     }
 });
 
+// Termine
+
+// Termine
+
+const openingHours = {
+    Dienstag: [
+        { start: '09:00', end: '13:00' },
+        { start: '13:30', end: '15:30' },
+    ],
+    Mittwoch: [
+        { start: '09:00', end: '13:00' },
+        { start: '13:30', end: '15:50' },
+    ],
+    Donnerstag: [
+        { start: '09:00', end: '13:00' },
+        { start: '13:30', end: '18:00' },
+    ],
+};
+
+// Funktion zur Generierung von Zeitfenstern
+function generateTimeSlots(openingHours) {
+    const slots = [];
+    Object.keys(openingHours).forEach((day, dayIndex) => {
+        openingHours[day].forEach(({ start, end }) => {
+            let current = new Date(2024, 11, 25 + dayIndex, ...start.split(':').map(Number));
+            const endTime = new Date(2024, 11, 25 + dayIndex, ...end.split(':').map(Number));
+            while (current < endTime) {
+                slots.push({
+                    day,
+                    t_datum: current.toISOString().split('T')[0],
+                    t_uhrzeit: current.toTimeString().substring(0, 5),
+                });
+                current.setMinutes(current.getMinutes() + 30);
+            }
+        });
+    });
+    return slots;
+}
+
+let slots = generateTimeSlots(openingHours);
+let termine = [];
+
+// Endpunkt: Verfügbare Slots abrufen
+app.get('/slots', (req, res) => res.json(slots));
+
+// Endpunkt: Termin buchen
+app.post('/termine', (req, res) => {
+    const { t_datum, t_uhrzeit, t_termintyp } = req.body;
+
+    const index = slots.findIndex((slot) => slot.t_datum === t_datum && slot.t_uhrzeit === t_uhrzeit);
+    if (index !== -1) {
+        slots.splice(index, 1);
+        const neuerTermin = { t_datum, t_uhrzeit, t_termintyp };
+        termine.push(neuerTermin);
+        console.log('Gebuchter Termin:', neuerTermin);
+        res.status(201).send('Termin erfolgreich gebucht');
+    } else {
+        res.status(400).send('Termin nicht verfügbar');
+    }
+});
+
+// Endpunkt: Alle gebuchten Termine abrufen
+app.get('/termine', (req, res) => res.json(termine));
 
 
 // Start server
