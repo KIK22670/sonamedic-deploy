@@ -136,7 +136,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             const testList = document.getElementById('testList');
 
-            fetch(`/getAudiometrieTests?p_id=${sessionStorage.getItem('p_id')}`)
+            fetch(`/getAudiometrieTests?u_id=${sessionStorage.getItem('u_id')}`)
                 .then((response) => response.json())
                 .then((tests) => {
                     if (tests.length === 0) {
