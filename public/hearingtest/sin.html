@@ -96,6 +96,7 @@
                         <a href="../aboutus.html" class="nav-item nav-link">About Us</a>
                         <a href="../faq.html" class="nav-item nav-link">FAQ</a>
                         <a href="../login.html" class="nav-item nav-link">Login</a>
+
                     </div>
                 </div>
             </nav>
@@ -128,27 +129,29 @@
         </div>
     </nav>
 
-    <!-- Hauptinhalt -->
     <div class="content-container">
         <div class="card">
-            <div class="card-header">Stellen Sie die Lautstärke ein</div>
+            <div class="card-header">Speech in Noise Test</div>
             <div class="card-body">
-                <!-- Audio-Element -->
-                <audio id="audioPlayer" src="/hearingtest/audio.mp3" preload="auto"></audio>
-
-                <!-- Lautstärkeregler -->
+                <audio id="audioPlayer" preload="none"></audio>
                 <label for="volumeControl">Lautstärke:</label>
                 <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
-
-                <!-- Button Container -->
                 <div class="button-container">
                     <button id="playBtn">Audio abspielen</button>
-                    <button id="startTestBtn" disabled>OK</button>
+                    <button id="startTestBtn">OK</button>
                     <button id="startTestProcessBtn" disabled>Test starten</button>
                 </div>
             </div>
         </div>
-    </div>
+        <div id="questionContainer" style="display:none;">
+            <div id="audioIndicator" style="text-align:center; margin-bottom: 20px;">
+                <i class="fas fa-volume-up" style="font-size: 48px; color: #866a67;"></i>
+            </div>
+            <p id="questionText"></p>
+            <div id="optionsContainer"></div>
+            <button id="nextButton" style="display:none;">Nächste Frage</button>
+        </div>
+    </div>  
 
 </body>
 </html>
