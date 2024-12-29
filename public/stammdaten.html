@@ -90,8 +90,12 @@
                         <input type="tel" class="form-control" id="p_telefonnummer" name="p_telefonnummer" readonly>
                     </div>
                     <div class="mb-3">
+                        <label for="p_geburtsdatum" class="form-label">Geburtsdatum:</label>
+                        <input type="date" class="form-control" id="p_geburtsdatum" name="p_geburtsdatum" readonly>
+                    </div>
+                    <div class="mb-3">
                         <label for="p_svnr" class="form-label">SVNR:</label>
-                        <input type="text" class="form-control" id="p_svnr" name="p_svnr" readonly maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        <input type="text" class="form-control" id="p_svnr" name="p_svnr" readonly maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
                     <div class="mb-3">
                         <label for="p_allergien" class="form-label">Allergien:</label>
@@ -143,6 +147,14 @@
 
     <!-- Skripte -->
     <script>
+    
+    document.addEventListener('DOMContentLoaded', () => {
+            const dateInput = document.getElementById('p_geburtsdatum');
+            const today = new Date();
+            const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            dateInput.max = minDate.toISOString().split('T')[0];
+        });
+
         window.onload = () => ladeStammdaten();
 
         function ladeStammdaten() {
@@ -167,7 +179,7 @@
 
         function stammdatenSpeichern() {
             const formData = {};
-            ['vorname', 'nachname', 'email', 'telefonnummer', 'svnr', 'allergien', 'vorerkrankungen', 'medikamente'].forEach(id => {
+            ['vorname', 'nachname', 'email', 'telefonnummer', 'geburtsdatum', 'svnr', 'allergien', 'vorerkrankungen', 'medikamente'].forEach(id => {
                 formData[id] = document.getElementById(`p_${id}`).value;
             });
 

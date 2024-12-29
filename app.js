@@ -387,7 +387,7 @@ app.get('/stammdaten', (req, res, next) => {
 app.post('/speichereStammdaten', async (req, res) => {
     try {
         const userID = req.session.user.id;
-        const { vorname, nachname, email, telefonnummer, svnr, allergien, vorerkrankungen, medikamente } = req.body;
+        const { vorname, nachname, email, telefonnummer, geburtsdatum, svnr, allergien, vorerkrankungen, medikamente } = req.body;
 
         // Überprüfen, ob bereits Patientendaten für diesen Benutzer vorhanden sind
         const checkExistingDataQuery = {
@@ -400,20 +400,20 @@ app.post('/speichereStammdaten', async (req, res) => {
             // Es gibt bereits Patientendaten für diesen Benutzer, daher aktualisieren Sie sie
             const updateDataQuery = {
                 text: `UPDATE p_patienten 
-               SET p_vorname = $1, p_nachname = $2, p_email = $3, p_telefonnummer = $4, 
-                   p_svnr = $5, p_allergien = $6, p_vorerkrankungen = $7, p_medikamente = $8, p_stammdaten = $9
-               WHERE p_id = $10`,
-                values: [vorname, nachname, email, telefonnummer, svnr, allergien, vorerkrankungen, medikamente, JSON.stringify(req.body), userID],
+               SET p_vorname = $1, p_nachname = $2, p_email = $3, p_telefonnummer = $4, p_geburtsdatum = $5,
+                   p_svnr = $6, p_allergien = $7, p_vorerkrankungen = $8, p_medikamente = $9, p_stammdaten = $10
+               WHERE p_id = $11`,
+                values: [vorname, nachname, email, telefonnummer, geburtsdatum, svnr, allergien, vorerkrankungen, medikamente, JSON.stringify(req.body), userID],
             };
             await client.query(updateDataQuery);
         } else {
             // Es gibt keine vorhandenen Patientendaten für diesen Benutzer, daher fügen Sie neue Daten hinzu
             const insertDataQuery = {
                 text: `INSERT INTO p_patienten
-               (p_id, p_vorname, p_nachname, p_email, p_telefonnummer, p_svnr, p_allergien, p_vorerkrankungen, p_medikamente, p_stammdaten) 
+               (p_id, p_vorname, p_nachname, p_email, p_telefonnummer, p_geburtsdatum, p_svnr, p_allergien, p_vorerkrankungen, p_medikamente, p_stammdaten) 
                VALUES 
-               ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-                values: [userID, vorname, nachname, email, telefonnummer, svnr, allergien, vorerkrankungen, medikamente, JSON.stringify(req.body)],
+               ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+                values: [userID, vorname, nachname, email, telefonnummer, geburtsdatum, svnr, allergien, vorerkrankungen, medikamente, JSON.stringify(req.body)],
             };
             await client.query(insertDataQuery);
         }
