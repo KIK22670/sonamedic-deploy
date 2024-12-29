@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SonaMedic - Stammdaten</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="img/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/stylehome.css" rel="stylesheet" />
+    <link href="css/information.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Navbar Start -->
+    <div class="container-fluid sticky-top bg-white shadow-sm">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
+                <a href="home.html" class="navbar-brand">
+                    <img src="img/logo.jpeg" class="logo-img" width="280">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto py-0">
+                        <a href="home.html" class="nav-item nav-link active">Home</a>
+                        <a href="aboutus.html" class="nav-item nav-link">About Us</a>
+                        <a href="faq.html" class="nav-item nav-link">FAQ</a>
+                        <a href="login.html" class="nav-item nav-link">Login</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+    <!-- Linke Navbar Start -->
+<nav class="navbar left-navbar">
+    <div class="container">
+        <div class="navbar-nav">
+            <a href="stammdaten.html" class="nav-item nav-link">
+                <i class="bi bi-person-badge"></i> Stammdaten
+            </a>
+            <a href="hearingtest/overview.html" class="nav-item nav-link">
+                <i class="fas fa-headset"></i> Hörtests
+            </a>
+            <a href="hearingtest/ergebnisse.html" class="nav-item nav-link">
+                <i class="fas fa-chart-line"></i> Ergebnisse
+            </a>
+            <a href="booking.html" class="nav-item nav-link">
+                <i class="bi bi-calendar-plus"></i> Buchung
+            </a>
+            <a href="booking-overview.html" class="nav-item nav-link">
+                <i class="bi bi-calendar-check"></i> Übersicht
+            </a>
+            <a href="information.html" class="nav-item nav-link">
+                <i class="fas fa-info-circle"></i> Informationen
+            </a>
+        </div>
+    </div>
+</nav>
+<!-- Linke Navbar End -->
+
+
+<!-- Main Start -->
+ <!-- Main Content -->
+ <div class="main-content">
+    <div class="info-header">
+        <h1>Gehörkrankheiten und ihre Auswirkungen</h1>
+        <p>Hier findest du eine Übersicht der häufigsten Gehörkrankheiten, ihre Ursachen, Symptome und Behandlungsmöglichkeiten.</p>
+    </div>
+
+    <div class="container">
+        <!-- Karten Layout -->
+        <div class="row">
+            <!-- Karte 1 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-deaf"></i> Sensorineurale Hörstörung</div>
+                    <div class="card-body">
+                        <p>Eine häufige Form des Hörverlusts, bei der das Innenohr oder der Hörnerv betroffen ist.</p>
+                        <a class="btn-expand" onclick="toggleContent(this)">Erfahre mehr</a>
+                        <div class="expanded-content">
+                            <ul>
+                                <li><strong>Ursachen:</strong> Alterung, Lärmexposition, genetische Faktoren.</li>
+                                <li><strong>Behandlung:</strong> Hörgeräte, Cochlea-Implantate, Rehabilitation.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Karte 2 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-headphones"></i> Leitungsstörung</div>
+                    <div class="card-body">
+                        <p>Eine Störung im äußeren oder mittleren Ohr, die den Schalltransport behindert.</p>
+                        <a class="btn-expand" onclick="toggleContent(this)">Erfahre mehr</a>
+                        <div class="expanded-content">
+                            <ul>
+                                <li><strong>Ursachen:</strong> Ohrenschmalz, Infektionen, Versteifung der Gehörknöchelchen.</li>
+                                <li><strong>Behandlung:</strong> Medikamente, Operationen, Hörhilfen.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Weitere Karten -->
+        <div class="row">
+            <!-- Karte 3 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-bullhorn"></i> Tinnitus</div>
+                    <div class="card-body">
+                        <p>Ein Pfeifen oder Summen in den Ohren, oft ohne äußere Geräuschquelle.</p>
+                        <a class="btn-expand" onclick="toggleContent(this)">Erfahre mehr</a>
+                        <div class="expanded-content">
+                            <ul>
+                                <li><strong>Ursachen:</strong> Lärmbelastung, Stress, neurologische Störungen.</li>
+                                <li><strong>Behandlung:</strong> Stressbewältigung, Hörgeräte, kognitive Verhaltenstherapie.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Karte 4 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-clock"></i> Altersbedingte Schwerhörigkeit</div>
+                    <div class="card-body">
+                        <p>Hörverlust, der mit dem Alter eintritt und oft beidseitig ist.</p>
+                        <a class="btn-expand" onclick="toggleContent(this)">Erfahre mehr</a>
+                        <div class="expanded-content">
+                            <ul>
+                                <li><strong>Ursachen:</strong> Zellschäden im Innenohr durch Alterung.</li>
+                                <li><strong>Behandlung:</strong> Hörgeräte, Cochlea-Implantate.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+<script>
+    function toggleContent(button) {
+        const content = button.nextElementSibling;
+        const isVisible = content.style.display === 'block';
+
+        content.style.display = isVisible ? 'none' : 'block';
+        button.textContent = isVisible ? 'Erfahre mehr' : 'Weniger anzeigen';
+    }
+</script>
+</body>
+
+</html>

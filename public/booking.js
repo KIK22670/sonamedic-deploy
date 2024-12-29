@@ -1,6 +1,4 @@
-console.log('Booking-Skript erfolgreich geladen.');
 
-const API_URL = 'http://localhost:3000'; // Lokaler Server auf Port 3000
 let selectedDatum = null;
 let selectedUhrzeit = null;
 let selectedTermintyp = null;
