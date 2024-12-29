@@ -216,7 +216,7 @@
                 <button class="btn btn-primary mt-3" id="nextEarButton">Weiter mit nächstem Ohr</button>
 
                 <div id="resultsButton">
-                    <a href="../hearingtest/ergebnisse.html">Ergebnisse anzeigen</a>
+                    <a href="../hearingtest/audiometrie_ergebnisse.html">Ergebnisse anzeigen</a>
                 </div>
 
                 <div id="prevFrequencyButton">
@@ -368,7 +368,7 @@
         const testNumber = currentFrequencyIndex + 1;
 
         const payload = {
-            p_id: sessionStorage.getItem('p_id'), // Patient ID aus Session speichern
+            u_id: sessionStorage.getItem('u_id'), // Patient ID aus Session speichern
             testNumber,
             frequency,
             result: heard,
