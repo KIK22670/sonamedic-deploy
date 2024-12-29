@@ -663,8 +663,6 @@ app.get('/getAudiometrieTests', async (req, res) => {
 
 // Termine
 
-// Termine
-
 const openingHours = {
     Dienstag: [
         { start: '09:00', end: '13:00' },
@@ -680,31 +678,51 @@ const openingHours = {
     ],
 };
 
+let termine = []; // Liste der gebuchten Termine
+
 // Funktion zur Generierung von Zeitfenstern
 function generateTimeSlots(openingHours) {
     const slots = [];
-    Object.keys(openingHours).forEach((day, dayIndex) => {
-        openingHours[day].forEach(({ start, end }) => {
-            let current = new Date(2024, 11, 25 + dayIndex, ...start.split(':').map(Number));
-            const endTime = new Date(2024, 11, 25 + dayIndex, ...end.split(':').map(Number));
-            while (current < endTime) {
-                slots.push({
-                    day,
-                    t_datum: current.toISOString().split('T')[0],
-                    t_uhrzeit: current.toTimeString().substring(0, 5),
-                });
-                current.setMinutes(current.getMinutes() + 30);
-            }
-        });
-    });
+    const today = new Date();
+    today.setDate(today.getDate() + 3); // Starte 3 Tage in der Zukunft
+    const endDate = new Date();
+    endDate.setMonth(endDate.getMonth() + 3); // Bis zu 3 Monate in die Zukunft
+
+    while (today <= endDate) {
+        const dayName = today.toLocaleDateString('de-DE', { weekday: 'long' });
+        if (openingHours[dayName]) {
+            openingHours[dayName].forEach(({ start, end }) => {
+                let current = new Date(today);
+                const [startHour, startMinute] = start.split(':').map(Number);
+                current.setHours(startHour, startMinute, 0, 0);
+
+                const endTime = new Date(today);
+                const [endHour, endMinute] = end.split(':').map(Number);
+                endTime.setHours(endHour, endMinute, 0, 0);
+
+                while (current < endTime) {
+                    slots.push({
+                        day: dayName,
+                        t_datum: current.toISOString().split('T')[0],
+                        t_uhrzeit: current.toTimeString().substring(0, 5),
+                    });
+                    current.setMinutes(current.getMinutes() + 30);
+                }
+            });
+        }
+        today.setDate(today.getDate() + 1); // Zum nächsten Tag wechseln
+    }
     return slots;
 }
 
 let slots = generateTimeSlots(openingHours);
-let termine = [];
 
 // Endpunkt: Verfügbare Slots abrufen
-app.get('/slots', (req, res) => res.json(slots));
+app.get('/slots', (req, res) => {
+    const gebuchteTermine = termine.map(termin => `${termin.t_datum}-${termin.t_uhrzeit}`);
+    const availableSlots = slots.filter(slot => !gebuchteTermine.includes(`${slot.t_datum}-${slot.t_uhrzeit}`));
+    res.json(availableSlots);
+});
 
 // Endpunkt: Termin buchen
 app.post('/termine', (req, res) => {
@@ -712,9 +730,16 @@ app.post('/termine', (req, res) => {
 
     const index = slots.findIndex((slot) => slot.t_datum === t_datum && slot.t_uhrzeit === t_uhrzeit);
     if (index !== -1) {
-        slots.splice(index, 1);
-        const neuerTermin = { t_datum, t_uhrzeit, t_termintyp };
-        termine.push(neuerTermin);
+        slots.splice(index, 1); // Entferne den Slot aus der Liste
+
+        const neuerTermin = {
+            t_id: termine.length + 1, // Eindeutige ID für den Termin
+            t_datum,
+            t_uhrzeit,
+            t_termintyp
+        };
+
+        termine.push(neuerTermin); // Termin hinzufügen
         console.log('Gebuchter Termin:', neuerTermin);
         res.status(201).send('Termin erfolgreich gebucht');
     } else {
@@ -723,8 +748,39 @@ app.post('/termine', (req, res) => {
 });
 
 // Endpunkt: Alle gebuchten Termine abrufen
-app.get('/termine', (req, res) => res.json(termine));
+app.get('/termine', (req, res) => {
+    res.json(termine);
+});
 
+// Endpunkt: Termin stornieren
+app.delete('/termine/:id', (req, res) => {
+    const { id } = req.params;
+    const index = termine.findIndex(termin => termin.t_id === parseInt(id, 10));
+    if (index !== -1) {
+        termine.splice(index, 1); // Termin entfernen
+        console.log(`Termin mit ID ${id} wurde storniert.`);
+        res.status(200).send('Termin erfolgreich storniert');
+    } else {
+        res.status(404).send('Termin nicht gefunden');
+    }
+});
+
+//Termine bearbeiten
+app.put('/termine/:id', (req, res) => {
+    const { id } = req.params;
+    const { t_datum, t_uhrzeit } = req.body;
+
+    const termin = termine.find(termin => termin.t_id === parseInt(id, 10));
+    if (termin) {
+        termin.t_datum = t_datum || termin.t_datum;
+        termin.t_uhrzeit = t_uhrzeit || termin.t_uhrzeit;
+
+        console.log(`Termin mit ID ${id} wurde bearbeitet:`, termin);
+        res.status(200).send('Termin erfolgreich bearbeitet');
+    } else {
+        res.status(404).send('Termin nicht gefunden');
+    }
+});
 
 // Start server
 app.listen(PORT, () => {

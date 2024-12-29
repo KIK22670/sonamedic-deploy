@@ -121,3 +121,8 @@ button:hover {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+
+.active-termintyp {
+    border: 2px solid black;
+    background-color: #d9d9d9;
+}

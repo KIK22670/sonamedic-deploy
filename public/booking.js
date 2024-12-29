@@ -6,9 +6,18 @@ let selectedUhrzeit = null;
 let selectedTermintyp = null;
 
 // Funktion: Termintyp auswählen
-function selectTermintyp(termintyp) {
+function selectTermintyp(termintyp, buttonElement) {
     selectedTermintyp = termintyp; // Speichert den ausgewählten Termintyp
     console.log(`Termintyp ausgewählt: ${termintyp}`);
+
+    // Entferne aktive Klasse von allen Buttons
+    document.querySelectorAll('.termintyp-button').forEach(button => {
+        button.classList.remove('active-termintyp');
+    });
+
+    // Füge aktive Klasse zum angeklickten Button hinzu
+    buttonElement.classList.add('active-termintyp');
+
     loadAvailableSlots(); // Lade verfügbare Zeitfenster
 }
 
@@ -98,7 +107,14 @@ async function bookAppointment() {
 
         if (response.ok) {
             console.log('Termin erfolgreich gebucht.');
-            document.getElementById('success-message').style.display = 'block';
+            const successMessage = document.getElementById('success-message');
+            successMessage.style.display = 'block';
+            successMessage.innerHTML = `
+                <p>Termin erfolgreich gebucht!</p>
+                <p>Ihr Termin ist am <strong>${selectedDatum}</strong> um <strong>${selectedUhrzeit}</strong>.</p>
+                <p>Liebe Grüße, Dr. Edlinger</p>
+                <button class="btn btn-secondary" onclick="closeSuccessMessage()">Schließen</button>
+            `;
             resetForm();
             loadAvailableSlots();
         } else {
@@ -107,6 +123,11 @@ async function bookAppointment() {
     } catch (err) {
         console.error('Fehler beim Buchen des Termins:', err);
     }
+}
+
+// Funktion: Schließen der Erfolgsmeldung
+function closeSuccessMessage() {
+    document.getElementById('success-message').style.display = 'none';
 }
 
 // Funktion: Formular zurücksetzen
