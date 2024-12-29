@@ -65,44 +65,43 @@
     </div>
 </nav>
 <!-- Linke Navbar End -->
+<div id="terminverwaltung">
+    <h1>Sie sind dabei, einen Termin zu vereinbaren</h1>
+    <p>HNO-Ordination Dr. Stefan Edlinger<br>Adresse: MEDIZIN am Markt Ärztezentrum, Schönbrunner Str. 9, 1040 Wien</p>
 
-    <div id="terminverwaltung">
-        <h1>Sie sind dabei, einen Termin zu vereinbaren</h1>
-        <p>HNO-Ordination Dr. Stefan Edlinger<br>Adresse: MEDIZIN am Markt Ärztezentrum, Schönbrunner Str. 9, 1040 Wien</p>
-
-        <h2>Wählen Sie den Grund Ihres Termins und eine Uhrzeit aus</h2>
-        <div id="termintyp-container">
-            <button class="termintyp-button" onclick="selectTermintyp('Hörtest und Beratung', this)">Hörtest und Beratung</button>
-            <button class="termintyp-button" onclick="selectTermintyp('Beratung Gehörschutz', this)">Beratung Gehörschutz</button>
-            <button class="termintyp-button" onclick="selectTermintyp('Routineuntersuchung', this)">Routineuntersuchung</button>
-        </div>
-
-        <h2>Verfügbare Termine</h2>
-        <div id="termine-carousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner" id="termine-container"></div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#termine-carousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Vorherige</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#termine-carousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Nächste</span>
-            </button>
-        </div>
-
-        <form id="create-termin-form" style="display: none;">
-            <h2>Terminbuchung</h2>
-            <p><strong>Datum:</strong> <span id="selected-datum"></span></p>
-            <p><strong>Uhrzeit:</strong> <span id="selected-uhrzeit"></span></p>
-            <p><strong>Terminart:</strong> <span id="selected-termintyp"></span></p>
-            <button type="submit">Termin buchen</button>
-        </form>
-
-        <div id="success-message" style="display: none;" class="alert alert-success mt-3" role="alert">
-            Termin erfolgreich gebucht!
-        </div>
+    <h2>Wählen Sie den Grund Ihres Termins und eine Uhrzeit aus</h2>
+    <div id="termintyp-container">
+        <button class="termintyp-button" onclick="selectTermintyp('Hörtest und Beratung', this)">Hörtest und Beratung</button>
+        <button class="termintyp-button" onclick="selectTermintyp('Beratung Gehörschutz', this)">Beratung Gehörschutz</button>
+        <button class="termintyp-button" onclick="selectTermintyp('Routineuntersuchung', this)">Routineuntersuchung</button>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="booking.js"></script>
+
+    <h2>Verfügbare Termine</h2>
+    <div id="termine-carousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner" id="termine-container"></div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#termine-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Vorherige</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#termine-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Nächste</span>
+        </button>
+    </div>
+
+    <form id="create-termin-form" style="display: none;">
+        <h2>Terminbuchung</h2>
+        <p><strong>Datum:</strong> <span id="selected-datum"></span></p>
+        <p><strong>Uhrzeit:</strong> <span id="selected-uhrzeit"></span></p>
+        <p><strong>Terminart:</strong> <span id="selected-termintyp"></span></p>
+        <button type="submit">Termin buchen</button>
+    </form>
+
+    <div id="success-message" style="display: none;" class="alert alert-success mt-3" role="alert">
+        Termin erfolgreich gebucht!
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="booking.js"></script>
 </body>
 </html>
