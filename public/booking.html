@@ -76,10 +76,39 @@
         <button class="termintyp-button" onclick="selectTermintyp('Routineuntersuchung', this)">Routineuntersuchung</button>
     </div>
 
+    <!-- Filter für Monat und Wochentag -->
+    <div id="filters" class="mb-4">
+        <label for="month-filter" class="form-label">Monat:</label>
+        <select id="month-filter" class="form-select mb-3">
+            <option value="" selected>Alle Monate</option>
+            <option value="1">Januar</option>
+            <option value="2">Februar</option>
+            <option value="3">März</option>
+            <option value="4">April</option>
+            <option value="5">Mai</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Dezember</option>
+        </select>
+
+        <label for="day-filter" class="form-label">Wochentag:</label>
+        <select id="day-filter" class="form-select">
+            <option value="" selected>Alle Tage</option>
+            <option value="13">Dienstag</option>
+            <option value="14">Mittwoch</option>
+            <option value="15">Donnerstag</option>
+        </select>
+    </div>
+
     <h2>Verfügbare Termine</h2>
+    <div id="error-message" style="display: none;" class="alert alert-danger mt-3" role="alert"></div>
     <div id="termine-carousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner" id="termine-container"></div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#termine-carousel" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#termine-carousel" data-bs-slide="false">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Vorherige</span>
         </button>
