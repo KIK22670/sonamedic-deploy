@@ -69,8 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
         score = 0;
 
         console.log("Ausgewählte Audios:", selectedAudios); // Debugging
-        playAudio();
-        showQuestion();
+        playAudioAndThenShowQuestion();
     }
 
     // Auswahl zufälliger Audios
@@ -83,15 +82,24 @@ document.addEventListener('DOMContentLoaded', function () {
         return selected;
     }
 
-    // Audio abspielen
-    function playAudio() {
+    // Audio abspielen und danach die Frage anzeigen
+    function playAudioAndThenShowQuestion() {
         const currentAudio = selectedAudios[currentAudioIndex];
         audioPlayer.src = currentAudio.src;
         console.log("Abspielpfad:", audioPlayer.src);
 
+        // Fragebereich während des Audios ausblenden
+        questionText.textContent = ""; 
+        optionsContainer.innerHTML = ""; // Frage und Optionen leeren
+
+        // Audio abspielen und nach dem Ende die Frage anzeigen
         audioPlayer.play()
             .then(() => {
                 console.log(`Audio für Frage ${currentAudioIndex + 1} wird abgespielt.`);
+                audioPlayer.addEventListener("ended", () => {
+                    console.log("Audio beendet, Frage wird angezeigt.");
+                    showQuestion(); // Frage erst nach Audioende anzeigen
+                }, { once: true });
             })
             .catch(error => console.error("Fehler beim Abspielen des Audios:", error));
     }
@@ -127,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function checkAnswer(selectedOption, button) {
         const currentAudio = selectedAudios[currentAudioIndex];
 
-        // Audio stoppen, wenn eine Antwort ausgewählt wurde
+        // Audio stoppen, falls noch nicht beendet
         audioPlayer.pause();
         audioPlayer.currentTime = 0;
 
@@ -155,8 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function nextAudio() {
         currentAudioIndex++;
         if (currentAudioIndex < selectedAudios.length) {
-            playAudio();
-            showQuestion();
+            playAudioAndThenShowQuestion();
         } else {
             endTest();
         }
@@ -171,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("Test abgeschlossen.");
     }
 });
+
 
 // Array of all audio files and their corresponding questions and answers
 const audioData = [
