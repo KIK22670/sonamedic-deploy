@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const questionContainer = document.getElementById("questionContainer");
     const questionText = document.getElementById("questionText");
     const optionsContainer = document.getElementById("optionsContainer");
+    const audioIndicator = document.getElementById("audioIndicator");
 
     let selectedAudios = [];
     let currentAudioIndex = 0;
@@ -88,7 +89,8 @@ document.addEventListener('DOMContentLoaded', function () {
         audioPlayer.src = currentAudio.src;
         console.log("Abspielpfad:", audioPlayer.src);
 
-        // Fragebereich während des Audios ausblenden
+        // Zeige das Symbol während des Audios
+        audioIndicator.style.display = "block";
         questionText.textContent = ""; 
         optionsContainer.innerHTML = ""; // Frage und Optionen leeren
 
@@ -98,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log(`Audio für Frage ${currentAudioIndex + 1} wird abgespielt.`);
                 audioPlayer.addEventListener("ended", () => {
                     console.log("Audio beendet, Frage wird angezeigt.");
+                    audioIndicator.style.display = "none"; // Symbol ausblenden
                     showQuestion(); // Frage erst nach Audioende anzeigen
                 }, { once: true });
             })
@@ -175,9 +178,39 @@ document.addEventListener('DOMContentLoaded', function () {
             <h2>Test abgeschlossen!</h2>
             <p>Ihr Punktestand: ${score} von ${selectedAudios.length}</p>
         `;
-        console.log("Test abgeschlossen.");
-    }
+        console.log('Test abgeschlossen. Ergebnisse:', score);
+    
+        // Ergebnisse speichern
+        const falscheAntworten = selectedAudios.length - score;
+        saveTestResult(score, falscheAntworten);
+    }    
 });
+
+function saveTestResult(richtigeAntworten, falscheAntworten) {
+    console.log('Daten, die gesendet werden:', { richtigeAntworten, falscheAntworten });
+
+    fetch('/speech-in-noise/save-result', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ richtigeAntworten, falscheAntworten }),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                console.error('Fehlerstatus:', response.status);
+                return response.json().then((data) => {
+                    throw new Error(data.error || 'Unbekannter Fehler');
+                });
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log('Erfolgreich gespeichert:', data);
+        })
+        .catch((error) => {
+            console.error('Fehler beim Speichern der Testergebnisse:', error.message);
+        });
+}
+
 
 
 // Array of all audio files and their corresponding questions and answers

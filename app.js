@@ -783,8 +783,93 @@ app.put('/termine/:id', (req, res) => {
 });
 
 //Speech-in-Noise Test 
+app.post('/speech-in-noise/save-result', async (req, res) => {
+    const { richtigeAntworten, falscheAntworten } = req.body;
+    const u_id = req.session.user?.id;
+
+    console.log('Empfangene Daten:', { richtigeAntworten, falscheAntworten, u_id });
+
+    if (!u_id) {
+        console.error('Benutzer nicht authentifiziert.');
+        return res.status(401).json({ error: 'Nicht authentifiziert' });
+    }
+
+    try {
+        // Hole p_id des aktuellen Benutzers
+        const userQuery = await client.query(
+            'SELECT u_p_id FROM u_userverwaltung WHERE u_id = $1',
+            [u_id]
+        );
+        console.log('User Query Result:', userQuery.rows);
+
+        if (userQuery.rows.length === 0) {
+            return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+        }
+
+        const p_id = userQuery.rows[0].u_p_id;
+
+        // Ergebnis speichern
+        const result = await client.query(
+            `INSERT INTO sin_speech_in_noise_test (sin_datum, sin_startzeit, sin_endzeit, sin_ergebnis, sin_p_id)
+             VALUES (CURRENT_DATE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $1, $2)
+             RETURNING sin_id`,
+            [richtigeAntworten / (richtigeAntworten + falscheAntworten), p_id]
+        );
+        console.log('Datenbank Insert Result:', result.rows);
+
+        // Details speichern
+        const sin_id = result.rows[0].sin_id;
+        await client.query(
+            `INSERT INTO sine_ergebnisse (sine_richtigeAntworten, sine_falscheAntworten, sine_sin_id)
+             VALUES ($1, $2, $3)`,
+            [richtigeAntworten, falscheAntworten, sin_id]
+        );
+
+        res.status(201).json({ message: 'Testergebnisse erfolgreich gespeichert.' });
+    } catch (error) {
+        console.error('Fehler beim Speichern:', error);
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
+});
+;
 
 
+
+app.get('/speech-in-noise/results', async (req, res) => {
+    const u_id = req.session.user?.id;
+
+    if (!u_id) {
+        return res.status(401).json({ error: 'Nicht authentifiziert' });
+    }
+
+    try {
+        // Hole p_id des aktuellen Benutzers aus u_userverwaltung
+        const userQuery = await client.query(
+            'SELECT u_p_id FROM u_userverwaltung WHERE u_id = $1',
+            [u_id]
+        );
+
+        if (userQuery.rows.length === 0) {
+            return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+        }
+
+        const p_id = userQuery.rows[0].u_p_id;
+
+        // Abrufen der Testergebnisse aus der Tabelle
+        const results = await client.query(
+            `SELECT sin_datum, sin_ergebnis
+             FROM sin_speech_in_noise_test
+             WHERE sin_p_id = $1
+             ORDER BY sin_datum DESC`,
+            [p_id]
+        );
+
+        res.json(results.rows);
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Testergebnisse:', error);
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
+});
 
 // Start server
 app.listen(PORT, () => {
