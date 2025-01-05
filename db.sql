@@ -245,3 +245,10 @@ CREATE TABLE IF NOT EXISTS sina_antwort (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
+
+--------------------
+
+INSERT INTO tt_termintyp (tt_id, tt_bezeichnung) VALUES
+(1, 'Hörtest und Beratung'),
+(2, 'Beratung Gehörschutz'),
+(3, 'Routineuntersuchung');

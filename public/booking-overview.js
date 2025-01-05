@@ -11,27 +11,65 @@ async function loadAppointments() {
 
         const today = new Date();
 
-        appointments.forEach(appointment => {
-            const appointmentDate = new Date(appointment.t_datum);
-            const container = appointmentDate < today ? pastContainer : upcomingContainer;
+        // Sortiere Termine: Zukünftige Termine aufsteigend, Vergangene Termine absteigend
+        const pastAppointments = appointments
+            .filter(appointment => new Date(appointment.t_datum) < today)
+            .sort((a, b) => new Date(b.t_datum) - new Date(a.t_datum)); // Absteigend
+        const upcomingAppointments = appointments
+            .filter(appointment => new Date(appointment.t_datum) >= today)
+            .sort((a, b) => new Date(a.t_datum) - new Date(b.t_datum)); // Aufsteigend
+
+        // Render Vergangene Termine
+        pastAppointments.forEach(appointment => {
+            const appointmentDate = formatDate(appointment.t_datum);
+            const appointmentTime = formatTime(appointment.t_uhrzeit);
 
             const div = document.createElement('div');
             div.className = 'appointment border p-2 mb-2';
             div.innerHTML = `
-                <p><strong>Datum:</strong> ${appointment.t_datum}</p>
-                <p><strong>Uhrzeit:</strong> ${appointment.t_uhrzeit}</p>
+                <p><strong>Datum:</strong> ${appointmentDate}</p>
+                <p><strong>Uhrzeit:</strong> ${appointmentTime}</p>
                 <p><strong>Typ:</strong> ${appointment.t_termintyp}</p>
-                ${container === upcomingContainer ? `
-                    <button class="btn btn-danger btn-sm" onclick="cancelAppointment(${appointment.t_id})">Stornieren</button>
-                    <button class="btn btn-primary btn-sm" onclick="openEditModal(${appointment.t_id}, '${appointment.t_datum}', '${appointment.t_uhrzeit}')">Bearbeiten</button>
-                ` : ''}
             `;
-            container.appendChild(div);
+            pastContainer.appendChild(div);
+        });
+
+        // Render Offene Termine
+        upcomingAppointments.forEach(appointment => {
+            const appointmentDate = formatDate(appointment.t_datum);
+            const appointmentTime = formatTime(appointment.t_uhrzeit);
+
+            const div = document.createElement('div');
+            div.className = 'appointment border p-2 mb-2';
+            div.innerHTML = `
+                <p><strong>Datum:</strong> ${appointmentDate}</p>
+                <p><strong>Uhrzeit:</strong> ${appointmentTime}</p>
+                <p><strong>Typ:</strong> ${appointment.t_termintyp}</p>
+                <button class="btn btn-danger btn-sm" onclick="cancelAppointment(${appointment.t_id})">Stornieren</button>
+                <button class="btn btn-primary btn-sm" onclick="openEditModal(${appointment.t_id}, '${appointment.t_datum}', '${appointment.t_uhrzeit}')">Bearbeiten</button>
+            `;
+            upcomingContainer.appendChild(div);
         });
     } catch (error) {
         console.error('Fehler beim Laden der Termine:', error);
     }
 }
+
+// Funktion zum Formatieren von Datum im Format DD.MM.YYYY
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Monate sind 0-basiert
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+}
+
+// Funktion zum Formatieren von Zeit im Format HH:MM
+function formatTime(timeString) {
+    const [hours, minutes] = timeString.split(':'); // Sekundenteile ignorieren
+    return `${hours}:${minutes}`;
+}
+
 
 async function cancelAppointment(id) {
     try {
