@@ -1,3 +1,21 @@
+// Funktion zur Umwandlung der Termintyp-ID in den Namen
+function getTermintypName(termintypId) {
+    switch (termintypId) {
+        case '1':
+        case 'Hörtest und Beratung':
+            return 'Hörtest und Beratung';
+        case '2':
+        case 'Beratung Gehörschutz':
+            return 'Beratung Gehörschutz';
+        case '3':
+        case 'Routineuntersuchung':
+            return 'Routineuntersuchung';
+        default:
+            return 'Unbekannter Typ';
+    }
+}
+
+// Funktion zum Laden der Termine
 async function loadAppointments() {
     try {
         const response = await fetch('/termine');
@@ -29,7 +47,7 @@ async function loadAppointments() {
             div.innerHTML = `
                 <p><strong>Datum:</strong> ${appointmentDate}</p>
                 <p><strong>Uhrzeit:</strong> ${appointmentTime}</p>
-                <p><strong>Typ:</strong> ${appointment.t_termintyp}</p>
+                <p><strong>Typ:</strong> ${getTermintypName(appointment.t_termintyp)}</p>
             `;
             pastContainer.appendChild(div);
         });
@@ -44,14 +62,51 @@ async function loadAppointments() {
             div.innerHTML = `
                 <p><strong>Datum:</strong> ${appointmentDate}</p>
                 <p><strong>Uhrzeit:</strong> ${appointmentTime}</p>
-                <p><strong>Typ:</strong> ${appointment.t_termintyp}</p>
+                <p><strong>Typ:</strong> ${getTermintypName(appointment.t_termintyp)}</p>
                 <button class="btn btn-danger btn-sm" onclick="cancelAppointment(${appointment.t_id})">Stornieren</button>
-                <button class="btn btn-primary btn-sm" onclick="openEditModal(${appointment.t_id}, '${appointment.t_datum}', '${appointment.t_uhrzeit}')">Bearbeiten</button>
+                <button class="btn btn-primary btn-sm" onclick="openEditModal(${appointment.t_id}, '${appointment.t_termintyp}')">Bearbeiten</button>
             `;
             upcomingContainer.appendChild(div);
         });
     } catch (error) {
         console.error('Fehler beim Laden der Termine:', error);
+    }
+}
+
+// Funktion zum Bearbeiten des Termins
+async function editAppointment() {
+    const modal = document.getElementById('edit-modal');
+    const id = modal.dataset.id;
+    const newTermintyp = document.getElementById('edit-termintyp-input').value;
+
+    // Wenn der neue Termintyp ein Textwert ist, konvertiere ihn in eine ID
+    let termintypId;
+    switch (newTermintyp) {
+        case 'Hörtest und Beratung':
+            termintypId = '1';
+            break;
+        case 'Beratung Gehörschutz':
+            termintypId = '2';
+            break;
+        case 'Routineuntersuchung':
+            termintypId = '3';
+            break;
+        default:
+            termintypId = newTermintyp; // Falls es sich bereits um eine ID handelt
+    }
+
+    try {
+        await fetch(`/termine/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ t_termintyp: termintypId }), // Nur den neuen Termintyp senden
+        });
+        showAlert('Termin wurde erfolgreich bearbeitet.', 'success');
+        modal.style.display = 'none';
+        loadAppointments();
+    } catch (error) {
+        showAlert('Fehler beim Bearbeiten des Termins.', 'danger');
+        console.error('Fehler beim Bearbeiten des Termins:', error);
     }
 }
 
@@ -81,43 +136,28 @@ async function cancelAppointment(id) {
         console.error('Fehler beim Stornieren des Termins:', error);
     }
 }
-
-async function openEditModal(id, currentDate, currentTime) {
+async function openEditModal(id, currentTermintyp) {
     const modal = document.getElementById('edit-modal');
-    const dateInput = document.getElementById('edit-date-input');
-    const timeInput = document.getElementById('edit-time-input');
+    const termintypInput = document.getElementById('edit-termintyp-input');
 
-    // Lade verfügbare Slots
+    // Lade die verfügbaren Termintypen
     try {
-        const response = await fetch('/slots');
-        const availableSlots = await response.json();
+        const response = await fetch('/termintypen');
+        const text = await response.text();  // Antwort als Text lesen
+        console.log(text);  // Überprüfe den Inhalt der Antwort
+        const termintypen = JSON.parse(text);  // Wenn es gültiges JSON ist, konvertiere es
 
-        const availableDates = [...new Set(availableSlots.map(slot => slot.t_datum))];
-        const availableTimes = availableSlots
-            .filter(slot => slot.t_datum === currentDate)
-            .map(slot => slot.t_uhrzeit);
-
-        // Fülle die Datumauswahl
-        dateInput.innerHTML = '';
-        availableDates.forEach(date => {
+        // Fülle die Auswahl mit den verfügbaren Termintypen
+        termintypInput.innerHTML = '';
+        termintypen.forEach(termintyp => {
             const option = document.createElement('option');
-            option.value = date;
-            option.textContent = date;
-            if (date === currentDate) option.selected = true;
-            dateInput.appendChild(option);
-        });
-
-        // Fülle die Uhrzeitauswahl
-        timeInput.innerHTML = '';
-        availableTimes.forEach(time => {
-            const option = document.createElement('option');
-            option.value = time;
-            option.textContent = time;
-            if (time === currentTime) option.selected = true;
-            timeInput.appendChild(option);
+            option.value = termintyp.tt_id;
+            option.textContent = termintyp.tt_bezeichnung; // Angenommen, das Feld "name" enthält die Bezeichnung
+            if (termintyp.tt_id === currentTermintyp) option.selected = true;
+            termintypInput.appendChild(option);
         });
     } catch (error) {
-        console.error('Fehler beim Laden der verfügbaren Slots:', error);
+        console.error('Fehler beim Laden der Termintypen:', error);
     }
 
     modal.dataset.id = id; // Speichere die ID im Modal
@@ -127,14 +167,13 @@ async function openEditModal(id, currentDate, currentTime) {
 async function editAppointment() {
     const modal = document.getElementById('edit-modal');
     const id = modal.dataset.id;
-    const newDate = document.getElementById('edit-date-input').value;
-    const newTime = document.getElementById('edit-time-input').value;
+    const newTermintyp = document.getElementById('edit-termintyp-input').value;
 
     try {
         await fetch(`/termine/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ t_datum: newDate, t_uhrzeit: newTime }),
+            body: JSON.stringify({ t_termintyp: newTermintyp }), // Nur den Termintyp senden
         });
         showAlert('Termin wurde erfolgreich bearbeitet.', 'success');
         modal.style.display = 'none';
@@ -144,6 +183,7 @@ async function editAppointment() {
         console.error('Fehler beim Bearbeiten des Termins:', error);
     }
 }
+
 
 // Zeigt eine Benachrichtigung auf der Seite an
 function showAlert(message, type) {
