@@ -61,21 +61,24 @@ p {
     font-size: 16px;
     color: #666;
 }
+
 .row {
     display: flex;
-    gap: 10px; /* Verringert den Abstand zwischen den Karten */
+    gap: 20px; /* Fügt Abstand zwischen den Karten hinzu */
+    margin-left: 250px; /* Verschiebt die Karten nach rechts, damit sie nicht von der Sidebar überlappt werden */
 }
 
+/* Angepasste Karte */
 .card {
     flex: 1;
     background-color: #fff;
-    border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-    padding: 20px;
+    padding: 15px; /* Weniger Padding, damit die Karten kleiner werden */
     transition: all 0.3s;
     overflow-y: auto;
-    margin-left: 5%; /* Verringert den Abstand links von der Karte */
+    margin-left: 0; /* Entfernt den Abstand links von der Karte */
+    max-width: 45%; /* Reduziert die Breite der Karten auf 45% der Containerbreite */
 }
 
 .card:hover {
