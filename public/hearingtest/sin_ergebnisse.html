@@ -16,104 +16,135 @@
 </head>
 
 <body>
-   <!-- Navbar Start -->
-   <div class="container-fluid sticky-top bg-white shadow-sm">
-    <div class="container">
-        <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
-            <a href="../home.html" class="navbar-brand">
-                <img src="../img/logo.jpeg" class="logo-img" width="280">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav ms-auto py-0">
-                    <a href="../home.html" class="nav-item nav-link active">Home</a>
-                    <a href="../aboutus.html" class="nav-item nav-link">About Us</a>
-                    <a href="../faq.html" class="nav-item nav-link">FAQ</a>
-                    <a href="../login.html" class="nav-item nav-link">Login</a>
+    <!-- Navbar Start -->
+    <div class="container-fluid sticky-top bg-white shadow-sm">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
+                <a href="../home.html" class="navbar-brand">
+                    <img src="../img/logo.jpeg" class="logo-img" width="280">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto py-0">
+                        <a href="../home.html" class="nav-item nav-link active">Home</a>
+                        <a href="../aboutus.html" class="nav-item nav-link">About Us</a>
+                        <a href="../faq.html" class="nav-item nav-link">FAQ</a>
+                        <a href="../login.html" class="nav-item nav-link">Login</a>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
     </div>
-</div>
-<!-- Navbar End -->
+    <!-- Navbar End -->
 
-<!-- Linke Navbar Start -->
-<nav class="navbar left-navbar">
-<div class="container">
-    <div class="navbar-nav">
-        <a href="../stammdaten.html" class="nav-item nav-link">
-            <i class="bi bi-person-badge"></i> Stammdaten
-        </a>
-        <a href="overview.html" class="nav-item nav-link">
-            <i class="fas fa-headset"></i> Hörtests
-        </a>
-        <a href="ergebnisse.html" class="nav-item nav-link">
-            <i class="fas fa-chart-line"></i> Ergebnisse
-        </a>
-        <a href="../booking.html" class="nav-item nav-link">
-            <i class="bi bi-calendar-plus"></i> Buchung
-        </a>
-        <a href="../booking-overview.html" class="nav-item nav-link">
-            <i class="bi bi-calendar-check"></i> Übersicht
-        </a>
-        <a href="../information.html" class="nav-item nav-link">
-            <i class="fas fa-info-circle"></i> Informationen
-        </a>
-    </div>
-</div>
-</nav>
-<!-- Linke Navbar End -->
+    <!-- Linke Navbar Start -->
+    <nav class="navbar left-navbar">
+        <div class="container">
+            <div class="navbar-nav">
+                <a href="../stammdaten.html" class="nav-item nav-link">
+                    <i class="bi bi-person-badge"></i> Stammdaten
+                </a>
+                <a href="overview.html" class="nav-item nav-link">
+                    <i class="fas fa-headset"></i> Hörtests
+                </a>
+                <a href="ergebnisse.html" class="nav-item nav-link active">
+                    <i class="fas fa-chart-line"></i> Ergebnisse
+                </a>
+                <a href="../booking.html" class="nav-item nav-link">
+                    <i class="bi bi-calendar-plus"></i> Buchung
+                </a>
+                <a href="../booking-overview.html" class="nav-item nav-link">
+                    <i class="bi bi-calendar-check"></i> Übersicht
+                </a>
+                <a href="../information.html" class="nav-item nav-link">
+                    <i class="fas fa-info-circle"></i> Informationen
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Linke Navbar End -->
 
     <div class="container">
         <h2 class="text-center mb-4">Speech-in-Noise-Test Ergebnisse</h2>
 
-        <div class="card">
-            <div class="card-header">Ihre Tests</div>
+        <div class="card results-card">
+            <div class="card-header">Ihre Testergebnisse</div>
             <div class="card-body">
-                <ul id="testList" class="result-list">
-                    <!-- Ergebnisse werden dynamisch geladen -->
-                </ul>
+                <div id="testList" class="row result-list">
+                    <!-- Dynamische Ergebnisse kommen hier -->
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const testList = document.getElementById('testList');
-    
-            // Hole die Testergebnisse vom Server
-            fetch(`/speech-in-noise/results`)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Fehler beim Abrufen der Testergebnisse');
-                    }
-                    return response.json();
-                })
-                .then((results) => {
-                    if (results.length === 0) {
-                        testList.innerHTML = '<li>Keine Testergebnisse verfügbar.</li>';
+    const testList = document.getElementById('testList');
+
+    fetch(`/speech-in-noise/results`)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Fehler beim Abrufen der Testergebnisse');
+            }
+            return response.json();
+        })
+        .then((results) => {
+            if (results.length === 0) {
+                testList.innerHTML = '<div class="col-12 text-center">Keine Testergebnisse verfügbar.</div>';
+            } else {
+                results.forEach((result) => {
+                    let resultClass = '';
+                    let resultMessage = '';
+                    const score = result.sin_ergebnis * 100;
+
+                    if (score === 100) {
+                        resultClass = 'result-excellent';
+                        resultMessage = 'Ihr Hörvermögen ist exzellent. Sie haben alle getesteten Frequenzen und Lautstärken korrekt wahrgenommen, was auf ein gesundes auditorisches System hinweist.';
+                    } else if (score >= 90) {
+                        resultClass = 'result-excellent';
+                        resultMessage = 'Sehr gutes Hörvermögen. Minimale Schwierigkeiten bei der Wahrnehmung leiserer Geräusche in starkem Störgeräuschumfeld.';
+                    } else if (score >= 70) {
+                        resultClass = 'result-good';
+                        resultMessage = 'Gutes Hörvermögen mit gelegentlichen Einschränkungen bei der Trennung von Sprache und Hintergrundgeräuschen. Eine Überprüfung der Hörgesundheit kann ratsam sein.';
+                    } else if (score >= 50) {
+                        resultClass = 'result-average';
+                        resultMessage = 'Ihr Hörvermögen liegt im durchschnittlichen Bereich. Möglicherweise erleben Sie Schwierigkeiten, Sprache in lauten Umgebungen zu verstehen. Ein professioneller Hörtest wird empfohlen.';
                     } else {
-                        // Füge die Ergebnisse zur Liste hinzu
-                        results.forEach((result, index) => {
-                            const listItem = document.createElement('li');
-                            listItem.className = 'result-item';
-                            listItem.innerHTML = `
-                                <div>
-                                    <b>Testdatum:</b> ${new Date(result.sin_datum).toLocaleDateString()}<br>
-                                    <b>Ergebnis:</b> ${(result.sin_ergebnis * 100).toFixed(2)}%
-                                </div>
-                            `;
-                            testList.appendChild(listItem);
-                        });
+                        resultClass = 'result-poor';
+                        resultMessage = 'Ihr Hörvermögen ist stark eingeschränkt. Es wäre ratsam, einen HNO-Arzt oder Hörakustiker für eine umfassende Diagnostik zu konsultieren.';
                     }
-                })
-                .catch((error) => {
-                    console.error('Fehler beim Laden der Ergebnisse:', error);
-                    testList.innerHTML = '<li>Fehler beim Laden der Ergebnisse. Bitte versuchen Sie es später erneut.</li>';
+
+                    const listItem = document.createElement('div');
+                    listItem.className = 'col-lg-4 col-md-6 col-sm-12 mb-4';
+                    listItem.innerHTML = `
+                        <div class="result-card ${resultClass}">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5><strong>Testdatum:</strong> ${new Date(result.sin_datum).toLocaleDateString()}</h5>
+                                    <p><strong>Ergebnis:</strong> ${(score).toFixed(2)}%</p>
+                                </div>
+                                <div class="progress-wrapper">
+                                    <div class="result-message" style="margin-left: 10px;">
+                                        <p>${resultMessage}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: ${score}%" aria-valuenow="${score}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    `;
+                    testList.appendChild(listItem);
                 });
+            }
+        })
+        .catch((error) => {
+            console.error('Fehler beim Laden der Ergebnisse:', error);
+            testList.innerHTML = '<div class="col-12 text-center">Fehler beim Laden der Ergebnisse. Bitte versuchen Sie es später erneut.</div>';
         });
+});
     </script>    
 </body>
 
