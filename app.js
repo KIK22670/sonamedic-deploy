@@ -924,7 +924,6 @@ app.get('/speech-in-noise/check-today', async (req, res) => {
     }
 });
 
-// Speech-in-Noise Test - Ergebnisse speichern
 app.post('/speech-in-noise/save-result', async (req, res) => {
     const { richtigeAntworten, falscheAntworten } = req.body;
     const u_id = req.session.user?.id;
@@ -934,27 +933,44 @@ app.post('/speech-in-noise/save-result', async (req, res) => {
     }
 
     try {
-        // Prüfe, ob der Benutzer mit einem Patienteneintrag verknüpft ist
-        let userQuery = await client.query(
+        // Prüfe, ob der Benutzer bereits mit einer Patienten-ID verknüpft ist
+        const userQuery = await client.query(
             'SELECT u_p_id FROM u_userverwaltung WHERE u_id = $1',
             [u_id]
         );
 
         let p_id = userQuery.rows[0]?.u_p_id;
 
-        // Wenn keine Patienten-ID vorhanden ist, erstelle einen neuen Patienteneintrag
         if (!p_id) {
-            const insertPatientQuery = await client.query(
-                `INSERT INTO p_patienten (p_vorname, p_nachname) VALUES ('', '') RETURNING p_id`
+            // Falls keine p_id vorhanden ist, prüfe, ob bereits ein Patient mit der gleichen ID existiert
+            const existingPatient = await client.query(
+                'SELECT p_id FROM p_patienten WHERE p_id = $1',
+                [u_id]
             );
 
-            p_id = insertPatientQuery.rows[0].p_id;
+            if (existingPatient.rows.length > 0) {
+                // Falls der Patient existiert, verknüpfe ihn mit dem Benutzer
+                p_id = existingPatient.rows[0].p_id;
 
-            // Verknüpfe den neuen Patienteneintrag mit dem Benutzer
-            await client.query(
-                `UPDATE u_userverwaltung SET u_p_id = $1 WHERE u_id = $2`,
-                [p_id, u_id]
-            );
+                await client.query(
+                    'UPDATE u_userverwaltung SET u_p_id = $1 WHERE u_id = $2',
+                    [p_id, u_id]
+                );
+            } else {
+                // Falls kein Patient existiert, erstelle einen neuen Patienteneintrag
+                const insertPatient = await client.query(
+                    'INSERT INTO p_patienten (p_id) VALUES ($1) RETURNING p_id',
+                    [u_id]
+                );
+
+                p_id = insertPatient.rows[0].p_id;
+
+                // Verknüpfe den neuen Patienten-Eintrag mit dem Benutzer
+                await client.query(
+                    'UPDATE u_userverwaltung SET u_p_id = $1 WHERE u_id = $2',
+                    [p_id, u_id]
+                );
+            }
         }
 
         // Ergebnis speichern
