@@ -884,15 +884,12 @@ app.put('/termine/:id', async (req, res) => {
     }
 });
 
-//Speech-in-Noise Test 
-app.post('/speech-in-noise/save-result', async (req, res) => {
-    const { richtigeAntworten, falscheAntworten } = req.body;
+// Speech-in-Noise Test
+// Speech-in-Noise Test - Überprüfen, ob der Test heute bereits gemacht wurde
+app.get('/speech-in-noise/check-today', async (req, res) => {
     const u_id = req.session.user?.id;
 
-    console.log('Empfangene Daten:', { richtigeAntworten, falscheAntworten, u_id });
-
     if (!u_id) {
-        console.error('Benutzer nicht authentifiziert.');
         return res.status(401).json({ error: 'Nicht authentifiziert' });
     }
 
@@ -902,13 +899,63 @@ app.post('/speech-in-noise/save-result', async (req, res) => {
             'SELECT u_p_id FROM u_userverwaltung WHERE u_id = $1',
             [u_id]
         );
-        console.log('User Query Result:', userQuery.rows);
 
         if (userQuery.rows.length === 0) {
             return res.status(404).json({ error: 'Benutzer nicht gefunden' });
         }
 
         const p_id = userQuery.rows[0].u_p_id;
+
+        // Prüfen, ob der Benutzer heute bereits einen Test durchgeführt hat
+        const today = new Date().toISOString().split('T')[0];
+        const testTodayQuery = await client.query(
+            `SELECT * FROM sin_speech_in_noise_test WHERE sin_p_id = $1 AND sin_datum = $2`,
+            [p_id, today]
+        );
+
+        if (testTodayQuery.rows.length > 0) {
+            res.json({ alreadyTaken: true });
+        } else {
+            res.json({ alreadyTaken: false });
+        }
+    } catch (error) {
+        console.error('Fehler beim Überprüfen des Tests:', error);
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
+});
+
+// Speech-in-Noise Test - Ergebnisse speichern
+app.post('/speech-in-noise/save-result', async (req, res) => {
+    const { richtigeAntworten, falscheAntworten } = req.body;
+    const u_id = req.session.user?.id;
+
+    if (!u_id) {
+        return res.status(401).json({ error: 'Nicht authentifiziert' });
+    }
+
+    try {
+        // Prüfe, ob der Benutzer mit einem Patienteneintrag verknüpft ist
+        let userQuery = await client.query(
+            'SELECT u_p_id FROM u_userverwaltung WHERE u_id = $1',
+            [u_id]
+        );
+
+        let p_id = userQuery.rows[0]?.u_p_id;
+
+        // Wenn keine Patienten-ID vorhanden ist, erstelle einen neuen Patienteneintrag
+        if (!p_id) {
+            const insertPatientQuery = await client.query(
+                `INSERT INTO p_patienten (p_vorname, p_nachname) VALUES ('', '') RETURNING p_id`
+            );
+
+            p_id = insertPatientQuery.rows[0].p_id;
+
+            // Verknüpfe den neuen Patienteneintrag mit dem Benutzer
+            await client.query(
+                `UPDATE u_userverwaltung SET u_p_id = $1 WHERE u_id = $2`,
+                [p_id, u_id]
+            );
+        }
 
         // Ergebnis speichern
         const result = await client.query(
@@ -917,7 +964,6 @@ app.post('/speech-in-noise/save-result', async (req, res) => {
              RETURNING sin_id`,
             [richtigeAntworten / (richtigeAntworten + falscheAntworten), p_id]
         );
-        console.log('Datenbank Insert Result:', result.rows);
 
         // Details speichern
         const sin_id = result.rows[0].sin_id;
@@ -933,9 +979,6 @@ app.post('/speech-in-noise/save-result', async (req, res) => {
         res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
-;
-
-
 
 app.get('/speech-in-noise/results', async (req, res) => {
     const u_id = req.session.user?.id;

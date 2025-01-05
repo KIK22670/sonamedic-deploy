@@ -50,11 +50,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Test starten
     startTestProcessBtn.addEventListener("click", () => {
-        console.log("Test starten Button geklickt.");
-        audioPlayer.pause();
-        document.querySelector(".card").style.display = "none"; // Einstiegskarte ausblenden
-        questionContainer.style.display = "block"; // Fragencontainer anzeigen
-        startTest();
+        // Überprüfen, ob der Benutzer den Test heute bereits gemacht hat
+        fetch('/speech-in-noise/check-today')
+            .then((response) => {
+                if (!response.ok) {
+                    return response.json().then((data) => {
+                        throw new Error(data.error || 'Unbekannter Fehler');
+                    });
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.alreadyTaken) {
+                    // Modal anzeigen
+                    const modal = new bootstrap.Modal(document.getElementById('testTakenModal'));
+                    modal.show();
+                } else {
+                    // Wenn der Test heute noch nicht gemacht wurde, Test starten
+                    console.log("Test starten Button geklickt.");
+                    audioPlayer.pause();
+                    document.querySelector(".card").style.display = "none"; // Einstiegskarte ausblenden
+                    questionContainer.style.display = "block"; // Fragencontainer anzeigen
+                    startTest();
+                }
+            })
+            .catch((error) => {
+                console.error('Fehler beim Überprüfen des Tests:', error.message);
+                alert('Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.');
+            });
     });
 
     // Testlogik starten
