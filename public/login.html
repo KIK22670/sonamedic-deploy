@@ -86,6 +86,9 @@
                         <input type="password" id="password" name="passwort" placeholder="Password" required>
                     </div>
 
+                    <!-- Fehleranzeige-Bereich -->
+                     <div id="error" class="error-message" style="display: none;"></div>
+
                     <!-- Remember Me und Forgot Password Links in einer Zeile -->
                     <div class="remember-forgot">
                         <a href="passwordreset.html" class="forgot-password">Forgot Password?</a>
@@ -121,6 +124,18 @@
         </div>
     </div>
     <!-- Footer End -->
+    <script>
+       window.onload = function () {
+    const params = new URLSearchParams(window.location.search);
+    const errorMessage = params.get('error');
+    if (errorMessage) {
+        const errorDiv = document.getElementById('error');
+        errorDiv.style.display = 'block';  // Make error message visible
+        errorDiv.innerHTML = errorMessage;  // Display the error message
+    }
+};
+
+        </script>
 
 </body>
 

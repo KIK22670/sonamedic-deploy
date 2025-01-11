@@ -315,14 +315,13 @@ app.get('/verify-email/:token', async (req, res) => {
     }
 });
 
-// Login route
 app.post('/login', async (req, res) => {
     try {
         const { email, passwort } = req.body;
         console.log('Request Body:', req.body);
 
         if (!passwort) {
-            return res.status(400).json({ error: 'Password is required' });
+            return res.redirect(`/login?error=Passwort ist erforderlich.`);
         }
 
         const query = {
@@ -337,21 +336,21 @@ app.post('/login', async (req, res) => {
             const user = result.rows[0];
 
             if (!user.u_verified) {
-                return res.status(401).json({ error: 'Please verify your email address before logging in' });
+                return res.redirect(`/login?error=Bitte bestätigen Sie Ihre E-Mail-Adresse, bevor Sie sich anmelden.`);
             }
 
             if (bcrypt.compareSync(passwort, user.u_passwort)) {
                 req.session.user = { id: user.u_id, email: user.u_email };
                 res.redirect('/stammdaten');
             } else {
-                res.status(401).json({ error: 'Invalid email or password' });
+                return res.redirect(`/login?error=Ungültige E-Mail oder Passwort.`);
             }
         } else {
-            res.status(401).json({ error: 'Invalid email or password' });
+            return res.redirect(`/login?error=Ungültige E-Mail oder Passwort.`);
         }
     } catch (error) {
         console.error('Error during login:', error);
-        res.status(500).json({ error: error.message });
+        return res.redirect(`/login?error=Ein interner Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.`);
     }
 });
 
