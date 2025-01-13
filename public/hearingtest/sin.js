@@ -82,13 +82,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Testlogik starten
     function startTest() {
-        if (availableAudios.length < 5) {
-            // Wenn weniger als 5 Fragen übrig sind, Fragenpool zurücksetzen
-            console.log("Fragenpool wird zurückgesetzt.");
-            availableAudios = [...audioData];
-        }
+        // Fragenpool mischen, damit es wirklich jedes Mal zufällig ist
+        availableAudios = shuffleArray([...audioData]);
 
-        selectedAudios = selectRandomAudios(5); // Wähle 5 zufällige Fragen
+        // Wählen Sie 5 zufällige Fragen aus dem gemischten Pool
+        selectedAudios = availableAudios.slice(0, 5); 
         currentAudioIndex = 0;
         score = 0;
 
@@ -97,13 +95,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Auswahl zufälliger Audios
-    function selectRandomAudios(count) {
-        const selected = [];
-        for (let i = 0; i < count; i++) {
-            const randomIndex = Math.floor(Math.random() * availableAudios.length);
-            selected.push(availableAudios.splice(randomIndex, 1)[0]);
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // Elemente tauschen
         }
-        return selected;
+        return array;
     }
 
     // Audio abspielen und danach die Frage anzeigen
