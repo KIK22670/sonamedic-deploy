@@ -130,11 +130,18 @@ button:hover {
     background-color: #0056b3;
 }
 
+#alert-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
 .alert {
-    padding: 15px;
-    background-color: #f8d7da;
-    color: #721c24;
-    margin-top: 20px;
-    border-radius: 5px;
-    border: 1px solid #f5c6cb;
+    width: 50%; /* Definiert die Breite */
+    text-align: left;
+    border-radius: 10px;
+    background-color: #d4edda; /* Grün für Erfolg */
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }

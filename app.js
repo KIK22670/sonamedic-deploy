@@ -872,6 +872,7 @@ app.get('/termintypen', async (req, res) => {
         res.status(500).json({ error: 'Interner Serverfehler' });  // JSON zurückgeben bei Fehler
     }
 });
+
 // Endpunkt: Termin bearbeiten
 app.put('/termine/:id', async (req, res) => {
     const { id } = req.params;
