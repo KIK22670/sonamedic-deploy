@@ -132,14 +132,17 @@ button:hover {
 
 #alert-box {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Zentriert den Inhalt horizontal */
     align-items: center;
     margin-top: 10px;
+    margin-left: 250px; /* Gleicher Abstand wie die Sidebar */
+    width: calc(100% - 300px); /* Breite zwischen Sidebar und rechtem Rand */
+    text-align: center; /* Text zentrieren */
 }
 
 .alert {
     width: 50%; /* Definiert die Breite */
-    text-align: left;
+    text-align: center;
     border-radius: 10px;
     background-color: #d4edda; /* Grün für Erfolg */
     color: #155724;

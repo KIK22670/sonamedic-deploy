@@ -194,6 +194,7 @@ function showAlert(message, type) {
     }, 3000);
 }
 
+
 // Schließe das Bearbeitungsmodal
 function closeEditModal() {
     const modal = document.getElementById('edit-modal');
