@@ -103,10 +103,10 @@ function selectSlot(t_datum, t_uhrzeit) {
     document.getElementById('create-termin-form').style.display = 'block';
 }
 
-// Funktion: Termin buchen
+/// Funktion Termine buchen
 async function bookAppointment() {
     if (!selectedTermintyp) {
-        showErrorMessage('Bitte wählen Sie zuerst einen Termintyp aus.');
+        showBookingError('Bitte wählen Sie zuerst einen Termintyp aus.');
         return;
     }
 
@@ -121,25 +121,37 @@ async function bookAppointment() {
             }),
         });
 
+        const responseData = await response.json();
+
         if (response.ok) {
             console.log('Termin erfolgreich gebucht.');
-            const successMessage = document.getElementById('success-message');
-            successMessage.style.display = 'block';
-            successMessage.innerHTML = `
+            document.getElementById('success-message').style.display = 'block';
+            document.getElementById('success-message').innerHTML = `
                 <p>Termin erfolgreich gebucht!</p>
                 <p>Ihr Termin ist am <strong>${selectedDatum}</strong> um <strong>${selectedUhrzeit}</strong>.</p>
                 <p>Liebe Grüße, Dr. Edlinger</p>
                 <button class="btn btn-secondary" onclick="closeSuccessMessage()">Schließen</button>
             `;
+
             resetForm();
-            loadAvailableSlots();
+            await loadAvailableSlots(); // 🔄 **Liste der freien Termine aktualisieren**
         } else {
-            showErrorMessage('Fehler beim Buchen des Termins.');
+            showBookingError(responseData.error || 'Fehler beim Buchen des Termins.');
         }
     } catch (err) {
-        console.error('Fehler beim Buchen des Termins:', err);
+        console.error('Fehler beim Buchen:', err);
+        showBookingError('Ein unerwarteter Fehler ist aufgetreten.');
     }
 }
+
+function showBookingError(message) {
+    const bookingErrorContainer = document.getElementById('booking-error-message');
+    bookingErrorContainer.style.display = 'block';
+    bookingErrorContainer.innerHTML = `<p class="text-danger">${message}</p>`;
+}
+
+
+
 
 // Funktion: Schließen der Erfolgsmeldung
 function closeSuccessMessage() {
