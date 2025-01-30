@@ -1053,6 +1053,63 @@ app.get('/speech-in-noise/results', async (req, res) => {
     }
 });
 
+// Überprüfung der letzten beiden Reintonaudiometrie-Ergebnisse
+app.get('/api/check-speech-in-noise-test', async (req, res) => {
+    const u_id = req.session.user?.id;
+
+    if (!u_id) {
+        return res.status(401).json({ error: 'Nicht authentifiziert' });
+    }
+
+    try {
+        const userQuery = await client.query(
+            'SELECT u_p_id FROM u_userverwaltung WHERE u_id = $1',
+            [u_id]
+        );
+
+        if (userQuery.rows.length === 0) {
+            return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+        }
+
+        const p_id = userQuery.rows[0].u_p_id;
+
+        // Abrufen der letzten beiden Speech-in-Noise-Tests
+        const testQuery = await client.query(
+            `SELECT sin_datum, sin_ergebnis FROM sin_speech_in_noise_test 
+             WHERE sin_p_id = $1 ORDER BY sin_datum DESC LIMIT 2`,
+            [p_id]
+        );
+
+        if (testQuery.rows.length < 2) {
+            return res.status(200).json({ alert: true, message: 'Es wurde noch kein Speech-in-Noise-Test durchgeführt. Bitte buchen Sie einen Termin.' });
+        }
+
+        const lastTwoTests = testQuery.rows;
+        const [firstTest, secondTest] = lastTwoTests;
+
+        if (firstTest.sin_ergebnis < 1 && secondTest.sin_ergebnis < 1) {
+            return res.json({ alert: true, message: 'Ihre letzten beiden Speech-in-Noise-Ergebnisse liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.' });
+        }
+
+        const lastTestDate = new Date(firstTest.sin_datum);
+        const currentDate = new Date();
+        const diffTime = Math.abs(currentDate - lastTestDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays >= 7) {
+            return res.json({ alert: true, message: 'Es ist Zeit, den Speech-in-Noise-Test durchzuführen.' });
+        }
+
+        res.json({ alert: false });
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Speech-in-Noise-Test-Daten:', error);
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
+});
+
+
+
+
 // Start server
 app.listen(PORT, () => {
     console.log(`Server läuft auf http://localhost:${PORT}`);
