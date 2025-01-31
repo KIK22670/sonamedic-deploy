@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Benachrichtigungen</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet" />
-    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
+     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/stammdaten.css" rel="stylesheet" />
     <link href="css/stylehome.css" rel="stylesheet" />
     <style>
@@ -27,7 +23,6 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 15px;
             padding: 15px;
-          
         }
         .notification-card h5 {
             margin-bottom: 10px;
@@ -51,6 +46,14 @@
             font-size: 12px;
             padding: 5px;
             border-radius: 50%;
+        }
+        .close-btn {
+            cursor: pointer;
+            color: red;
+            font-size: 18px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
     </style>
 </head>
@@ -125,35 +128,55 @@
             const notificationsList = document.getElementById('notificationsList');
             let notificationCount = 0;
     
-            // Überprüft, ob Benachrichtigungen für den Speech-in-Noise-Test erforderlich sind
+            // Benachrichtigungen für "Speech-in-Noise" Test
             fetch('http://localhost:3000/api/check-speech-in-noise-test')
-    .then(response => response.json())
-    .then(data => {
-        if (data.alert) {
-            const alertDiv = document.createElement('div');
-            alertDiv.classList.add('alert', 'alert-warning');
-            alertDiv.innerHTML = `
-                <strong>Es ist Zeit!</strong> ${data.message}
-            `;
-            notificationsList.prepend(alertDiv);
-            notificationCount++;
-        }
-    })
-    .catch((error) => {
-        console.error('Fehler beim Abrufen der Benachrichtigungen:', error);
-    });
-
+                .then(response => response.json())
+                .then(data => {
+                    if (data.alert) {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.classList.add('alert', 'alert-warning');
+                        alertDiv.innerHTML = `<strong>Es ist Zeit!</strong> ${data.message}`;
+                        notificationsList.prepend(alertDiv);
+                        notificationCount++;
+                    }
+                })
+                .catch(error => console.error('Fehler beim Abrufen der Benachrichtigungen:', error));
+    
+            // Benachrichtigungen für Hörtests < 50%
+            fetch('http://localhost:3000/api/check-hearing-test-results')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.alert) {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.classList.add('alert', 'alert-warning');
+                        alertDiv.innerHTML = `<strong>Wenig Ergebnisse!</strong> ${data.message}`;
+                        notificationsList.prepend(alertDiv);
+                        notificationCount++;
+                    }
+                })
+                .catch(error => console.error('Fehler beim Abrufen der Benachrichtigungen:', error));
+    
+            // Benachrichtigungen für 7 Tage keine Tests
+            fetch('http://localhost:3000/api/check-seven-days-no-test')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.alert) {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.classList.add('alert', 'alert-warning');
+                        alertDiv.innerHTML = `<strong>Überprüfen Sie Ihre Tests!</strong> ${data.message}`;
+                        notificationsList.prepend(alertDiv);
+                        notificationCount++;
+                    }
+                })
+                .catch(error => console.error('Fehler beim Abrufen der Benachrichtigungen:', error));
     
             // Anzeige der Benachrichtigungsanzahl
+            const notificationCountElement = document.getElementById('notificationCount');
             if (notificationCount > 0) {
-                const notificationCountElement = document.getElementById('notificationCount');
                 notificationCountElement.style.display = 'inline';
                 notificationCountElement.textContent = notificationCount;
             }
         });
-    </script>
-    
-    
-
+    </script>  
 </body>
 </html>

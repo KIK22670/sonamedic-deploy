@@ -1053,61 +1053,58 @@ app.get('/speech-in-noise/results', async (req, res) => {
     }
 });
 
-// Überprüfung der letzten beiden Reintonaudiometrie-Ergebnisse
-app.get('/api/check-speech-in-noise-test', async (req, res) => {
-    const u_id = req.session.user?.id;
-
-    if (!u_id) {
-        return res.status(401).json({ error: 'Nicht authentifiziert' });
-    }
-
+// Überprüft, ob der letzte Hörtest unter 50% lag
+app.get('/api/check-hearing-test-results', async (req, res) => {
     try {
-        const userQuery = await client.query(
-            'SELECT u_p_id FROM u_userverwaltung WHERE u_id = $1',
-            [u_id]
-        );
+        const result = await client.query(`
+            SELECT * FROM reintonaudiometrie_ergebnisse
+            WHERE p_id = 1 AND ergebnis = FALSE
+            ORDER BY erstellt_am DESC
+            LIMIT 1;
+        `);
+        const lastTest = result.rows[0];
 
-        if (userQuery.rows.length === 0) {
-            return res.status(404).json({ error: 'Benutzer nicht gefunden' });
-        }
-
-        const p_id = userQuery.rows[0].u_p_id;
-
-        // Abrufen der letzten beiden Speech-in-Noise-Tests
-        const testQuery = await client.query(
-            `SELECT sin_datum, sin_ergebnis FROM sin_speech_in_noise_test 
-             WHERE sin_p_id = $1 ORDER BY sin_datum DESC LIMIT 2`,
-            [p_id]
-        );
-
-        if (testQuery.rows.length < 2) {
-            return res.status(200).json({ alert: true, message: 'Es wurde noch kein Speech-in-Noise-Test durchgeführt. Bitte buchen Sie einen Termin.' });
-        }
-
-        const lastTwoTests = testQuery.rows;
-        const [firstTest, secondTest] = lastTwoTests;
-
-        if (firstTest.sin_ergebnis < 1 && secondTest.sin_ergebnis < 1) {
-            return res.json({ alert: true, message: 'Ihre letzten beiden Speech-in-Noise-Ergebnisse liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.' });
-        }
-
-        const lastTestDate = new Date(firstTest.sin_datum);
-        const currentDate = new Date();
-        const diffTime = Math.abs(currentDate - lastTestDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        if (diffDays >= 7) {
-            return res.json({ alert: true, message: 'Es ist Zeit, den Speech-in-Noise-Test durchzuführen.' });
+        if (lastTest && lastTest.ergebnis === false) {
+            return res.json({
+                alert: true,
+                message: 'Ein Hörtest lag unter 50%. Bitte buchen Sie einen Termin.'
+            });
         }
 
         res.json({ alert: false });
-    } catch (error) {
-        console.error('Fehler beim Abrufen der Speech-in-Noise-Test-Daten:', error);
-        res.status(500).json({ error: 'Interner Serverfehler' });
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Hörtest-Ergebnisse:', err);
+        res.status(500).send('Serverfehler');
     }
 });
 
+// Überprüft, ob der letzte Speech-in-Noise-Test mehr als 7 Tage zurückliegt
+app.get('/api/check-seven-days-no-test', async (req, res) => {
+    try {
+        const result = await client.query(`
+            SELECT * FROM sin_speech_in_noise_test
+            WHERE sin_p_id = 1
+            ORDER BY sin_datum DESC
+            LIMIT 1;
+        `);
 
+        const lastTest = result.rows[0];
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        if (lastTest && new Date(lastTest.sin_datum) < sevenDaysAgo) {
+            return res.json({
+                alert: true,
+                message: 'Es ist Zeit für einen neuen Test. Der letzte Test war vor mehr als 7 Tagen.'
+            });
+        }
+
+        res.json({ alert: false });
+    } catch (err) {
+        console.error('Fehler beim Abrufen des Testdatums:', err);
+        res.status(500).send('Serverfehler');
+    }
+});
 
 
 // Start server
