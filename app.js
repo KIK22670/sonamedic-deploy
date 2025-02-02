@@ -26,8 +26,6 @@ app.use(session({
 }));
 
 
-
-
 // Set SendGrid API key
 sgMail.setApiKey(process.env.MY_API_KEY);
 
@@ -614,6 +612,9 @@ app.get('/reset-password/:token', async (req, res) => {
     }
 });
 
+//--------------------------------------------------------------
+// Reintonaudiometrie
+
 // Endpunkt zum Speichern von Reintonaudiometrie-Ergebnissen
 app.post('/saveTestResult', async (req, res) => {
     const { p_id, testNumber, frequency, result, ear } = req.body; 
@@ -660,7 +661,8 @@ app.get('/getAudiometrieTests', async (req, res) => {
     }
 });
 
-// Termine 
+//--------------------------------------------------------------
+// Terminverwaltung
 
 // Öffnungszeiten
 const openingHours = {
@@ -782,66 +784,58 @@ app.get('/slots', async (req, res) => {
     }
 });
 
-
-
-
 // Endpunkt: Termin buchen
 app.post('/termine', async (req, res) => {
     const { t_datum, t_uhrzeit, t_termintyp } = req.body;
-    const t_p_id = req.session.user?.id; // Patienten-ID aus der Session
+    const t_p_id = req.session.user?.id;
 
-    if (!t_p_id || !t_termintyp || !t_datum || !t_uhrzeit) {
-        return res.status(400).json({ error: 'Fehlende Daten. Bitte überprüfen Sie die Eingabe.' });
+    console.log('Eingehende Buchungsdaten:', { t_datum, t_uhrzeit, t_termintyp, t_p_id });
+
+    if (!t_p_id || !t_termintyp) {
+        console.error('Fehlende erforderliche Felder:', { t_p_id, t_termintyp });
+        return res.status(400).send('Patienten-ID und Termintyp sind erforderlich');
     }
 
     try {
-        // Prüfen, ob der Termin bereits gebucht wurde
-        const existingAppointment = await client.query(
-            'SELECT * FROM t_termine WHERE t_datum = $1 AND t_uhrzeit = $2',
-            [t_datum, t_uhrzeit]
-        );
-
-        if (existingAppointment.rows.length > 0) {
-            return res.status(400).json({ error: 'Dieser Termin ist bereits vergeben.' });
-        }
-
-        // Termintyp-ID abrufen
+        // Abrufen der Termintyp-ID
         const termintypResult = await client.query(
             'SELECT tt_id FROM tt_termintyp WHERE tt_bezeichnung = $1',
             [t_termintyp]
         );
 
         if (termintypResult.rows.length === 0) {
-            return res.status(400).json({ error: 'Ungültiger Termintyp' });
+            console.error('Ungültiger Termintyp:', t_termintyp);
+            return res.status(400).send('Ungültiger Termintyp');
         }
 
         const tt_termintyp_tt_id = termintypResult.rows[0].tt_id;
 
-        // Zeitslot-ID abrufen
+        // Abrufen der Zeitslot-ID
         const zeitslotResult = await client.query(
             'SELECT z_id FROM z_zeitslots WHERE z_startzeit = $1',
             [t_uhrzeit]
         );
 
         if (zeitslotResult.rows.length === 0) {
-            return res.status(400).json({ error: 'Ungültiges Zeitfenster' });
+            console.error('Ungültiges Zeitfenster:', t_uhrzeit);
+            return res.status(400).send('Ungültiges Zeitfenster');
         }
 
         const z_zeitslots_z_id = zeitslotResult.rows[0].z_id;
 
-        // Termin in die Datenbank einfügen
+        // Termin einfügen
         const result = await client.query(
             'INSERT INTO t_termine (t_datum, t_uhrzeit, t_termintyp, t_p_id, tt_termintyp_tt_id, z_zeitslots_z_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
             [t_datum, t_uhrzeit, t_termintyp, t_p_id, tt_termintyp_tt_id, z_zeitslots_z_id]
         );
 
-        res.status(201).json(result.rows[0]); // Erfolgreiche Buchung
+        console.log('Termin erfolgreich gebucht:', result.rows[0]);
+        res.status(201).json(result.rows[0]);
     } catch (error) {
-        console.error('Fehler beim Buchen:', error);
-        res.status(500).json({ error: 'Interner Serverfehler' });
+        console.error('Fehler beim Hinzufügen eines Termins:', error.message, error.stack);
+        res.status(500).send('Interner Serverfehler');
     }
 });
-
 
 
 
@@ -883,7 +877,6 @@ app.get('/termintypen', async (req, res) => {
         res.status(500).json({ error: 'Interner Serverfehler' });  // JSON zurückgeben bei Fehler
     }
 });
-
 // Endpunkt: Termin bearbeiten
 app.put('/termine/:id', async (req, res) => {
     const { id } = req.params;
@@ -904,6 +897,8 @@ app.put('/termine/:id', async (req, res) => {
         res.status(500).send('Interner Serverfehler');
     }
 });
+
+//-----------------------------------------------------
 
 // Speech-in-Noise Test
 // Speech-in-Noise Test - Überprüfen, ob der Test heute bereits gemacht wurde
@@ -1052,96 +1047,6 @@ app.get('/speech-in-noise/results', async (req, res) => {
         res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
-
-// Überprüft, ob der letzte Hörtest unter 50% lag
-// Überprüft, ob der letzte Hörtest unter 50% lag
-app.get('/api/check-speech-in-noise-test', async (req, res) => {
-    try {
-        const result = await client.query(`
-            SELECT * FROM sin_speech_in_noise_test
-            WHERE sin_p_id = 1
-            ORDER BY sin_datum DESC
-            LIMIT 1;
-        `);
-
-        const lastResult = result.rows;
-
-        if (lastResult.length === 1 && lastResult.every(r => r.sin_ergebnis < 0.50)) {
-            return res.json({
-                alert: true,
-                message: 'Ihr letztes Speech-in-Noise-Ergebnis liegt unter 50%. Bitte buchen Sie einen Termin für eine Überprüfung.'
-            });
-        }
-
-        res.json({ alert: false });
-    } catch (err) {
-        res.status(500).send('Serverfehler');
-    }
-});
-
-
-// Überprüft, ob die letzten 2 Hörtests unter 100% liegen
-app.get('/api/check-speech-in-noise-test2', async (req, res) => {
-    try {
-        console.log("Check Speech-in-Noise Test request received");
-
-        // Holen der letzten 2 Ergebnisse des Speech-in-Noise-Tests
-        const result = await client.query(`
-            SELECT * FROM sin_speech_in_noise_test
-            WHERE sin_p_id = 1  -- Ersetze 1 mit der aktuellen Patienten-ID
-            ORDER BY sin_datum DESC
-            LIMIT 2;
-        `);
-
-        console.log("Query result:", result.rows);
-
-        const lastTwoResults = result.rows;
-
-        // Wenn beide letzten Ergebnisse unter 50% liegen
-        if (lastTwoResults.length === 2 && lastTwoResults.every(r => r.sin_ergebnis < 1.00)) {
-            return res.json({
-                alert: true,
-                message: 'Ihre letzten 2 Speech-in-Noise-Ergebnisse liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.'
-            });
-        }
-
-        res.json({ alert: false });
-    } catch (err) {
-        console.error('Fehler beim Abrufen der Ergebnisse:', err);
-        res.status(500).send('Serverfehler');
-    }
-});
-
-
-
-// Überprüft, ob der letzte Speech-in-Noise-Test mehr als 7 Tage zurückliegt
-app.get('/api/check-seven-days-no-test', async (req, res) => {
-    try {
-        const result = await client.query(`
-            SELECT * FROM sin_speech_in_noise_test
-            WHERE sin_p_id = 1
-            ORDER BY sin_datum DESC
-            LIMIT 1;
-        `);
-
-        const lastTest = result.rows[0];
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-        if (lastTest && new Date(lastTest.sin_datum) < sevenDaysAgo) {
-            return res.json({
-                alert: true,
-                message: 'Es ist Zeit für einen neuen Test. Der letzte Test war vor mehr als 7 Tagen.'
-            });
-        }
-
-        res.json({ alert: false });
-    } catch (err) {
-        console.error('Fehler beim Abrufen des Testdatums:', err);
-        res.status(500).send('Serverfehler');
-    }
-});
-
 
 // Start server
 app.listen(PORT, () => {
