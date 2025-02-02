@@ -83,34 +83,35 @@
     <!-- Navbar End -->
 
     <!-- Linke Navbar Start -->
-    <nav class="navbar left-navbar">
-        <div class="container">
-            <div class="navbar-nav">
-                <a href="notification.html" class="nav-item nav-link">
-                    <i class="fas fa-bell"></i> Benachrichtigungen
-                </a>
-                <a href="stammdaten.html" class="nav-item nav-link">
-                    <i class="bi bi-person-badge"></i> Stammdaten
-                </a>
-                <a href="hearingtest/overview.html" class="nav-item nav-link">
-                    <i class="fas fa-headset"></i> Hörtests
-                </a>
-                <a href="hearingtest/ergebnisse.html" class="nav-item nav-link">
-                    <i class="fas fa-chart-line"></i> Ergebnisse
-                </a>
-                <a href="booking.html" class="nav-item nav-link">
-                    <i class="bi bi-calendar-plus"></i> Buchung
-                </a>
-                <a href="booking-overview.html" class="nav-item nav-link">
-                    <i class="bi bi-calendar-check"></i> Übersicht
-                </a>
-                <a href="information.html" class="nav-item nav-link">
-                    <i class="fas fa-info-circle"></i> Informationen
-                </a>
-            </div>
+<nav class="navbar left-navbar">
+    <div class="container">
+        <div class="navbar-nav">
+            <a href="notification.html" class="nav-item nav-link">
+                <i class="fas fa-bell"></i> Benachrichtigungen
+            </a>
+            <a href="stammdaten.html" class="nav-item nav-link">
+                <i class="bi bi-person-badge"></i> Stammdaten
+            </a>
+            <a href="hearingtest/overview.html" class="nav-item nav-link">
+                <i class="fas fa-headset"></i> Hörtests
+            </a>
+            <a href="hearingtest/ergebnisse.html" class="nav-item nav-link">
+                <i class="fas fa-chart-line"></i> Ergebnisse
+            </a>
+            <a href="booking.html" class="nav-item nav-link">
+                <i class="bi bi-calendar-plus"></i> Buchung
+            </a>
+            <a href="booking-overview.html" class="nav-item nav-link">
+                <i class="bi bi-calendar-check"></i> Übersicht
+            </a>
+            <a href="information.html" class="nav-item nav-link">
+                <i class="fas fa-info-circle"></i> Informationen
+            </a>
         </div>
-    </nav>
-    <!-- Linke Navbar End -->
+    </div>
+</nav>
+<!-- Linke Navbar End -->
+
 
     <!-- Notification Section -->
     <div class="notification-container">
@@ -127,49 +128,59 @@
         document.addEventListener('DOMContentLoaded', function () {
             const notificationsList = document.getElementById('notificationsList');
             let notificationCount = 0;
-    
+
+            function createNotification(message, redirectUrl, notificationId) {
+                if (localStorage.getItem(notificationId)) return; // Verhindert das erneute Anzeigen
+
+                const alertDiv = document.createElement('div');
+                alertDiv.classList.add('notification-card');
+                const currentTime = new Date().toLocaleString();
+                
+                alertDiv.innerHTML = `
+                    <h5>Benachrichtigung</h5>
+                    <p>${message}</p>
+                    <span class="notification-time">${currentTime}</span>
+                    <button class="notification-button" onclick="window.location.href='${redirectUrl}'">Mehr erfahren</button>
+                    <span class="close-btn" onclick="this.parentElement.remove(); localStorage.setItem('${notificationId}', 'true')">&#10006;</span>
+                `;
+                notificationsList.prepend(alertDiv);
+                notificationCount++;
+            }
+
             // Benachrichtigungen für "Speech-in-Noise" Test
             fetch('http://localhost:3000/api/check-speech-in-noise-test')
-                .then(response => response.json())
+                .then(response => {
+                    return response.json();
+                })
                 .then(data => {
                     if (data.alert) {
-                        const alertDiv = document.createElement('div');
-                        alertDiv.classList.add('alert', 'alert-warning');
-                        alertDiv.innerHTML = `<strong>Es ist Zeit!</strong> ${data.message}`;
-                        notificationsList.prepend(alertDiv);
-                        notificationCount++;
+                        createNotification('Ihr letztes Speech-in-Noise-Ergebnis liegt unter 50%. Bitte buchen Sie einen Termin für eine Überprüfung.', '/booking.html', 'speech_in_noise_test');
                     }
                 })
                 .catch(error => console.error('Fehler beim Abrufen der Benachrichtigungen:', error));
-    
-            // Benachrichtigungen für Hörtests < 50%
-            fetch('http://localhost:3000/api/check-hearing-test-results')
-                .then(response => response.json())
+
+            // Benachrichtigungen für "Speech-in-Noise" Test 2
+            fetch('http://localhost:3000/api/check-speech-in-noise-test2')
+                .then(response => {
+                    return response.json();
+                })
                 .then(data => {
                     if (data.alert) {
-                        const alertDiv = document.createElement('div');
-                        alertDiv.classList.add('alert', 'alert-warning');
-                        alertDiv.innerHTML = `<strong>Wenig Ergebnisse!</strong> ${data.message}`;
-                        notificationsList.prepend(alertDiv);
-                        notificationCount++;
+                        createNotification('Ihre letzten 2 Speech-in-Noise-Ergebnisse liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.', '/booking.html', 'speech_in_noise_test2');
                     }
                 })
                 .catch(error => console.error('Fehler beim Abrufen der Benachrichtigungen:', error));
-    
+
             // Benachrichtigungen für 7 Tage keine Tests
             fetch('http://localhost:3000/api/check-seven-days-no-test')
                 .then(response => response.json())
                 .then(data => {
                     if (data.alert) {
-                        const alertDiv = document.createElement('div');
-                        alertDiv.classList.add('alert', 'alert-warning');
-                        alertDiv.innerHTML = `<strong>Überprüfen Sie Ihre Tests!</strong> ${data.message}`;
-                        notificationsList.prepend(alertDiv);
-                        notificationCount++;
+                        createNotification('Es ist Zeit für einen neuen Test. Der letzte Test war vor mehr als 7 Tagen.', '/hearingtest/sin.html', 'seven_days_no_test');
                     }
                 })
                 .catch(error => console.error('Fehler beim Abrufen der Benachrichtigungen:', error));
-    
+
             // Anzeige der Benachrichtigungsanzahl
             const notificationCountElement = document.getElementById('notificationCount');
             if (notificationCount > 0) {
@@ -177,6 +188,6 @@
                 notificationCountElement.textContent = notificationCount;
             }
         });
-    </script>  
+    </script> 
 </body>
 </html>

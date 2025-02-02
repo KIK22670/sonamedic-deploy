@@ -1054,29 +1054,65 @@ app.get('/speech-in-noise/results', async (req, res) => {
 });
 
 // Überprüft, ob der letzte Hörtest unter 50% lag
-app.get('/api/check-hearing-test-results', async (req, res) => {
+// Überprüft, ob der letzte Hörtest unter 50% lag
+app.get('/api/check-speech-in-noise-test', async (req, res) => {
     try {
         const result = await client.query(`
-            SELECT * FROM reintonaudiometrie_ergebnisse
-            WHERE p_id = 1 AND ergebnis = FALSE
-            ORDER BY erstellt_am DESC
+            SELECT * FROM sin_speech_in_noise_test
+            WHERE sin_p_id = 1
+            ORDER BY sin_datum DESC
             LIMIT 1;
         `);
-        const lastTest = result.rows[0];
 
-        if (lastTest && lastTest.ergebnis === false) {
+        const lastResult = result.rows;
+
+        if (lastResult.length === 1 && lastResult.every(r => r.sin_ergebnis < 0.50)) {
             return res.json({
                 alert: true,
-                message: 'Ein Hörtest lag unter 50%. Bitte buchen Sie einen Termin.'
+                message: 'Ihr letztes Speech-in-Noise-Ergebnis liegt unter 50%. Bitte buchen Sie einen Termin für eine Überprüfung.'
             });
         }
 
         res.json({ alert: false });
     } catch (err) {
-        console.error('Fehler beim Abrufen der Hörtest-Ergebnisse:', err);
         res.status(500).send('Serverfehler');
     }
 });
+
+
+// Überprüft, ob die letzten 2 Hörtests unter 100% liegen
+app.get('/api/check-speech-in-noise-test2', async (req, res) => {
+    try {
+        console.log("Check Speech-in-Noise Test request received");
+
+        // Holen der letzten 2 Ergebnisse des Speech-in-Noise-Tests
+        const result = await client.query(`
+            SELECT * FROM sin_speech_in_noise_test
+            WHERE sin_p_id = 1  -- Ersetze 1 mit der aktuellen Patienten-ID
+            ORDER BY sin_datum DESC
+            LIMIT 2;
+        `);
+
+        console.log("Query result:", result.rows);
+
+        const lastTwoResults = result.rows;
+
+        // Wenn beide letzten Ergebnisse unter 50% liegen
+        if (lastTwoResults.length === 2 && lastTwoResults.every(r => r.sin_ergebnis < 1.00)) {
+            return res.json({
+                alert: true,
+                message: 'Ihre letzten 2 Speech-in-Noise-Ergebnisse liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.'
+            });
+        }
+
+        res.json({ alert: false });
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Ergebnisse:', err);
+        res.status(500).send('Serverfehler');
+    }
+});
+
+
 
 // Überprüft, ob der letzte Speech-in-Noise-Test mehr als 7 Tage zurückliegt
 app.get('/api/check-seven-days-no-test', async (req, res) => {
