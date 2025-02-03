@@ -19,6 +19,7 @@
         .notification-container {
             padding: 20px;
             margin-left: 17%;
+            padding-top: 50px;
         }
         .notification-card {
             background-color: #fff;
@@ -26,6 +27,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 15px;
             padding: 15px;
+            position: relative;
         }
         .notification-card h5 {
             margin-bottom: 10px;
@@ -52,11 +54,12 @@
         }
         .close-btn {
             cursor: pointer;
-            color: red;
-            font-size: 18px;
+            color: #ff0000;
+            font-size: 20px;
             position: absolute;
             top: 10px;
             right: 10px;
+            z-index: 10;
         }
     </style>
 </head>
@@ -85,7 +88,6 @@
     </div>
     <!-- Navbar End -->
 
-   
     <!-- Linke Navbar Start -->
 <nav class="navbar left-navbar">
     <div class="container">
@@ -133,28 +135,49 @@
             let notificationCount = 0;
 
             function createNotification(message, redirectUrl, notificationId) {
-                if (localStorage.getItem(notificationId)) return; // Verhindert das erneute Anzeigen
+                // Verhindert das erneute Anzeigen der Benachrichtigung, wenn sie bereits geschlossen wurde
+                if (localStorage.getItem(notificationId)) return;
 
                 const alertDiv = document.createElement('div');
                 alertDiv.classList.add('notification-card');
-                const currentTime = new Date().toLocaleString();
                 
+                // Uhrzeit nur beim ersten Laden setzen, sonst bleibt sie gleich
+                let notificationTime = localStorage.getItem(`${notificationId}-time`);
+                if (!notificationTime) {
+                    notificationTime = new Date().toLocaleString();
+                    localStorage.setItem(`${notificationId}-time`, notificationTime); // Speichern der Uhrzeit
+                }
+
                 alertDiv.innerHTML = `
                     <h5>Benachrichtigung</h5>
                     <p>${message}</p>
-                    <span class="notification-time">${currentTime}</span>
+                    <span class="notification-time">${notificationTime}</span>
                     <button class="notification-button" onclick="window.location.href='${redirectUrl}'">Mehr erfahren</button>
-                    <span class="close-btn" onclick="this.parentElement.remove(); localStorage.setItem('${notificationId}', 'true')">&#10006;</span>
+                    <span class="close-btn" id="close-btn-${notificationId}">&#10006;</span>
                 `;
+                
                 notificationsList.prepend(alertDiv);
                 notificationCount++;
+
+                // Hinzufügen des Event-Listeners für das Schließen der Benachrichtigung
+                const closeButton = document.getElementById(`close-btn-${notificationId}`);
+                closeButton.addEventListener('click', function() {
+                    closeNotification(notificationId);
+                });
+            }
+
+            // Funktion zum Schließen der Benachrichtigung
+            function closeNotification(notificationId) {
+                // Entfernt die Benachrichtigung aus der Anzeige
+                const notificationElement = document.getElementById(`close-btn-${notificationId}`).parentElement;
+                notificationElement.remove();
+                // Speichert im localStorage, dass die Benachrichtigung geschlossen wurde
+                localStorage.setItem(notificationId, 'true');
             }
 
             // Benachrichtigungen für "Speech-in-Noise" Test
             fetch('http://localhost:3000/api/check-speech-in-noise-test')
-                .then(response => {
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     if (data.alert) {
                         createNotification('Ihr letztes Speech-in-Noise-Ergebnis liegt unter 50%. Bitte buchen Sie einen Termin für eine Überprüfung.', '/booking.html', 'speech_in_noise_test');
@@ -164,9 +187,7 @@
 
             // Benachrichtigungen für "Speech-in-Noise" Test 2
             fetch('http://localhost:3000/api/check-speech-in-noise-test2')
-                .then(response => {
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     if (data.alert) {
                         createNotification('Ihre letzten 2 Speech-in-Noise-Ergebnisse liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.', '/booking.html', 'speech_in_noise_test2');
@@ -191,6 +212,6 @@
                 notificationCountElement.textContent = notificationCount;
             }
         });
-    </script> 
+    </script>
 </body>
 </html>

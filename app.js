@@ -1041,6 +1041,13 @@ app.get('/speech-in-noise/results', async (req, res) => {
             [p_id]
         );
 
+        res.json(results.rows);
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Testergebnisse:', error);
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
+});
+
 // Überprüft, ob der letzte Hörtest unter 50% lag
 app.get('/api/check-speech-in-noise-test', async (req, res) => {
     try {
@@ -1112,13 +1119,6 @@ app.get('/api/check-seven-days-no-test', async (req, res) => {
     } catch (err) {
         console.error('Fehler beim Abrufen des Testdatums:', err);
         res.status(500).send('Serverfehler');
-    }
-});
-
-        res.json(results.rows);
-    } catch (error) {
-        console.error('Fehler beim Abrufen der Testergebnisse:', error);
-        res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
 
