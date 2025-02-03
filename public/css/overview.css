@@ -3,7 +3,7 @@ body {
     background-color: #f8f9fa;
 }
 
-/* Linke Sidebar */
+/* Linke Sidebar (Unverändert) */
 .left-navbar {
     position: fixed;
     top: 60px;
@@ -31,15 +31,30 @@ body {
 /* Hauptinhalt */
 .main-content {
     margin-left: 220px;
-    padding: 20px;
+    padding: 40px;
+    text-align: center;
 }
-.card {
+
+.page-title {
+    font-size: 2rem;
+    color: #4e4e4e;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.sub-title {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-bottom: 30px;
+}
+
+/* Card */
+.custom-card {
+    max-width: 600px;
+    margin: 0 auto;
     border: none;
     border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-left: 27%;
-    margin-bottom: 20%;
-    margin-top: 20%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
@@ -47,40 +62,16 @@ body {
     color: #ffffff;
     border-bottom: none;
     border-radius: 15px 15px 0 0;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .card-body {
-    padding: 20px;
+    padding: 25px;
+    font-size: 16px;
 }
 
-.form-group {
-    margin-bottom: 20px;
-}
-
-label {
-    font-weight: bold;
-    color: #866a67;
-}
-
-.btn-primary {
-    background-color: #866a67;
-    border: none;
-    padding: 10px 20px;
-}
-
-.btn-primary:hover {
-    background-color: #786765;
-}
-
-.btn-success {
-    background-color: #786765;
-    border-color: #786765;
-}
-
-textarea[readonly] {
-    background-color: #e9ecef;
-}
-
+/* Buttons */
 .custom-button {
     background: linear-gradient(135deg, #866a67, #786765);
     color: #ffffff;
@@ -99,20 +90,4 @@ textarea[readonly] {
     background: linear-gradient(135deg, #786765, #5a4f4b);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
-}
-
-.custom-button:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(120, 103, 101, 0.3);
-}
-
-.instruction-text {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #4e4e4e;
-
-    margin-bottom: 20px;
-    font-family: 'Lato', sans-serif; /* Professionelle Schriftart */
-    letter-spacing: 0.5px;
-    line-height: 1.6;
 }

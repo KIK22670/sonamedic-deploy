@@ -60,88 +60,178 @@
     </div>
     <!-- Navbar End -->
 
-    <div class="container mt-5">
-        <h2>Häufig gestellte Fragen (FAQ)</h2>
-        <p>Antworten auf häufig gestellte Fragen zur Nutzung von SonaMedic:</p>
-
-        <!-- Frage 1 -->
-        <div class="accordion-item">
-            <button class="accordion-button" onclick="toggleCollapse('collapse1')">
-                Frage 1: Was ist SonaMedic?
-            </button>
-            <div id="collapse1" class="accordion-body">
-                SonaMedic ist eine Webapplikation zur Überwachung und Verbesserung des Hörvermögens. Sie ermöglicht es Nutzern, bequem von zu Hause aus zwei audiometrische Tests – den Speech-in-Noise-Test und die Reintonaudiometrie – durchzuführen. Die Ergebnisse werden in einem persönlichen Profil gespeichert, um Veränderungen im Hörvermögen zu dokumentieren und nachzuverfolgen.
+    <div class="container-fluid mt-5">
+        <h2 class="faq-title">Häufig gestellte Fragen (FAQ)</h2>
+        <p class="text-center">Hier finden Sie Antworten auf häufig gestellte Fragen zur Nutzung von SonaMedic.</p>
+    
+        <div class="faq-container">
+            <!-- Frage 1 -->
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleCollapse('collapse1')">
+                    <span>Was ist SonaMedic?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="collapse1" class="faq-answer">
+                    SonaMedic ist eine Webapplikation zur Überwachung und Verbesserung des Hörvermögens. Sie ermöglicht es Nutzern, bequem von zu Hause aus zwei audiometrische Tests – den Speech-in-Noise-Test und die Reintonaudiometrie – durchzuführen. Die Ergebnisse werden in einem persönlichen Profil gespeichert, um Veränderungen im Hörvermögen zu dokumentieren und nachzuverfolgen.
+                </div>
             </div>
-        </div>
-
-        <!-- Frage 2 -->
-        <div class="accordion-item">
-            <button class="accordion-button" onclick="toggleCollapse('collapse2')">
-                Frage 2: Wie führe ich einen Hörtest durch?
-            </button>
-            <div id="collapse2" class="accordion-body">
-                Um einen Test durchzuführen, melden Sie sich bei SonaMedic an und wählen Sie entweder den Speech-in-Noise-Test oder die Reintonaudiometrie aus. Befolgen Sie die Anweisungen auf der Plattform, um den Test durchzuführen und Ihre Ergebnisse zu erhalten.
+    
+            <!-- Frage 2 -->
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleCollapse('collapse2')">
+                    <span>Wie führe ich einen Hörtest durch?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="collapse2" class="faq-answer">
+                    Melden Sie sich bei SonaMedic an und wählen Sie den gewünschten Test aus. Befolgen Sie die Anweisungen auf der Plattform, um den Test durchzuführen und Ihre Ergebnisse zu erhalten.
+                </div>
             </div>
-        </div>
-
-        <!-- Frage 3 -->
-        <div class="accordion-item">
-            <button class="accordion-button" onclick="toggleCollapse('collapse3')">
-                Frage 3: Gibt es Kosten für die Nutzung von SonaMedic?
-            </button>
-            <div id="collapse3" class="accordion-body">
-                Die Nutzung von SonaMedic ist für alle Patienten kostenlos. Sie können die Tests jederzeit durchführen und Ihre Ergebnisse einsehen, ohne Gebühren zu zahlen.
+    
+            <!-- Frage 3 -->
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleCollapse('collapse3')">
+                    <span>Gibt es Kosten für die Nutzung von SonaMedic?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="collapse3" class="faq-answer">
+                    Nein, die Nutzung von SonaMedic ist für alle Patienten kostenlos. Sie können die Tests jederzeit durchführen und Ihre Ergebnisse einsehen, ohne Gebühren zu zahlen.
+                </div>
             </div>
-        </div>
-
-        <!-- Frage 4 -->
-        <div class="accordion-item">
-            <button class="accordion-button" onclick="toggleCollapse('collapse4')">
-                Frage 4: Wie buche ich einen Termin bei Dr. Stefan Edlinger?
-            </button>
-            <div id="collapse4" class="accordion-body">
-                Wenn Ihre Testergebnisse Auffälligkeiten zeigen, können Sie direkt über die SonaMedic-Plattform einen Termin bei Dr. Stefan Edlinger buchen. Die Anwendung bietet eine benutzerfreundliche Funktion zur sofortigen Terminvereinbarung.
+    
+            <!-- Frage 4 -->
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleCollapse('collapse4')">
+                    <span>Wie buche ich einen Termin bei Dr. Stefan Edlinger?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="collapse4" class="faq-answer">
+                    Wenn Ihre Testergebnisse Auffälligkeiten zeigen, können Sie direkt über die SonaMedic-Plattform einen Termin bei Dr. Stefan Edlinger buchen. Die Anwendung bietet eine benutzerfreundliche Funktion zur sofortigen Terminvereinbarung.
+                </div>
             </div>
-        </div>
-
-        <!-- Frage 5 -->
-        <div class="accordion-item">
-            <button class="accordion-button" onclick="toggleCollapse('collapse5')">
-                Frage 5: Wie werden meine Testergebnisse gespeichert?
-            </button>
-            <div id="collapse5" class="accordion-body">
-                Ihre Testergebnisse werden sicher in Ihrem persönlichen SonaMedic-Profil gespeichert. So können Sie Veränderungen im Hörvermögen über die Zeit hinweg verfolgen und Ihre Ergebnisse bei Bedarf mit einem Arzt teilen.
+    
+            <!-- NEUE FRAGEN -->
+    
+            <!-- Frage 5 -->
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleCollapse('collapse5')">
+                    <span>Wie merke ich, ob ich eine Hörminderung habe?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="collapse5" class="faq-answer">
+                    Typische Anzeichen einer Hörminderung sind Schwierigkeiten, Gespräche in lauten Umgebungen zu verstehen, häufiges Nachfragen oder das Gefühl, dass andere undeutlich sprechen. Ein Hörtest auf SonaMedic kann erste Hinweise geben.
+                </div>
             </div>
-        </div>
-
-        <!-- Frage 6 -->
-        <div class="accordion-item">
-            <button class="accordion-button" onclick="toggleCollapse('collapse6')">
-                Frage 6: Was passiert, wenn ein Testergebnis auffällig ist?
-            </button>
-            <div id="collapse6" class="accordion-body">
-                Wenn ein Testergebnis auffällig ist, benachrichtigt SonaMedic Sie und ermöglicht es Ihnen, direkt einen Termin mit Dr. Stefan Edlinger zu vereinbaren, um Ihre Ergebnisse zu besprechen und gegebenenfalls weiterführende Untersuchungen zu erhalten.
+    
+            <!-- Frage 6 -->
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleCollapse('collapse6')">
+                    <span>Kann ich mein Gehör trainieren oder verbessern?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="collapse6" class="faq-answer">
+                    Ja, es gibt Hörtrainingsprogramme, die das Gehirn dabei unterstützen, Töne und Sprache besser zu verarbeiten. Regelmäßige Tests helfen Ihnen, Veränderungen frühzeitig zu erkennen.
+                </div>
             </div>
-        </div>
-
-        <!-- Frage 7 -->
-        <div class="accordion-item">
-            <button class="accordion-button" onclick="toggleCollapse('collapse7')">
-                Frage 7: Wie sicher sind meine persönlichen Daten bei SonaMedic?
-            </button>
-            <div id="collapse7" class="accordion-body">
-                Die Sicherheit Ihrer persönlichen Daten ist uns sehr wichtig. SonaMedic verwendet moderne Verschlüsselung und Sicherheitsmaßnahmen, um sicherzustellen, dass Ihre Informationen stets geschützt sind.
+    
+            <!-- Frage 7 -->
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleCollapse('collapse7')">
+                    <span>Welche Internetverbindung wird für die Tests benötigt?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="collapse7" class="faq-answer">
+                    Eine stabile Internetverbindung wird empfohlen, damit die Tests ohne Verzögerungen durchgeführt werden können. Eine langsame Verbindung kann die Genauigkeit der Tests beeinflussen.
+                </div>
             </div>
+    
         </div>
-
     </div>
-
+    
+    <!-- JavaScript für das Ein- und Ausklappen -->
     <script>
         function toggleCollapse(id) {
             var element = document.getElementById(id);
-            element.style.display = (element.style.display === 'none' || element.style.display === '') ? 'block' : 'none';
+            var icon = element.previousElementSibling.querySelector("i");
+    
+            if (element.style.display === "block") {
+                element.style.display = "none";
+                icon.classList.remove("fa-chevron-up");
+                icon.classList.add("fa-chevron-down");
+            } else {
+                element.style.display = "block";
+                icon.classList.remove("fa-chevron-down");
+                icon.classList.add("fa-chevron-up");
+            }
         }
     </script>
+    
+    <!-- CSS für das Styling -->
+    <style>
+        /* FAQ-Container über gesamte Breite */
+        .faq-container {
+            max-width: 95%;
+            margin: auto;
+            background-color: #f7f3eb;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        /* Titel */
+        .faq-title {
+            color: #5e5643;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+    
+        /* Jede einzelne Frage */
+        .faq-item {
+            background-color: #e6dbc8;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            transition: 0.3s ease-in-out;
+        }
+    
+        /* Frage-Button */
+        .faq-question {
+            width: 100%;
+            background-color: #d4c8b8;
+            color: black;
+            font-weight: bold;
+            padding: 15px;
+            border: none;
+            text-align: left;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+    
+        /* Frage-Button Hover-Effekt */
+        .faq-question:hover {
+            background-color: #c2b6a4;
+        }
+    
+        /* Antwortfeld */
+        .faq-answer {
+            display: none;
+            padding: 15px;
+            background-color: #f5eee0;
+            color: #333;
+            border-radius: 0 0 10px 10px;
+        }
+    
+        /* Icon für Ein-/Ausklappen */
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+    </style>
+    
 
    <!-- Footer Start -->
 <div class="container-fluid text-light border-top border-secondary py-4" style="background-color: #9a9385;">

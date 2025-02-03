@@ -2,104 +2,73 @@
 <html lang="de">
 <head>
     <title>Hörtest Übersicht</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="img/favicon.ico">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet" />
-    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-    <link href="../css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../css/overview.css" rel="stylesheet" />
-    <link href="../css/stylehome.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/overview.css" rel="stylesheet">
+    <link href="../css/stylehome.css" rel="stylesheet">
 </head>
 <body>
-     <!-- Navbar Start -->
-     <div class="container-fluid sticky-top bg-white shadow-sm">
-        <div class="container">
-            <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
-                <a href="../home.html" class="navbar-brand">
-                    <img src="../img/logo.jpeg" class="logo-img" width="280">
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <div class="navbar-nav ms-auto py-0">
-                        <a href="../home.html" class="nav-item nav-link active">Home</a>
-                        <a href="../aboutus.html" class="nav-item nav-link">About Us</a>
-                        <a href="../faq.html" class="nav-item nav-link">FAQ</a>
-                        <a href="../login.html" class="nav-item nav-link">Login</a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </div>
-    <!-- Navbar End -->
 
-    <!-- Linke Navbar Start -->
+<!-- Navbar Start -->
+<div class="container-fluid sticky-top bg-white shadow-sm">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light py-3">
+            <a href="../home.html" class="navbar-brand">
+                <img src="../img/logo.jpeg" class="logo-img" width="200">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto py-0">
+                    <a href="../home.html" class="nav-item nav-link active">Home</a>
+                    <a href="../aboutus.html" class="nav-item nav-link">Über Uns</a>
+                    <a href="../faq.html" class="nav-item nav-link">FAQ</a>
+                    <a href="../login.html" class="nav-item nav-link">Login</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- Navbar End -->
+
+<!-- Linke Sidebar (Bleibt gleich) -->
 <nav class="navbar left-navbar">
     <div class="container">
         <div class="navbar-nav">
-            <a href="../notification.html" class="nav-item nav-link">
-                <i class="fas fa-bell"></i> Nachrichten
-            </a>           
-            <a href="../stammdaten.html" class="nav-item nav-link">
-                <i class="bi bi-person-badge"></i> Stammdaten
-            </a>
-            <a href="overview.html" class="nav-item nav-link">
-                <i class="fas fa-headset"></i> Hörtests
-            </a>
-            <a href="ergebnisse.html" class="nav-item nav-link">
-                <i class="fas fa-chart-line"></i> Ergebnisse
-            </a>
-            <a href="../booking.html" class="nav-item nav-link">
-                <i class="bi bi-calendar-plus"></i> Buchung
-            </a>
-            <a href="../booking-overview.html" class="nav-item nav-link">
-                <i class="bi bi-calendar-check"></i> Übersicht
-            </a>
-            <a href="../information.html" class="nav-item nav-link">
-                <i class="fas fa-info-circle"></i> Informationen
-            </a>
+            <a href="../notification.html" class="nav-item nav-link"><i class="fas fa-bell"></i> Nachrichten</a>           
+            <a href="../stammdaten.html" class="nav-item nav-link"><i class="bi bi-person-badge"></i> Stammdaten</a>
+            <a href="overview.html" class="nav-item nav-link active"><i class="fas fa-headset"></i> Hörtests</a>
+            <a href="ergebnisse.html" class="nav-item nav-link"><i class="fas fa-chart-line"></i> Ergebnisse</a>
+            <a href="../booking.html" class="nav-item nav-link"><i class="bi bi-calendar-plus"></i> Buchung</a>
+            <a href="../booking-overview.html" class="nav-item nav-link"><i class="bi bi-calendar-check"></i> Übersicht</a>
+            <a href="../information.html" class="nav-item nav-link"><i class="fas fa-info-circle"></i> Informationen</a>
         </div>
     </div>
 </nav>
-<!-- Linke Navbar End -->
-
- <!-- Begrüßung -->
- <div class="container mt-5 text-center">
-</div>
+<!-- Linke Sidebar Ende -->
 
 <!-- Hauptinhalt -->
-<div class="container mt-5" style="max-width: 800px;">
-    <div class="card">
+<div class="container main-content">
+    <h1 class="page-title">🎧 Hörtest Übersicht</h1>
+    <p class="sub-title">Wählen Sie einen Hörtest aus und starten Sie Ihre Analyse</p>
+
+    <div class="card custom-card">
         <div class="card-header">Hörtest Auswahl</div>
         <div class="card-body">
-            <p>Guten Tag! Bitte wählen Sie einen Hörtest aus:</p>
-            <button class="btn btn-primary" id="speechInNoiseBtn">Speech in Noise Test</button>
-            <button class="btn btn-primary" id="reintonaudiometrieBtn">Reintonaudiometrie</button>
+            <p>Bitte wählen Sie einen Hörtest:</p>
+            <button class="custom-button" id="speechInNoiseBtn">🎤 Speech in Noise Test</button>
+            <button class="custom-button" id="reintonaudiometrieBtn">🔊 Reintonaudiometrie</button>
         </div>
     </div>
 </div>
-<!-- Footer Start -->
-<div class="container-fluid text-light border-top border-secondary py-4" style="background-color: #9a9385;">
-    <div class="container">
-        <div class="row g-5">
-            <div class="col-md-6 text-center text-md-start">
-                <p class="mb-md-0" style="color: #ffffff;">&copy; <a class="text-light" href="#">SonaMedic</a>. 
-                  </p>
-            </div>
-            <div class="col-md-6 text-center text-md-end">
-                <a href="impressum.html" style="margin-right: 10px; color: #ffffff;">Impressum</a>
-                <a href="datenschutz.html" style="color: #ffffff;">Datenschutz</a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Footer End -->
 
-</script>
-    <script src="overview.js"></script>
+<script src="overview.js"></script>
 </body>
 </html>

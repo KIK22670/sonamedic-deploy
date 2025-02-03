@@ -23,12 +23,32 @@
     background-color: #4e5560;
 }
 
-
+/* Hauptinhalt */
 .main-content {
     margin-left: 250px;
     padding: 20px;
+    text-align: center; /* Zentriert den Text */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Zentriert die Karten und Inhalte */
 }
 
+/* Header zentrieren */
+.info-header {
+    text-align: center;
+    margin-bottom: 30px;
+    max-width: 800px;
+}
+
+/* Karten-Container */
+.container .row {
+    display: flex;
+    justify-content: center; /* Zentriert die Karten */
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Karten */
 .card {
     background-color: #fff;
     border-radius: 8px;
@@ -36,6 +56,8 @@
     margin-bottom: 20px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 600px; /* Breitere Karten */
 }
 
 .card:hover {
@@ -43,20 +65,19 @@
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
 
+/* Karten-Header */
 .card-header {
-    background-color: #866a67;
+    background-color: #9a8f7f;
     color: #fff;
     font-size: 18px;
     font-weight: bold;
     padding: 15px;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
-.card-header i {
-    margin-right: 10px;
-}
-
+/* Kartentext */
 .card-body {
     padding: 15px;
     font-size: 16px;
@@ -67,44 +88,36 @@
     margin-bottom: 10px;
 }
 
-.card-body ul {
-    list-style-type: disc;
-    margin-left: 20px;
-}
-
-.btn-expand {
-    color: #866a67;
-    font-weight: bold;
-    text-decoration: none;
-    cursor: pointer;
-    margin-top: 10px;
-    display: inline-block;
-}
-
-.btn-expand:hover {
-    text-decoration: underline;
-}
-
+/* Erweiterbarer Inhalt */
 .expanded-content {
     display: none;
     margin-top: 15px;
 }
 
-.expanded-content p {
-    margin-bottom: 10px;
+.expanded-content ul {
+    text-align: left; /* Text links ausrichten */
 }
 
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+/* Button */
+.btn-expand {
+    color: #9a8f7f;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 10px;
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 1px solid #9a8f7f;
+    transition: all 0.3s ease;
 }
 
-.col {
-    flex: 0 0 calc(50% - 20px);
-    box-sizing: border-box;
+.btn-expand:hover {
+    background-color: #9a8f7f;
+    color: white;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
     .col {
         flex: 0 0 100%;
@@ -112,5 +125,9 @@
 
     .main-content {
         margin-left: 0;
+    }
+
+    .card {
+        max-width: 100%;
     }
 }
