@@ -56,18 +56,49 @@
 
 <!-- Hauptinhalt -->
 <div class="container main-content">
-    <h1 class="page-title">🎧 Hörtest Übersicht</h1>
-    <p class="sub-title">Wählen Sie einen Hörtest aus und starten Sie Ihre Analyse</p>
+    <h1 class="page-title">🎧 Willkommen zur Hörtest-Übersicht</h1>
+    <p class="sub-title">Wählen Sie den passenden Hörtest aus und verbessern Sie Ihr Hörerlebnis</p>
 
-    <div class="card custom-card">
-        <div class="card-header">Hörtest Auswahl</div>
-        <div class="card-body">
-            <p>Bitte wählen Sie einen Hörtest:</p>
-            <button class="custom-button" id="speechInNoiseBtn">🎤 Speech in Noise Test</button>
-            <button class="custom-button" id="reintonaudiometrieBtn">🔊 Reintonaudiometrie</button>
+    <!-- Hörtest Auswahl -->
+    <div class="test-options">
+        <div class="test-card">
+            <i class="fas fa-microphone-alt"></i>
+            <h3>Speech in Noise Test</h3>
+            <p>Testen Sie Ihr Hörvermögen in lauten Umgebungen.</p>
+            <button class="custom-button" id="speechInNoiseBtn">Jetzt starten</button>
+        </div>
+        <div class="test-card">
+            <i class="fas fa-volume-up"></i>
+            <h3>Reintonaudiometrie</h3>
+            <p>Ermitteln Sie Ihre Hörschwelle für verschiedene Frequenzen.</p>
+            <button class="custom-button" id="reintonaudiometrieBtn">Jetzt starten</button>
         </div>
     </div>
-</div>
+
+    <!-- Nutzerstatistiken -->
+    <div class="stats-container">
+        <div class="stat-box">
+            <i class="fas fa-users"></i>
+            <h3>10.482</h3>
+            <p>Benutzer haben den Test durchgeführt</p>
+        </div>
+        <div class="stat-box">
+            <i class="fas fa-headphones"></i>
+            <h3>98%</h3>
+            <p>Zufriedene Tester</p>
+        </div>
+        <div class="stat-box">
+            <i class="fas fa-clock"></i>
+            <h3>5 Min</h3>
+            <p>Durchschnittliche Testdauer</p>
+        </div>
+    </div>
+
+     <!-- Info-Box -->
+     <div class="info-box">
+        <h3>Warum ist ein Hörtest wichtig? 🦻</h3>
+        <p>Regelmäßige Hörtests helfen dabei, Hörprobleme frühzeitig zu erkennen und vorzubeugen.</p>
+    </div>
 
 <script src="overview.js"></script>
 </body>

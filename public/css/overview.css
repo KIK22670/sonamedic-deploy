@@ -91,3 +91,82 @@ body {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
 }
+
+/* Testauswahl */
+.test-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.test-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.test-card i {
+    font-size: 40px;
+    color: #866a67;
+    margin-bottom: 15px;
+}
+
+.test-card h3 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.test-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Info-Box */
+.info-box {
+    background: #fdfdfd;
+    margin-top: 40px; /* Abstand von den Testkarten */
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Nutzerstatistiken */
+.stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.stat-box {
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    width: 180px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.stat-box i {
+    font-size: 30px;
+    color: #866a67;
+}
+
+.stat-box h3 {
+    margin: 10px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.stat-box:hover {
+    transform: translateY(-5px);
+}
+
+
+
