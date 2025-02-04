@@ -10,11 +10,11 @@ body {
 /* Content Container */
 .content-container {
     max-width: 700px;
-    margin: 60px auto;
+    margin: 120px auto 50px;
     padding: 20px;
     border-radius: 10px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
 }
 
 /* Card Styles */
@@ -61,8 +61,13 @@ audio {
 label {
     font-size: 16px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-top: 15px;
     display: block;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin: 15px 0;
 }
 
 /* Buttons */
@@ -113,4 +118,196 @@ button.btn-warning:hover {
     background-color: #e0a800;
 }
 
+/* Fragencontainer */
+#questionContainer {
+    display: none;
+    margin-top: 20px;
+    text-align: center;
+}
 
+/* Audio-Indikator */
+#audioIndicator {
+    position: relative;
+    font-size: 30px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Volle Höhe des Viewports */
+    margin-left: 40%;
+}
+
+.circle {
+    position: relative;
+    border: 5px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    width: 300px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 1.5s infinite;
+}
+
+#audioIndicator i {
+    font-size: 150px;
+    color: white;
+    animation: pulse 1.5s infinite;
+    align-items: center;
+}
+
+/* Animation für den Audio-Indikator */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+}
+
+/* Frage-Text */
+#questionText {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #fff; /* Weißer Text */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Schatten für Hervorhebung */
+}
+
+/* Antwortoptionen */
+.option-button {
+    display: block;
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin: 10px 0;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%; /* Gleiche Breite */
+    box-sizing: border-box; /* Padding und Border in Breite einbeziehen */
+}
+
+.option-button:hover {
+    background-color: #e0e0e0;
+}
+
+.option-button.correct {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.option-button.incorrect {
+    background-color: #F44336;
+    color: #fff;
+}
+
+/* Hintergrundbild */
+.background-image-container {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px); /* Höhe anpassen, um den Header auszuschließen */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; /* Hintergrundbild nicht wiederholen */
+    z-index: -1; /* Damit das Hintergrundbild hinter anderen Elementen bleibt */
+    opacity: 0.3; /* Hintergrundbild schwächer machen */
+}
+
+/* Container für die Frageoptionen */
+.question-options-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Optionen oben ausrichten */
+    padding: 20px;
+}
+
+#questionText {
+    flex: 1;
+    text-align: left;
+}
+
+#optionsContainer {
+    flex: 1;
+    text-align: right;
+    display: flex;
+    flex-direction: column; /* Optionen untereinander */
+    align-items: flex-end; /* Rechtsbündig */
+}
+
+/* Ergebniscontainer */
+.result-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.result-container h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.result-container p {
+    font-size: 20px;
+    color: #666;
+}
+
+.result-container .score {
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.result-container .total {
+    font-weight: bold;
+    color: #333;
+}
+
+.view-results-button {
+    background-color: #866a67;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 20px;
+}
+
+.view-results-button:hover {
+    background-color: #6f5654;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal Styles */
+.modal-header .close {
+    display: none;
+}
+
+.btn-custom {
+    background-color: #1b9aaa;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: #0f7c8a;
+}
