@@ -36,31 +36,35 @@
     </div>
     <!-- Navbar End -->
 
-    <!-- Main Content -->
-    <div class="content-container">
-        <div class="card">
-            <div class="card-header">🎧 Speech in Noise Test</div>
-            <div class="instructions">
-                <p><strong>Willkommen!</strong> Bitte folgen Sie den Anweisungen unten, um mit dem Test zu beginnen:</p>
-                <ol>
-                    <li>🎚 <strong>Lautstärke einstellen:</strong> Spielen Sie das Audio ab und verwenden Sie den Lautstärkeregler.</li>
-                    <li>✔️ <strong>Bestätigen:</strong> Klicken Sie auf "OK", wenn die Lautstärke passt.</li>
-                    <li>🚀 <strong>Test starten:</strong> Drücken Sie "Test starten", um den Test zu beginnen.</li>
-                    <li>🧏 <strong>Frage beantworten:</strong> Während des Audios erscheint ein Symbol. Beantworten Sie danach die Frage.</li>
-                </ol>
-            </div>
-            <div class="card-body">
-                <label for="volumeControl">🔊 Lautstärke:</label>
-                <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
-                <audio id="audioPlayer" controls></audio>
-                <div class="button-container">
-                    <button id="playBtn" class="btn btn-primary"><i class="fas fa-play"></i> Audio abspielen</button>
-                    <button id="startTestBtn" class="btn btn-success"><i class="fas fa-check"></i> OK</button>
-                    <button id="startTestProcessBtn" class="btn btn-warning" disabled><i class="fas fa-rocket"></i> Test starten</button>
-                </div>
+   <!-- Main Content -->
+<div class="content-container">
+    <div class="card">
+        <div class="card-header">🎧 Speech in Noise Test</div>
+        <div class="instructions">
+            <p><strong>Willkommen!</strong> Bitte folgen Sie den Anweisungen unten, um mit dem Test zu beginnen:</p>
+            <ol>
+                <li>🎚 <strong>Lautstärke einstellen:</strong> Spielen Sie das Audio ab und verwenden Sie den Lautstärkeregler.</li>
+                <li>✔️ <strong>Bestätigen:</strong> Klicken Sie auf "OK", wenn die Lautstärke passt.</li>
+                <li>🚀 <strong>Test starten:</strong> Drücken Sie "Test starten", um den Test zu beginnen.</li>
+                <li>🧏 <strong>Frage beantworten:</strong> Während des Audios erscheint ein Symbol. Beantworten Sie danach die Frage.</li>
+            </ol>
+        </div>
+        <div class="card-body">
+            <label for="volumeControl">🔊 Lautstärke:</label>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
+            <audio id="audioPlayer" controls></audio>
+            <div class="button-container">
+                <button id="playBtn" class="btn btn-primary"><i class="fas fa-play"></i> Audio abspielen</button>
+                <button id="startTestBtn" class="btn btn-success"><i class="fas fa-check"></i> OK</button>
+                <button id="startTestProcessBtn" class="btn btn-warning" disabled><i class="fas fa-rocket"></i> Test starten</button>
             </div>
         </div>
     </div>
+    <!-- Link für "Test nicht machen" -->
+    <div class="test-cancel-link">
+        <a href="../stammdaten.html" class="cancel-test-link">Ich möchte den Test nicht machen</a>
+    </div>
+</div>
 
     <div id="testContainer">
         <!-- Frage und Audio-Indikator -->
@@ -98,6 +102,7 @@
     </div>
 </div>
 </div>
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

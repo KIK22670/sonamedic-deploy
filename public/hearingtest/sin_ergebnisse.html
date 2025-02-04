@@ -13,6 +13,8 @@
     <link href="../css/bootstrap.min.css" rel="stylesheet" />
     <link href="../css/sin_ergebnisse.css" rel="stylesheet" />
     <link href="../css/stylehome.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
@@ -69,92 +71,170 @@
     </nav>
     <!-- Linke Navbar End -->
 
-    <div class="container">
+       <!-- Main Content -->
+    <div class="container my-5">
         <h2 class="text-center mb-4">Speech-in-Noise-Test Ergebnisse</h2>
 
-        <div class="card results-card">
-            <div class="card-header">Ihre Testergebnisse</div>
-            <div class="card-body">
-                <div id="testList" class="row result-list">
-                    <!-- Dynamische Ergebnisse kommen hier -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-    const testList = document.getElementById('testList');
-
-    fetch(`/speech-in-noise/results`)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Fehler beim Abrufen der Testergebnisse');
-            }
-            return response.json();
-        })
-        .then((results) => {
-            if (results.length === 0) {
-                testList.innerHTML = '<div class="col-12 text-center">Keine Testergebnisse verfügbar.</div>';
-            } else {
-                results.forEach((result) => {
-                    let resultClass = '';
-                    let progressClass = ''; // Klasse für die Progressbar
-let resultMessage = '';
-    const score = result.sin_ergebnis * 100;
-
-    if (score === 100) {
-        resultClass = 'result-excellent';
-        progressClass = 'excellent';
-        resultMessage = 'Ihr Hörvermögen ist exzellent. Sie haben alle getesteten Frequenzen und Lautstärken korrekt wahrgenommen, was auf ein gesundes auditorisches System hinweist.';
-    } else if (score >= 90) {
-        resultClass = 'result-excellent';
-        progressClass = 'excellent';
-        resultMessage = 'Sehr gutes Hörvermögen. Minimale Schwierigkeiten bei der Wahrnehmung leiserer Geräusche in starkem Störgeräuschumfeld.';
-    } else if (score >= 70) {
-        resultClass = 'result-good';
-        progressClass = 'good';
-        resultMessage = 'Gutes Hörvermögen mit gelegentlichen Einschränkungen bei der Trennung von Sprache und Hintergrundgeräuschen. Eine Überprüfung der Hörgesundheit kann ratsam sein.';
-    } else if (score >= 50) {
-        resultClass = 'result-average';
-        progressClass = 'average';
-        resultMessage = 'Ihr Hörvermögen liegt im durchschnittlichen Bereich. Möglicherweise erleben Sie Schwierigkeiten, Sprache in lauten Umgebungen zu verstehen. Ein professioneller Hörtest wird empfohlen.';
-    } else {
-        resultClass = 'result-poor';
-        progressClass = 'poor';
-        resultMessage = 'Ihr Hörvermögen ist stark eingeschränkt. Es wäre ratsam, einen HNO-Arzt oder Hörakustiker für eine umfassende Diagnostik zu konsultieren.';
-    }
-
-    const listItem = document.createElement('div');
-    listItem.className = 'col-lg-4 col-md-6 col-sm-12 mb-4';
-    listItem.innerHTML = `
-        <div class="result-card ${resultClass}">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <h5><strong>Testdatum:</strong> ${new Date(result.sin_datum).toLocaleDateString()}</h5>
-                    <p><strong>Ergebnis:</strong> ${(score).toFixed(2)}%</p>
-                </div>
-                <div class="progress-wrapper">
-                    <div class="result-message" style="margin-left: 10px;">
-                        <p>${resultMessage}</p>
+        <div class="row">
+            <!-- Ergebnisse Card -->
+            <div class="col-lg-12">
+                <div class="card results-card mb-4">
+                    <div class="card-header">Ihre Testergebnisse</div>
+                    <div class="card-body">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div class="information">
+                                <h5><strong>Statistik der Testergebnisse</strong></h5>
+                                <div class="stat-item">
+                                    <i class="fas fa-trophy icon"></i>
+                                    <p>Exzellente Ergebnisse: <span id="excellentCount">0</span></p>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-thumbs-up icon"></i>
+                                    <p>Gute Ergebnisse: <span id="goodCount">0</span></p>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-meh-blank icon"></i>
+                                    <p>Durchschnittliche Ergebnisse: <span id="averageCount">0</span></p>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-thumbs-down icon"></i>
+                                    <p>Schwache Ergebnisse: <span id="poorCount">0</span></p>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="sinResultsChart"></canvas>
+                            </div>
+                        </div>
+                        <div id="testList" class="row result-list">
+                            <!-- Dynamische Ergebnisse kommen hier -->
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="progress">
-                <div class="progress-bar ${progressClass}" role="progressbar" style="width: ${score}%" aria-valuenow="${score}" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
         </div>
-    `;
-    testList.appendChild(listItem);
-});
-            }
-        })
-        .catch((error) => {
-            console.error('Fehler beim Laden der Ergebnisse:', error);
-            testList.innerHTML = '<div class="col-12 text-center">Fehler beim Laden der Ergebnisse. Bitte versuchen Sie es später erneut.</div>';
+        
+    </div>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const testList = document.getElementById('testList');
+            const ctx = document.getElementById('sinResultsChart').getContext('2d');
+    
+            fetch(`/speech-in-noise/results`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Fehler beim Abrufen der Testergebnisse');
+                    }
+                    return response.json();
+                })
+                .then((results) => {
+                    if (results.length === 0) {
+                        testList.innerHTML = '<div class="col-12 text-center">Keine Testergebnisse verfügbar.</div>';
+                    } else {
+                        let scoreData = { excellent: 0, good: 0, average: 0, poor: 0 };
+    
+                        results.forEach((result) => {
+                            let resultClass = '';
+                            let progressClass = ''; // Klasse für die Progressbar
+                            let resultMessage = '';
+                            const score = result.sin_ergebnis * 100;
+    
+                            if (score === 100) {
+                                resultClass = 'result-excellent';
+                                progressClass = 'excellent';
+                                resultMessage = 'Ihr Hörvermögen ist exzellent. Sie haben alle getesteten Frequenzen und Lautstärken korrekt wahrgenommen, was auf ein gesundes auditorisches System hinweist.';
+                                scoreData.excellent++;
+                            } else if (score >= 90) {
+                                resultClass = 'result-excellent';
+                                progressClass = 'excellent';
+                                resultMessage = 'Sehr gutes Hörvermögen. Minimale Schwierigkeiten bei der Wahrnehmung leiserer Geräusche in starkem Störgeräuschumfeld.';
+                                scoreData.excellent++;
+                            } else if (score >= 70) {
+                                resultClass = 'result-good';
+                                progressClass = 'good';
+                                resultMessage = 'Gutes Hörvermögen mit gelegentlichen Einschränkungen bei der Trennung von Sprache und Hintergrundgeräuschen. Eine Überprüfung der Hörgesundheit kann ratsam sein.';
+                                scoreData.good++;
+                            } else if (score >= 50) {
+                                resultClass = 'result-average';
+                                progressClass = 'average';
+                                resultMessage = 'Ihr Hörvermögen liegt im durchschnittlichen Bereich. Möglicherweise erleben Sie Schwierigkeiten, Sprache in lauten Umgebungen zu verstehen. Ein professioneller Hörtest wird empfohlen.';
+                                scoreData.average++;
+                            } else {
+                                resultClass = 'result-poor';
+                                progressClass = 'poor';
+                                resultMessage = 'Ihr Hörvermögen ist stark eingeschränkt. Es wäre ratsam, einen HNO-Arzt oder Hörakustiker für eine umfassende Diagnostik zu konsultieren.';
+                                scoreData.poor++;
+                            }
+    
+                            const listItem = document.createElement('div');
+                            listItem.className = 'col-lg-4 col-md-6 col-sm-12 mb-4';
+                            listItem.innerHTML = `
+                                <div class="result-card ${resultClass}">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h5><strong>Testdatum:</strong> ${new Date(result.sin_datum).toLocaleDateString()}</h5>
+                                            <p><strong>Ergebnis:</strong> ${(score).toFixed(2)}%</p>
+                                        </div>
+                                        <div class="progress-wrapper">
+                                            <div class="result-message" style="margin-left: 10px;">
+                                                <p>${resultMessage}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar ${progressClass}" role="progressbar" style="width: ${score}%" aria-valuenow="${score}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            `;
+                            testList.appendChild(listItem);
+                        });
+    
+                        // Aktualisieren der Statistiken
+                        document.getElementById('excellentCount').textContent = scoreData.excellent;
+                        document.getElementById('goodCount').textContent = scoreData.good;
+                        document.getElementById('averageCount').textContent = scoreData.average;
+                        document.getElementById('poorCount').textContent = scoreData.poor;
+    
+                        // Diagramm erstellen
+                        const chart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: ['Exzellent', 'Gut', 'Durchschnittlich', 'Schlecht'],
+                                datasets: [{
+                                    label: 'Testergebnisse',
+                                    data: [scoreData.excellent, scoreData.good, scoreData.average, scoreData.poor],
+                                    backgroundColor: ['#28a745', '#ffc107', '#fd7e14', '#dc3545'],
+                                    hoverOffset: 4
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'right',  // Legende nach rechts verschieben
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(tooltipItem) {
+                                                return tooltipItem.label + ': ' + tooltipItem.raw + ' Tests';
+                                            }
+                                        }
+                                    }
+                                },
+                                
+                            }
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error('Fehler beim Laden der Ergebnisse:', error);
+                    testList.innerHTML = '<div class="col-12 text-center">Fehler beim Laden der Ergebnisse. Bitte versuchen Sie es später erneut.</div>';
+                });
         });
-});
-    </script>    
+    </script>
+    
 </body>
 
 </html>

@@ -69,11 +69,74 @@ h2 {
 
 .card-body {
     padding: 20px;
+    align-items: center;
 }
+
+.chart-container {
+    width: 250px; /* Kleinere Breite */
+    height: 250px; /* Kleinere Höhe */
+    margin-right: 10%; /* Weniger Abstand */
+}
+
+/* Neue Stile für die Statistik */
+.information {
+    padding: 20px;
+    margin-left: 5%;
+    margin-top: 20px;
+}
+
+.information h5 {
+    font-size: 20px;
+    color: #343a40;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Allgemeine Statistik-Elemente */
+.stat-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1px;
+}
+
+.stat-item p {
+    margin-left: 10px;
+    font-size: 16px;
+    color: #6c757d;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.icon {
+    font-size: 24px;
+    color: #28a745; /* Grün für den Erfolg */
+}
+
+.stat-item:nth-child(2) .icon {
+    color: #ffc107; /* Gelb für gute Ergebnisse */
+}
+
+.stat-item:nth-child(3) .icon {
+    color: #fd7e14; /* Orange für durchschnittliche Ergebnisse */
+}
+
+.stat-item:nth-child(4) .icon {
+    color: #dc3545; /* Rot für schwache Ergebnisse */
+}
+
+/* Füge eine Hover-Wirkung hinzu */
+.stat-item:hover {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
 
 .result-list {
     display: block;
- 
+    justify-content: center;
+    align-items: center;
     gap: 20px;
 
 }
@@ -88,6 +151,7 @@ h2 {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    margin-left: 65px;
 }
 
 .result-card:hover {

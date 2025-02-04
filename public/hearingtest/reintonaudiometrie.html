@@ -130,6 +130,35 @@
         #prevFrequencyButton i:hover {
             color: #705a55;
         }
+
+        
+/* Test-Cancel-Link */
+.test-cancel-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.cancel-test-link {
+    font-size: 16px;
+    font-weight: bold;
+    color: #FF5733; /* Auffällige Farbe */
+    text-decoration: none;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 2px solid #FF5733;
+    transition: all 0.3s ease;
+}
+
+.cancel-test-link:hover {
+    background-color: #FF5733;
+    color: #fff;
+    border-color: #FF5733;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(255, 87, 51, 0.2);
+}
+
+        
     </style>
 </head>
 
@@ -188,7 +217,11 @@
                     <label class="form-check-label" for="binaural">Beide Ohren (binaural)</label>
                 </div>
                 <button class="btn btn-primary mt-3" id="startTestButton">Zum Test</button>
+            <!-- Link für "Test nicht machen" -->
+            <div class="test-cancel-link">
+                <a href="../stammdaten.html" class="cancel-test-link">Ich möchte den Test nicht machen</a>
             </div>
+        </div>
 
             <div class="test-section">
                 <h3 class="header">Reintonaudiometrie Test</h3>
