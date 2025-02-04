@@ -7,9 +7,10 @@
     <script src="sin.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet" />
     <link href="../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/stylehome.css" rel="stylesheet" />
     <link href="sin.css" rel="stylesheet" />
-    <link href="../css/stylehome.css" rel="stylesheet">
 </head>
 <body>
 
@@ -39,67 +40,65 @@
     <!-- Main Content -->
     <div class="content-container">
         <div class="card">
-            <div class="card-header">🎧 Speech in Noise Test</div>
+            <div class="card-header">Speech in Noise Test</div>
             <div class="instructions">
-                <p><strong>Willkommen!</strong> Bitte folgen Sie den Anweisungen unten, um mit dem Test zu beginnen:</p>
+                <p>Willkommen zum Speech-in-Noise-Test! Bitte folgen Sie den Anweisungen:</p>
                 <ol>
-                    <li>🎚 <strong>Lautstärke einstellen:</strong> Spielen Sie das Audio ab und verwenden Sie den Lautstärkeregler.</li>
-                    <li>✔️ <strong>Bestätigen:</strong> Klicken Sie auf "OK", wenn die Lautstärke passt.</li>
-                    <li>🚀 <strong>Test starten:</strong> Drücken Sie "Test starten", um den Test zu beginnen.</li>
-                    <li>🧏 <strong>Frage beantworten:</strong> Während des Audios erscheint ein Symbol. Beantworten Sie danach die Frage.</li>
+                    <li>Stellen Sie die Lautstärke ein, indem Sie das Audio abspielen und den Lautstärkeregler verwenden.</li>
+                    <li>Klicken Sie auf <strong>"OK"</strong>, wenn Sie mit der Lautstärke zufrieden sind.</li>
+                    <li>Klicken Sie anschließend auf <strong>"Test starten"</strong>, um mit dem Test zu beginnen.</li>
+                    <li>Während des Audios wird ein Symbol angezeigt. Nach dem Audio wird eine Frage angezeigt, die Sie beantworten müssen.</li>
                 </ol>
             </div>
             <div class="card-body">
-                <label for="volumeControl">🔊 Lautstärke:</label>
+                <audio id="audioPlayer" preload="none"></audio>
+                <label for="volumeControl">Lautstärke:</label>
                 <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
-                <audio id="audioPlayer" controls></audio>
                 <div class="button-container">
-                    <button id="playBtn" class="btn btn-primary"><i class="fas fa-play"></i> Audio abspielen</button>
-                    <button id="startTestBtn" class="btn btn-success"><i class="fas fa-check"></i> OK</button>
-                    <button id="startTestProcessBtn" class="btn btn-warning" disabled><i class="fas fa-rocket"></i> Test starten</button>
+                    <button id="playBtn">Audio abspielen</button>
+                    <button id="startTestBtn">OK</button>
+                    <button id="startTestProcessBtn" disabled>Test starten</button>
+                </div>
+            </div>
+        </div>
+        <div id="testContainer">
+            <!-- Frage und Audio-Indikator -->
+            <div id="questionContainer">
+                <div id="audioIndicator">
+                    <div class="circle">
+                        <i class="fas fa-volume-up"></i>
+                    </div>
+                </div>
+                
+                <div class="question-options-container">
+                    <div id="questionText"></div>
+                    <div id="optionsContainer"></div>
+                </div>
+            </div>
+        
+            <!-- Hintergrundbild -->
+            <div id="backgroundImage" class="background-image-container"></div>
+        </div>
+    </div>
+
+    <!-- Modal für Benachrichtigung -->
+    <div class="modal" id="testTakenModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Test bereits durchgeführt</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Sie haben den Speech-in-Noise-Test heute bereits durchgeführt. Der Test ist nur einmal täglich durchführbar. Bitte versuchen Sie es morgen erneut.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-custom" data-bs-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="testContainer">
-        <!-- Frage und Audio-Indikator -->
-        <div id="questionContainer">
-            <div id="audioIndicator">
-                <div class="circle">
-                    <i class="fas fa-volume-up"></i>
-                </div>
-            </div>
-            
-            <div class="question-options-container">
-                <div id="questionText"></div>
-                <div id="optionsContainer"></div>
-            </div>
-        </div>
-
-    <!-- Hintergrundbild -->
-    <div id="backgroundImage" class="background-image-container"></div>
-</div>
-</div>
-
-<!-- Modal für Benachrichtigung -->
-<div class="modal" id="testTakenModal" tabindex="-1" role="dialog">
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">Test bereits durchgeführt</h5>
-        </div>
-        <div class="modal-body">
-            <p>Sie haben den Speech-in-Noise-Test heute bereits durchgeführt. Der Test ist nur einmal täglich durchführbar. Bitte versuchen Sie es morgen erneut.</p>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-custom" data-bs-dismiss="modal">OK</button>
-        </div>
-    </div>
-</div>
-</div>
-
-    <!-- Bootstrap JS -->
+    <!-- Bootstrap JS für Modal -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
