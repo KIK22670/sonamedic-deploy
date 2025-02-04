@@ -664,6 +664,8 @@ app.get('/getAudiometrieTests', async (req, res) => {
 //--------------------------------------------------------------
 // Terminverwaltung
 
+// Termine 
+
 // Öffnungszeiten
 const openingHours = {
     Dienstag: [
@@ -784,58 +786,66 @@ app.get('/slots', async (req, res) => {
     }
 });
 
+
+
+
 // Endpunkt: Termin buchen
 app.post('/termine', async (req, res) => {
     const { t_datum, t_uhrzeit, t_termintyp } = req.body;
-    const t_p_id = req.session.user?.id;
+    const t_p_id = req.session.user?.id; // Patienten-ID aus der Session
 
-    console.log('Eingehende Buchungsdaten:', { t_datum, t_uhrzeit, t_termintyp, t_p_id });
-
-    if (!t_p_id || !t_termintyp) {
-        console.error('Fehlende erforderliche Felder:', { t_p_id, t_termintyp });
-        return res.status(400).send('Patienten-ID und Termintyp sind erforderlich');
+    if (!t_p_id || !t_termintyp || !t_datum || !t_uhrzeit) {
+        return res.status(400).json({ error: 'Fehlende Daten. Bitte überprüfen Sie die Eingabe.' });
     }
 
     try {
-        // Abrufen der Termintyp-ID
+        // Prüfen, ob der Termin bereits gebucht wurde
+        const existingAppointment = await client.query(
+            'SELECT * FROM t_termine WHERE t_datum = $1 AND t_uhrzeit = $2',
+            [t_datum, t_uhrzeit]
+        );
+
+        if (existingAppointment.rows.length > 0) {
+            return res.status(400).json({ error: 'Dieser Termin ist bereits vergeben.' });
+        }
+
+        // Termintyp-ID abrufen
         const termintypResult = await client.query(
             'SELECT tt_id FROM tt_termintyp WHERE tt_bezeichnung = $1',
             [t_termintyp]
         );
 
         if (termintypResult.rows.length === 0) {
-            console.error('Ungültiger Termintyp:', t_termintyp);
-            return res.status(400).send('Ungültiger Termintyp');
+            return res.status(400).json({ error: 'Ungültiger Termintyp' });
         }
 
         const tt_termintyp_tt_id = termintypResult.rows[0].tt_id;
 
-        // Abrufen der Zeitslot-ID
+        // Zeitslot-ID abrufen
         const zeitslotResult = await client.query(
             'SELECT z_id FROM z_zeitslots WHERE z_startzeit = $1',
             [t_uhrzeit]
         );
 
         if (zeitslotResult.rows.length === 0) {
-            console.error('Ungültiges Zeitfenster:', t_uhrzeit);
-            return res.status(400).send('Ungültiges Zeitfenster');
+            return res.status(400).json({ error: 'Ungültiges Zeitfenster' });
         }
 
         const z_zeitslots_z_id = zeitslotResult.rows[0].z_id;
 
-        // Termin einfügen
+        // Termin in die Datenbank einfügen
         const result = await client.query(
             'INSERT INTO t_termine (t_datum, t_uhrzeit, t_termintyp, t_p_id, tt_termintyp_tt_id, z_zeitslots_z_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
             [t_datum, t_uhrzeit, t_termintyp, t_p_id, tt_termintyp_tt_id, z_zeitslots_z_id]
         );
 
-        console.log('Termin erfolgreich gebucht:', result.rows[0]);
-        res.status(201).json(result.rows[0]);
+        res.status(201).json(result.rows[0]); // Erfolgreiche Buchung
     } catch (error) {
-        console.error('Fehler beim Hinzufügen eines Termins:', error.message, error.stack);
-        res.status(500).send('Interner Serverfehler');
+        console.error('Fehler beim Buchen:', error);
+        res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
+
 
 
 
@@ -877,6 +887,7 @@ app.get('/termintypen', async (req, res) => {
         res.status(500).json({ error: 'Interner Serverfehler' });  // JSON zurückgeben bei Fehler
     }
 });
+
 // Endpunkt: Termin bearbeiten
 app.put('/termine/:id', async (req, res) => {
     const { id } = req.params;

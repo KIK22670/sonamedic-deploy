@@ -40,6 +40,7 @@
     max-width: 800px;
 }
 
+
 /* Karten-Container */
 .container .row {
     display: flex;
@@ -67,7 +68,7 @@
 
 /* Karten-Header */
 .card-header {
-    background-color: #9a8f7f;
+    background-color: #866a67;
     color: #fff;
     font-size: 18px;
     font-weight: bold;
@@ -100,7 +101,7 @@
 
 /* Button */
 .btn-expand {
-    color: #9a8f7f;
+    color: #866a67;
     font-weight: bold;
     text-decoration: none;
     cursor: pointer;
@@ -108,12 +109,12 @@
     display: inline-block;
     padding: 8px 15px;
     border-radius: 5px;
-    border: 1px solid #9a8f7f;
+    border: 1px solid #866a67;
     transition: all 0.3s ease;
 }
 
 .btn-expand:hover {
-    background-color: #9a8f7f;
+    background-color: #866a67;
     color: white;
 }
 

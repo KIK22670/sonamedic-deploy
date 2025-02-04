@@ -59,17 +59,20 @@ async function loadAvailableSlots() {
             pageSlots.forEach(slot => {
                 const slotDiv = document.createElement('div');
                 slotDiv.className = 'termin m-2 p-2 border rounded';
-                slotDiv.style.backgroundColor = '#e6dbc8';
+                slotDiv.style.backgroundColor = '#866a67';
 
                 const dayText = document.createElement('p');
                 dayText.textContent = new Date(slot.t_datum).toLocaleDateString('de-DE', { weekday: 'long' });
                 slotDiv.appendChild(dayText);
+                dayText.style.color = 'white';
 
                 const timeText = document.createElement('p');
                 timeText.textContent = `${slot.t_datum} um ${slot.t_uhrzeit}`;
+                timeText.style.color = 'white';
                 slotDiv.appendChild(timeText);
 
                 const button = document.createElement('button');
+                button.style.color = 'white';
                 button.className = 'btn btn-custom';
                 button.textContent = 'Termin wählen';
                 button.addEventListener('click', () => selectSlot(slot.t_datum, slot.t_uhrzeit));

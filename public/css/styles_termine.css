@@ -71,7 +71,7 @@ h2 {
     flex: 1;
     padding: 10px 15px;
     font-size: 16px;
-    background-color: #d6cbb8;
+    background-color: #866a67;
     border: 1px solid #aaa;
     border-radius: 5px;
     cursor: pointer;
@@ -79,7 +79,7 @@ h2 {
 }
 
 .termintyp-button:hover {
-    background-color: #c5b8a4;
+    background-color: #746361;
 }
 
 #termine-container {
@@ -92,7 +92,7 @@ h2 {
     flex: 1 0 30%;
     padding: 10px;
     text-align: center;
-    background-color: #e6dbc8;
+    background-color: #866a67;
     border: 1px solid #aaa;
     border-radius: 5px;
     cursor: pointer;
@@ -100,7 +100,6 @@ h2 {
 }
 
 .termin:hover {
-    background-color: #d6cbb8;
     transform: scale(1.05);
 }
 
