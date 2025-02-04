@@ -1,21 +1,31 @@
 /* Global Styles */
+html {
+    height: 100%;
+    overflow: hidden; /* Deaktiviert die Browser-Scrollbar */
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f9f9f9;
     margin: 0;
     padding: 0;
     color: #333;
+    overflow-y: scroll; /* Scrollen innerhalb der Webseite aktivieren */
+    height: 100vh; /* Höhe auf den Viewport beschränken */
+    scroll-behavior: smooth;
 }
 
 /* Content Container */
 .content-container {
     max-width: 700px;
-    margin: 120px auto 50px;
+    margin: 120px auto;
     padding: 20px;
     border-radius: 10px;
     position: relative;
-    overflow: hidden;
+  
+   
 }
+
 
 /* Card Styles */
 .card {
