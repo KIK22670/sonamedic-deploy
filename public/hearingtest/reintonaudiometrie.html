@@ -130,35 +130,6 @@
         #prevFrequencyButton i:hover {
             color: #705a55;
         }
-
-        
-/* Test-Cancel-Link */
-.test-cancel-link {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.cancel-test-link {
-    font-size: 16px;
-    font-weight: bold;
-    color: #FF5733; /* Auffällige Farbe */
-    text-decoration: none;
-    background-color: #fff;
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: 2px solid #FF5733;
-    transition: all 0.3s ease;
-}
-
-.cancel-test-link:hover {
-    background-color: #FF5733;
-    color: #fff;
-    border-color: #FF5733;
-    text-decoration: none;
-    box-shadow: 0 4px 8px rgba(255, 87, 51, 0.2);
-}
-
-        
     </style>
 </head>
 
@@ -217,15 +188,13 @@
                     <label class="form-check-label" for="binaural">Beide Ohren (binaural)</label>
                 </div>
                 <button class="btn btn-primary mt-3" id="startTestButton">Zum Test</button>
-            <!-- Link für "Test nicht machen" -->
-            <div class="test-cancel-link">
-                <a href="../stammdaten.html" class="cancel-test-link">Ich möchte den Test nicht machen</a>
             </div>
-        </div>
 
             <div class="test-section">
                 <h3 class="header">Reintonaudiometrie Test</h3>
-                <p class="text-center">Bitte wählen Sie mithilfe des Schiebereglers die Lautstärke, bei der Sie den Ton gerade noch wahrnehmen können, ohne dass er unangenehm oder schmerzhaft wird. Verwenden Sie dazu die Maus oder die Pfeiltasten Ihrer Tastatur.</p>
+                <p class="text-center">Bitte wählen Sie mithilfe des Schiebereglers die Lautstärke, bei der Sie den Ton
+                    gerade noch wahrnehmen können, ohne dass er unangenehm oder schmerzhaft wird. Verwenden Sie dazu die
+                    Maus oder die Pfeiltasten Ihrer Tastatur.</p>
 
                 <div class="slider-container">
                     <label for="volumeSlider">Lautstärke (dB):</label>
@@ -267,13 +236,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            
+
             const frequencies = [125, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000, 8000, 10000, 12000, 14000];
             let currentFrequencyIndex = 0;
             const allEars = ["left", "right", "binaural"];
             let selectedEar = null;
             let earOrder = [];
-    
+
             const audioPlayer = document.getElementById('audioPlayer');
             const frequencyDisplay = document.getElementById('frequencyDisplay');
             const volumeSlider = document.getElementById('volumeSlider');
@@ -285,9 +254,9 @@
             const hearingButtons = document.getElementById('hearingButtons');
             const resultsButton = document.getElementById('resultsButton');
             const prevFrequencyButton = document.getElementById('prevFrequencyButton');
-    
+
             let audioContext, source, panner;
-    
+
             document.getElementById('startTestButton').addEventListener('click', function () {
                 const selectedEarInput = document.querySelector('input[name="earSelection"]:checked');
                 if (selectedEarInput) {
@@ -301,7 +270,7 @@
                     alert('Bitte wählen Sie ein Ohr aus, um fortzufahren.');
                 }
             });
-    
+
             nextEarButton.addEventListener('click', function () {
                 if (earOrder.length > 1) {
                     earOrder.shift();
@@ -316,7 +285,7 @@
                     resultsButton.style.display = 'block';
                 }
             });
-    
+
             prevFrequencyButton.addEventListener('click', function () {
                 if (currentFrequencyIndex > 0) {
                     currentFrequencyIndex--;
@@ -326,7 +295,7 @@
                     updateFrequencyDisplay();
                 }
             });
-    
+
             function initializeAudio() {
                 if (!audioContext) {
                     audioContext = new AudioContext();
@@ -335,8 +304,10 @@
                     source.connect(panner).connect(audioContext.destination);
                 }
             }
-    
+
             function updateFrequencyDisplay() {
+                audioPlayer.pause();
+                audioPlayer.currentTime = 0;
                 const frequency = frequencies[currentFrequencyIndex];
                 frequencyDisplay.textContent = `Frequenz: ${frequency} Hz - ${selectedEar}`;
                 audioPlayer.src = `Reintonaudios/${frequency}.wav`;
@@ -345,23 +316,24 @@
                 audioPlayer.play();
                 playButton.textContent = "Ton abschalten";
             }
-    
-            function setAudioChannel(ear) {
-            if (ear === "left") {
-                panner.pan.value = 1; // Linkes Ohr -> rechter Kanal
-            } else if (ear === "right") {
-                panner.pan.value = -1; // Rechtes Ohr -> linker Kanal
-            } else {
-                panner.pan.value = 0; // Binaural
-            }
-        }
 
-    
+            function setAudioChannel(ear) {
+                if (!panner || !panner.pan) return;
+                if (ear === "left") {
+                    panner.pan.value = 1; // Linkes Ohr -> rechter Kanal
+                } else if (ear === "right") {
+                    panner.pan.value = -1; // Rechtes Ohr -> linker Kanal
+                } else {
+                    panner.pan.value = 0; // Binaural
+                }
+            }
+
+
             volumeSlider.addEventListener('input', function () {
                 volumeValue.textContent = `${volumeSlider.value} dB`;
                 audioPlayer.volume = volumeSlider.value / 100;
             });
-    
+
             playButton.addEventListener('click', function () {
                 if (audioPlayer.paused) {
                     audioPlayer.play();
@@ -371,15 +343,51 @@
                     playButton.textContent = "Ton abspielen";
                 }
             });
-    
+
             document.getElementById('hearButton').addEventListener('click', function () {
                 nextFrequency();
             });
-    
+
             document.getElementById('notHearButton').addEventListener('click', function () {
                 nextFrequency();
             });
-    
+
+
+            // Call saveResult when "Ich höre" or "Ich höre nicht" is clicked
+            document.getElementById('hearButton').addEventListener('click', function () {
+                saveResult(true);
+                nextFrequency();
+            });
+
+            document.getElementById('notHearButton').addEventListener('click', function () {
+                saveResult(false);
+                nextFrequency();
+            });
+            function saveResult(heard) {
+                const frequency = frequencies[currentFrequencyIndex];
+                const testNumber = currentFrequencyIndex + 1;
+
+                const payload = {
+                    u_id: sessionStorage.getItem('u_id'), // Patient ID aus Session speichern
+                    testNumber,
+                    frequency,
+                    result: heard,
+                    ear: selectedEar,
+                };
+
+                console.log('Sende Daten:', payload); // Debugging
+
+                fetch('/saveTestResult', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                }).then((response) => {
+                    if (!response.ok) {
+                        alert('Fehler beim Speichern des Ergebnisses.');
+                    }
+                });
+            }
+
             function nextFrequency() {
                 if (currentFrequencyIndex < frequencies.length - 1) {
                     currentFrequencyIndex++;
@@ -392,49 +400,14 @@
                     }
                 }
             }
-    
-            updateFrequencyDisplay();
+
+            //updateFrequencyDisplay();
         });
-        
 
-        function saveResult(heard) {
-        const frequency = frequencies[currentFrequencyIndex];
-        const testNumber = currentFrequencyIndex + 1;
 
-        const payload = {
-            u_id: sessionStorage.getItem('u_id'), // Patient ID aus Session speichern
-            testNumber,
-            frequency,
-            result: heard,
-            ear: selectedEar,
-        };
-
-        console.log('Sende Daten:', payload); // Debugging
-
-        fetch('/saveTestResult', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-        }).then((response) => {
-            if (!response.ok) {
-                alert('Fehler beim Speichern des Ergebnisses.');
-            }
-        });
-    }
-
-    // Call saveResult when "Ich höre" or "Ich höre nicht" is clicked
-    document.getElementById('hearButton').addEventListener('click', function () {
-        saveResult(true);
-        nextFrequency();
-    });
-
-    document.getElementById('notHearButton').addEventListener('click', function () {
-        saveResult(false);
-        nextFrequency();
-    });
 
     </script>
-    
+
 </body>
 
 </html>
