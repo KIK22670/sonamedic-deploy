@@ -617,49 +617,95 @@ app.get('/reset-password/:token', async (req, res) => {
 
 // Endpunkt zum Speichern von Reintonaudiometrie-Ergebnissen
 app.post('/saveTestResult', async (req, res) => {
-    const { p_id, testNumber, frequency, result, ear } = req.body; 
-    console.log('Eingehende Daten:', req.body);
+    const { test_id, testNumber, frequency, result, ear } = req.body;
+    const u_id = req.session.user?.id; // Benutzer-ID aus der Session
+
+    console.log('Session-Daten:', req.session); // Debugging
+    console.log('u_id:', u_id); // Debugging
+
+    if (!u_id) {
+        return res.status(401).json({ error: 'Nicht authentifiziert.' });
+    }
 
     try {
-        const query = {
-            text: `
-                INSERT INTO reintonaudiometrie_ergebnisse (p_id, testnummer, frequenz, ergebnis, ohr)
-                VALUES ($1, $2, $3, $4, $5)
-            `,
-            values: [p_id, testNumber, frequency, result, ear], 
-        };
+        // Hole p_id des aktuellen Benutzers
+        const userQuery = await client.query(
+            'SELECT u_p_id FROM u_userverwaltung WHERE u_id = $1',
+            [u_id]
+        );
 
-        console.log('Query:', query);
-        await client.query(query);
-        res.status(200).json({ message: 'Ergebnis erfolgreich gespeichert.' });
+        if (userQuery.rows.length === 0) {
+            return res.status(404).json({ error: 'Benutzer nicht gefunden.' });
+        }
+
+        const p_id = userQuery.rows[0].u_p_id;
+
+        // Speichere den übergeordneten Test (falls noch nicht vorhanden)
+        const testExists = await client.query(
+            'SELECT rt_test_id FROM reintonaudiometrie WHERE rt_test_id = $1 LIMIT 1',
+            [test_id]
+        );
+
+        if (testExists.rows.length === 0) {
+            await client.query(
+                `INSERT INTO reintonaudiometrie (rt_test_id, rt_datum, rt_startzeit, rt_endzeit, rt_p_id, rt_frequenz, rt_ohr, rt_lautstaerke_db, rt_gehoert)
+                 VALUES ($1, CURRENT_DATE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $2, $3, $4, $5, $6)`,
+                [test_id, p_id, frequency, ear, 50.0, result]
+            );
+        } else {
+            // Falls der Test bereits existiert, speichere nur die Frequenz/Ohr-Kombination
+            await client.query(
+                `INSERT INTO reintonaudiometrie (rt_test_id, rt_datum, rt_startzeit, rt_endzeit, rt_p_id, rt_frequenz, rt_ohr, rt_lautstaerke_db, rt_gehoert)
+                 VALUES ($1, CURRENT_DATE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $2, $3, $4, $5, $6)`,
+                [test_id, p_id, frequency, ear, 50.0, result]
+            );
+        }
+
+        res.status(201).json({ message: 'Testergebnis erfolgreich gespeichert.' });
     } catch (error) {
-        console.error('Fehler beim Speichern des Testergebnisses:', error);
-        res.status(500).json({ error: 'Fehler beim Speichern des Ergebnisses.' });
+        console.error('Fehler beim Speichern:', error);
+        res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
+
 
 // Endpunkt zum Abrufen von Reintonaudiometrie-Ergebnissen
 app.get('/getAudiometrieTests', async (req, res) => {
-    const { p_id } = req.query; 
+    const u_id = req.session.user?.id;
+
+    if (!u_id) {
+        return res.status(401).json({ error: 'Nicht authentifiziert' });
+    }
 
     try {
-        const query = {
-            text: `
-                SELECT testnummer, frequenz, ergebnis, ohr, erstellt_am
-                FROM reintonaudiometrie_ergebnisse
-                WHERE p_id = $1
-                ORDER BY testnummer, erstellt_am
-            `,
-            values: [p_id], 
-        };
+        // Hole p_id des aktuellen Benutzers aus u_userverwaltung
+        const userQuery = await client.query(
+            'SELECT u_p_id FROM u_userverwaltung WHERE u_id = $1',
+            [u_id]
+        );
 
-        const results = await client.query(query);
+        if (userQuery.rows.length === 0) {
+            return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+        }
+
+        const p_id = userQuery.rows[0].u_p_id;
+
+        // Abrufen der Testergebnisse aus der Tabelle
+        const results = await client.query(
+            `SELECT rt_test_id, rt_datum, rt_startzeit, rt_endzeit, rt_frequenz, rt_ohr, rt_lautstaerke_db, rt_gehoert
+             FROM reintonaudiometrie
+             WHERE rt_p_id = $1
+             ORDER BY rt_datum DESC, rt_startzeit DESC`,
+            [p_id]
+        );
+
         res.json(results.rows);
     } catch (error) {
         console.error('Fehler beim Abrufen der Testergebnisse:', error);
-        res.status(500).json({ error: 'Fehler beim Abrufen der Ergebnisse.' });
+        res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
+
 
 //--------------------------------------------------------------
 // Terminverwaltung

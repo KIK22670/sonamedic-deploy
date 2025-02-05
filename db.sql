@@ -19,16 +19,19 @@ CREATE TABLE IF NOT EXISTS p_patienten (
 );
 
 -- -----------------------------------------------------
--- Table sonamedic.reintonaudiometrie_ergebnisse
+-- Table sonamedic.reintonaudiometrie
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS reintonaudiometrie_ergebnisse (
-  ergebnis_id SERIAL PRIMARY KEY,
-  p_id INT NOT NULL REFERENCES p_patienten(p_id) ON DELETE CASCADE,
-  testnummer INT NOT NULL,
-  frequenz INT NOT NULL,
-  ergebnis BOOLEAN NOT NULL,
-  ohr VARCHAR(10) NOT NULL, -- "left", "right", "binaural"
-  erstellt_am TIMESTAMP DEFAULT NOW()
+CREATE TABLE IF NOT EXISTS reintonaudiometrie (
+  rt_id SERIAL PRIMARY KEY,  -- Eindeutige ID für jede Zeile (Frequenz/Ohr-Kombination)
+  rt_test_id INT NOT NULL,  -- Übergeordnete Test-ID (z. B. 1 für den ersten Test des Patienten)
+  rt_datum DATE NOT NULL,  -- Datum des Tests
+  rt_startzeit TIMESTAMP NOT NULL,  -- Startzeit des Tests
+  rt_endzeit TIMESTAMP NOT NULL,  -- Endzeit des Tests
+  rt_p_id INT NOT NULL REFERENCES p_patienten(p_id) ON DELETE CASCADE,  -- Fremdschlüssel zum Patienten
+  rt_frequenz INT NOT NULL,  -- Frequenz in Hz (125, 250, ..., 14000)
+  rt_ohr VARCHAR(10) NOT NULL,  -- Getestetes Ohr ("left", "right", "binaural")
+  rt_lautstaerke_db DECIMAL(5,2) NOT NULL,  -- Lautstärke in dB
+  rt_gehoert BOOLEAN NOT NULL  -- Wurde der Ton gehört? (true/false)
 );
 
 -- -----------------------------------------------------

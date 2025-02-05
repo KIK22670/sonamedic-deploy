@@ -5,11 +5,9 @@
     <title>SonaMedic - Audiometrie Ergebnisse</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="img/favicon.ico">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet" />
-    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
     <link href="../css/bootstrap.min.css" rel="stylesheet" />
     <link href="../css/sin_ergebnisse.css" rel="stylesheet" />
     <link href="../css/stylehome.css" rel="stylesheet" />
@@ -86,20 +84,32 @@
         document.addEventListener('DOMContentLoaded', function () {
             const testList = document.getElementById('testList');
 
-            fetch(`/getAudiometrieTests?u_id=${sessionStorage.getItem('u_id')}`)
-                .then((response) => response.json())
-                .then((tests) => {
+            fetch('/getAudiometrieTests')
+                .then(response => {
+                    if (!response.ok) throw new Error('Fehler beim Abrufen der Testergebnisse');
+                    return response.json();
+                })
+                .then(tests => {
                     if (tests.length === 0) {
-                        testList.innerHTML = '<li>Keine Testergebnisse verfügbar.</li>';
+                        testList.innerHTML = '<li class="list-group-item">Keine Testergebnisse verfügbar.</li>';
                     } else {
-                        tests.forEach((test) => {
+                        tests.forEach(test => {
                             const listItem = document.createElement('li');
-                            listItem.innerHTML = `<b>Testnummer ${test.testnummer}</b> - ${new Date(test.erstellt_am).toLocaleString()}`;
+                            listItem.className = 'list-group-item';
+                            listItem.innerHTML = `
+                                <strong>Test ID:</strong> ${test.rt_test_id} <br>
+                                <strong>Datum:</strong> ${new Date(test.rt_datum).toLocaleDateString()} <br>
+                                <strong>Zeit:</strong> ${new Date(test.rt_startzeit).toLocaleTimeString()} - ${new Date(test.rt_endzeit).toLocaleTimeString()} <br>
+                                <strong>Frequenz:</strong> ${test.rt_frequenz} Hz <br>
+                                <strong>Ohr:</strong> ${test.rt_ohr} <br>
+                                <strong>Lautstärke:</strong> ${test.rt_lautstaerke_db} dB <br>
+                                <strong>Gehört:</strong> ${test.rt_gehoert ? 'Ja' : 'Nein'}
+                            `;
                             testList.appendChild(listItem);
                         });
                     }
                 })
-                .catch((error) => console.error('Fehler:', error));
+                .catch(error => console.error('Fehler:', error));
         });
     </script>
 </body>

@@ -5,7 +5,6 @@
     <title>SonaMedic - Reintonaudiometrie Test</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="img/favicon.ico">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet" />
     <link href="../css/bootstrap.min.css" rel="stylesheet" />
     <link href="../css/stylehome.css" rel="stylesheet" />
@@ -304,18 +303,27 @@
                     source.connect(panner).connect(audioContext.destination);
                 }
             }
-
+            
             function updateFrequencyDisplay() {
-                audioPlayer.pause();
-                audioPlayer.currentTime = 0;
+                if (!audioPlayer.paused) {
+                    audioPlayer.pause(); // Pausiere den Ton, falls er abgespielt wird
+                }
+                audioPlayer.currentTime = 0; // Setze die Audiozeit zurück
                 const frequency = frequencies[currentFrequencyIndex];
                 frequencyDisplay.textContent = `Frequenz: ${frequency} Hz - ${selectedEar}`;
                 audioPlayer.src = `Reintonaudios/${frequency}.wav`;
                 setAudioChannel(selectedEar);
                 audioPlayer.loop = true;
-                audioPlayer.play();
-                playButton.textContent = "Ton abschalten";
+
+                // Warte, bis das Audio geladen ist, bevor es abgespielt wird
+                audioPlayer.load(); // Lade das Audio neu
+                audioPlayer.play().then(() => {
+                    playButton.textContent = "Ton abschalten";
+                }).catch((error) => {
+                    console.error('Fehler beim Abspielen des Tons:', error);
+                });
             }
+
 
             function setAudioChannel(ear) {
                 if (!panner || !panner.pan) return;
@@ -363,13 +371,21 @@
                 saveResult(false);
                 nextFrequency();
             });
+
+            let currentTestId = null; // Übergeordnete Test-ID für den aktuellen Test
+
             function saveResult(heard) {
-                const frequency = frequencies[currentFrequencyIndex];
-                const testNumber = currentFrequencyIndex + 1;
+            const frequency = frequencies[currentFrequencyIndex];
+            const testNumber = currentFrequencyIndex + 1;
+
+                // Wenn currentTestId null ist, starte einen neuen Test
+                if (currentTestId === null) {
+                    currentTestId = Date.now(); // Verwende den aktuellen Zeitstempel als Test-ID
+                }
 
                 const payload = {
-                    u_id: sessionStorage.getItem('u_id'), // Patient ID aus Session speichern
-                    testNumber,
+                    test_id: currentTestId, // Übergeordnete Test-ID
+                    testNumber, // Unter-ID (Frequenz/Ohr-Kombination)
                     frequency,
                     result: heard,
                     ear: selectedEar,
@@ -381,10 +397,19 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload),
-                }).then((response) => {
+                })
+                .then((response) => {
                     if (!response.ok) {
-                        alert('Fehler beim Speichern des Ergebnisses.');
+                        throw new Error('Fehler beim Speichern des Ergebnisses.');
                     }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log('Ergebnis erfolgreich gespeichert:', data);
+                })
+                .catch((error) => {
+                    console.error('Fehler:', error);
+                    alert('Fehler beim Speichern des Ergebnisses. Bitte versuchen Sie es erneut.');
                 });
             }
 
