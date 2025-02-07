@@ -32,13 +32,14 @@ body {
 .main-content {
     margin-left: 220px;
     padding: 20px;
-}
+}/* Formularanpassungen */
 .card {
     border: none;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-left: 27%;
     margin-bottom: 10%;
+    background-color: #ffffff;
 }
 
 .card-header {
@@ -46,10 +47,13 @@ body {
     color: #ffffff;
     border-bottom: none;
     border-radius: 15px 15px 0 0;
+    padding: 15px;
+    font-size: 1.3rem;
+    text-align: center;
 }
 
 .card-body {
-    padding: 20px;
+    padding: 30px;
 }
 
 .form-group {
@@ -59,12 +63,36 @@ body {
 label {
     font-weight: bold;
     color: #866a67;
+    font-size: 1.1rem;
+}
+
+input,
+textarea {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 12px 15px;
+    width: 100%;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #866a67;
+    box-shadow: 0 0 5px rgba(134, 106, 103, 0.5);
+}
+
+textarea[readonly] {
+    background-color: #e9ecef;
 }
 
 .btn-primary {
     background-color: #866a67;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
 }
 
 .btn-primary:hover {
@@ -74,10 +102,21 @@ label {
 .btn-success {
     background-color: #786765;
     border-color: #786765;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 10px;
 }
 
-textarea[readonly] {
-    background-color: #e9ecef;
+.btn-success:hover {
+    background-color: #665e57;
+}
+
+/* Zusätzliche Animationen für Eingabefelder */
+input:focus,
+textarea:focus {
+    border-color: #866a67;
+    outline: none;
+    box-shadow: 0 0 10px rgba(134, 106, 103, 0.5);
 }
 
 /* Badge-Animation für Benachrichtigungen */
