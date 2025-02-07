@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS p_patienten (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS reintonaudiometrie (
   rt_id SERIAL PRIMARY KEY,  -- Eindeutige ID für jede Zeile (Frequenz/Ohr-Kombination)
-  rt_test_id INT NOT NULL,  -- Übergeordnete Test-ID (z. B. 1 für den ersten Test des Patienten)
+  rt_test_id BIGINT NOT NULL,  -- Übergeordnete Test-ID (z. B. 1 für den ersten Test des Patienten)
   rt_datum DATE NOT NULL,  -- Datum des Tests
   rt_startzeit TIMESTAMP NOT NULL,  -- Startzeit des Tests
   rt_endzeit TIMESTAMP NOT NULL,  -- Endzeit des Tests

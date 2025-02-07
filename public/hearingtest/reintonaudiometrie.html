@@ -307,7 +307,15 @@
             function updateFrequencyDisplay() {
                 if (!audioPlayer.paused) {
                     audioPlayer.pause(); // Pausiere den Ton, falls er abgespielt wird
+                    setTimeout(() => {
+                        loadAndPlayAudio();
+                    }, 100); // Kurze Verzögerung von 100 ms
+                } else {
+                    loadAndPlayAudio();
                 }
+            }
+
+            function loadAndPlayAudio() {
                 audioPlayer.currentTime = 0; // Setze die Audiozeit zurück
                 const frequency = frequencies[currentFrequencyIndex];
                 frequencyDisplay.textContent = `Frequenz: ${frequency} Hz - ${selectedEar}`;
@@ -317,10 +325,23 @@
 
                 // Warte, bis das Audio geladen ist, bevor es abgespielt wird
                 audioPlayer.load(); // Lade das Audio neu
-                audioPlayer.play().then(() => {
-                    playButton.textContent = "Ton abschalten";
-                }).catch((error) => {
-                    console.error('Fehler beim Abspielen des Tons:', error);
+
+                // Event-Listener für das 'canplaythrough'-Ereignis
+                audioPlayer.addEventListener('canplaythrough', function onCanPlayThrough() {
+                    audioPlayer.removeEventListener('canplaythrough', onCanPlayThrough);
+                    audioPlayer.play()
+                        .then(() => {
+                            playButton.textContent = "Ton abschalten";
+                        })
+                        .catch((error) => {
+                            console.error('Fehler beim Abspielen des Tons:', error);
+                        });
+                }, { once: true });
+
+                // Fehlerbehandlung für fehlende Audiodateien
+                audioPlayer.addEventListener('error', function onError() {
+                    console.error('Fehler beim Laden der Audiodatei:', audioPlayer.error);
+                    alert('Fehler beim Laden der Audiodatei. Bitte stellen Sie sicher, dass die Datei existiert und korrekt ist.');
                 });
             }
 
