@@ -235,7 +235,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-
             const frequencies = [125, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000, 8000, 10000, 12000, 14000];
             let currentFrequencyIndex = 0;
             const allEars = ["left", "right", "binaural"];
@@ -263,6 +262,7 @@
                     earOrder = [selectedEar, ...allEars.filter(ear => ear !== selectedEar)];
                     instructionsSection.style.display = 'none';
                     testSection.style.display = 'block';
+                    currentFrequencyIndex = 0;
                     initializeAudio();
                     updateFrequencyDisplay();
                 } else {
@@ -288,9 +288,6 @@
             prevFrequencyButton.addEventListener('click', function () {
                 if (currentFrequencyIndex > 0) {
                     currentFrequencyIndex--;
-                    hearingButtons.style.display = 'flex';
-                    resultsButton.style.display = 'none';
-                    nextEarButton.style.display = 'none';
                     updateFrequencyDisplay();
                 }
             });
@@ -303,30 +300,27 @@
                     source.connect(panner).connect(audioContext.destination);
                 }
             }
-            
+
             function updateFrequencyDisplay() {
                 if (!audioPlayer.paused) {
-                    audioPlayer.pause(); // Pausiere den Ton, falls er abgespielt wird
+                    audioPlayer.pause();
                     setTimeout(() => {
                         loadAndPlayAudio();
-                    }, 100); // Kurze Verzögerung von 100 ms
+                    }, 100);
                 } else {
                     loadAndPlayAudio();
                 }
             }
 
             function loadAndPlayAudio() {
-                audioPlayer.currentTime = 0; // Setze die Audiozeit zurück
+                audioPlayer.currentTime = 0;
                 const frequency = frequencies[currentFrequencyIndex];
                 frequencyDisplay.textContent = `Frequenz: ${frequency} Hz - ${selectedEar}`;
                 audioPlayer.src = `Reintonaudios/${frequency}.wav`;
                 setAudioChannel(selectedEar);
                 audioPlayer.loop = true;
+                audioPlayer.load();
 
-                // Warte, bis das Audio geladen ist, bevor es abgespielt wird
-                audioPlayer.load(); // Lade das Audio neu
-
-                // Event-Listener für das 'canplaythrough'-Ereignis
                 audioPlayer.addEventListener('canplaythrough', function onCanPlayThrough() {
                     audioPlayer.removeEventListener('canplaythrough', onCanPlayThrough);
                     audioPlayer.play()
@@ -338,24 +332,15 @@
                         });
                 }, { once: true });
 
-                // Fehlerbehandlung für fehlende Audiodateien
                 audioPlayer.addEventListener('error', function onError() {
                     console.error('Fehler beim Laden der Audiodatei:', audioPlayer.error);
                     alert('Fehler beim Laden der Audiodatei. Bitte stellen Sie sicher, dass die Datei existiert und korrekt ist.');
                 });
             }
 
-
             function setAudioChannel(ear) {
                 if (!panner || !panner.pan) return;
-
-                if (ear === "left") {
-                    panner.pan.value = -1; // Linkes Ohr -> linker Kanal
-                } else if (ear === "right") {
-                    panner.pan.value = 1; // Rechtes Ohr -> rechter Kanal
-                } else {
-                    panner.pan.value = 0; // Binaural (beide Kanäle)
-                }
+                panner.pan.value = ear === "left" ? -1 : ear === "right" ? 1 : 0;
             }
 
             volumeSlider.addEventListener('input', function () {
@@ -374,16 +359,6 @@
             });
 
             document.getElementById('hearButton').addEventListener('click', function () {
-                nextFrequency();
-            });
-
-            document.getElementById('notHearButton').addEventListener('click', function () {
-                nextFrequency();
-            });
-
-
-            // Call saveResult when "Ich höre" or "Ich höre nicht" is clicked
-            document.getElementById('hearButton').addEventListener('click', function () {
                 saveResult(true);
                 nextFrequency();
             });
@@ -393,66 +368,64 @@
                 nextFrequency();
             });
 
-            let currentTestId = null; // Übergeordnete Test-ID für den aktuellen Test
+            let currentTestId = null;
 
             function saveResult(heard) {
-            const frequency = frequencies[currentFrequencyIndex];
-            const testNumber = currentFrequencyIndex + 1;
+                const frequency = frequencies[currentFrequencyIndex];
+                const testNumber = currentFrequencyIndex + 1;
 
-                // Wenn currentTestId null ist, starte einen neuen Test
                 if (currentTestId === null) {
-                    currentTestId = Date.now(); // Verwende den aktuellen Zeitstempel als Test-ID
+                    currentTestId = Date.now();
                 }
 
                 const payload = {
-                    test_id: currentTestId, // Übergeordnete Test-ID
-                    testNumber, // Unter-ID (Frequenz/Ohr-Kombination)
+                    test_id: currentTestId,
+                    testNumber,
                     frequency,
                     result: heard,
                     ear: selectedEar,
                 };
 
-                console.log('Sende Daten:', payload); // Debugging
+                console.log('Sende Daten:', payload);
 
                 fetch('/saveTestResult', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload),
                 })
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Fehler beim Speichern des Ergebnisses.');
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log('Ergebnis erfolgreich gespeichert:', data);
-                })
-                .catch((error) => {
-                    console.error('Fehler:', error);
-                    alert('Fehler beim Speichern des Ergebnisses. Bitte versuchen Sie es erneut.');
-                });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Fehler beim Speichern des Ergebnisses.');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Ergebnis erfolgreich gespeichert:', data);
+                    })
+                    .catch(error => {
+                        console.error('Fehler:', error);
+                        alert('Fehler beim Speichern des Ergebnisses. Bitte versuchen Sie es erneut.');
+                    });
             }
 
             function nextFrequency() {
                 if (currentFrequencyIndex < frequencies.length - 1) {
                     currentFrequencyIndex++;
                     updateFrequencyDisplay();
+                } else if (earOrder.length > 1) {
+                    earOrder.shift();
+                    selectedEar = earOrder[0];
+                    currentFrequencyIndex = 0;
+                    updateFrequencyDisplay();
                 } else {
                     hearingButtons.style.display = 'none';
-                    nextEarButton.style.display = earOrder.length > 1 ? 'block' : 'none';
-                    if (earOrder.length <= 1) {
-                        resultsButton.style.display = 'block';
-                    }
+                    nextEarButton.style.display = 'none';
+                    resultsButton.style.display = 'block';
                 }
             }
-
-            //updateFrequencyDisplay();
         });
-
-
-
     </script>
+
 
 </body>
 
