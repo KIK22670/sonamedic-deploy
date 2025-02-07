@@ -348,15 +348,15 @@
 
             function setAudioChannel(ear) {
                 if (!panner || !panner.pan) return;
+
                 if (ear === "left") {
-                    panner.pan.value = 1; // Linkes Ohr -> rechter Kanal
+                    panner.pan.value = -1; // Linkes Ohr -> linker Kanal
                 } else if (ear === "right") {
-                    panner.pan.value = -1; // Rechtes Ohr -> linker Kanal
+                    panner.pan.value = 1; // Rechtes Ohr -> rechter Kanal
                 } else {
-                    panner.pan.value = 0; // Binaural
+                    panner.pan.value = 0; // Binaural (beide Kanäle)
                 }
             }
-
 
             volumeSlider.addEventListener('input', function () {
                 volumeValue.textContent = `${volumeSlider.value} dB`;
