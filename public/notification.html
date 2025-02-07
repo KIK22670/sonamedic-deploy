@@ -20,51 +20,115 @@
             padding: 20px;
             margin-left: 17%;
             padding-top: 50px;
+            
         }
         .notification-card {
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-            padding: 15px;
-            position: relative;
+        background-color: #ffffff;
+        border-left: 5px solid #866a67;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .notification-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .notification-card h5 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #866a67;
+    }
+    .notification-card p {
+        font-size: 14px;
+        color: #555;
+    }
+    .notification-button {
+        background-color: #866a67;
+        color: white;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .notification-button:hover {
+        background-color: #796462;
+    }
+    .close-btn {
+        cursor: pointer;
+        color: #999;
+        font-size: 20px;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        transition: color 0.3s ease;
+    }
+    .close-btn:hover {
+        color: #333;
+    }
+    .toast-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #28a745;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transform: translateY(-20px);
+        animation: slideIn 0.5s forwards, fadeOut 5s forwards 3s;
+        z-index: 9999;
+    }
+    @keyframes slideIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
-        .notification-card h5 {
-            margin-bottom: 10px;
+    }
+    @keyframes fadeOut {
+        to {
+            opacity: 0;
+            transform: translateY(-20px);
         }
-        .navbar-brand img {
-            width: 280px;
-        }
-        .alert-warning {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        .notification-bell {
-            position: relative;
-        }
-        .notification-count {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: red;
-            color: white;
-            font-size: 12px;
-            padding: 5px;
-            border-radius: 50%;
-        }
-        .close-btn {
-            cursor: pointer;
-            color: #ff0000;
-            font-size: 20px;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 10;
-        }
+    }
+        /* Badge-Animation für Benachrichtigungen */
+.badge-animation {
+    transition: all 0.3s ease; 
+    transform: scale(1);
+    position: relative; /* Position für das Popping */
+    animation: none; /* Kein initialer Effekt */
+}
+
+.badge-pop {
+    transform: scale(1.3); /* Vergrößert das Badge */
+    background-color: #ff0000; /* Rotes Hintergrund für die Benachrichtigung */
+    animation: badgePopping 0.5s ease-out infinite; /* Animiert das "Popping" */
+}
+
+@keyframes badgePopping {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
     </style>
 </head>
 
-<body>
+<body data-user-id="{{ userId }}">
+
     <!-- Navbar Start -->
     <div class="container-fluid sticky-top bg-white shadow-sm">
         <div class="container">
@@ -93,8 +157,10 @@
     <div class="container">
         <div class="navbar-nav">
             <a href="notification.html" class="nav-item nav-link">
-                <i class="fas fa-bell"></i> Nachrichten
-            </a>
+    <i class="fas fa-bell"></i> Nachrichten
+    <span id="notificationBadge" class="badge bg-danger ms-2 badge-animation" style="display: none;">0</span>
+</a>
+
             <a href="stammdaten.html" class="nav-item nav-link">
                 <i class="bi bi-person-badge"></i> Stammdaten
             </a>
@@ -118,100 +184,108 @@
 </nav>
 <!-- Linke Navbar End -->
 
-    <!-- Notification Section -->
-    <div class="notification-container">
-        <h2>Benachrichtigungen</h2>
+  <!-- Notification Section -->
+  <div class="notification-container">
+    <h2>Benachrichtigungen</h2>
 
-        <!-- Dynamische Benachrichtigungen kommen hier -->
-        <div id="notificationsList">
-            <!-- Benachrichtigungskarten werden hier hinzugefügt -->
-        </div>
+    <!-- Dynamische Benachrichtigungen kommen hier -->
+    <div id="notificationsList">
+        <!-- Benachrichtigungskarten werden hier hinzugefügt -->
     </div>
+</div>
 
     <!-- Notification Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const notificationsList = document.getElementById('notificationsList');
-            let notificationCount = 0;
-
+            const todayDate = new Date().toISOString().split('T')[0]; // Format: "YYYY-MM-DD"
+    
             function createNotification(message, redirectUrl, notificationId) {
-                // Verhindert das erneute Anzeigen der Benachrichtigung, wenn sie bereits geschlossen wurde
-                if (localStorage.getItem(notificationId)) return;
-
+                const storageKey = `${notificationId}-${todayDate}`;
+    
+                // Verhindert das erneute Anzeigen der Benachrichtigung, wenn sie heute bereits geschlossen wurde
+                if (localStorage.getItem(storageKey)) return;
+    
                 const alertDiv = document.createElement('div');
                 alertDiv.classList.add('notification-card');
-                
-                // Uhrzeit nur beim ersten Laden setzen, sonst bleibt sie gleich
-                let notificationTime = localStorage.getItem(`${notificationId}-time`);
-                if (!notificationTime) {
-                    notificationTime = new Date().toLocaleString();
-                    localStorage.setItem(`${notificationId}-time`, notificationTime); // Speichern der Uhrzeit
-                }
-
+    
                 alertDiv.innerHTML = `
-                    <h5>Benachrichtigung</h5>
+                    <h5>Neue Benachrichtigung</h5>
                     <p>${message}</p>
-                    <span class="notification-time">${notificationTime}</span>
                     <button class="notification-button" onclick="window.location.href='${redirectUrl}'">Mehr erfahren</button>
                     <span class="close-btn" id="close-btn-${notificationId}">&#10006;</span>
                 `;
-                
+    
                 notificationsList.prepend(alertDiv);
-                notificationCount++;
-
-                // Hinzufügen des Event-Listeners für das Schließen der Benachrichtigung
+    
                 const closeButton = document.getElementById(`close-btn-${notificationId}`);
-                closeButton.addEventListener('click', function() {
+                closeButton.addEventListener('click', function () {
                     closeNotification(notificationId);
                 });
+                showToast("Neue Benachrichtigung erhalten!");
             }
-
-            // Funktion zum Schließen der Benachrichtigung
+    
             function closeNotification(notificationId) {
-                // Entfernt die Benachrichtigung aus der Anzeige
+                const storageKey = `${notificationId}-${todayDate}`;
+                localStorage.setItem(storageKey, 'true'); // Speichert, dass die Benachrichtigung für heute geschlossen wurde
                 const notificationElement = document.getElementById(`close-btn-${notificationId}`).parentElement;
                 notificationElement.remove();
-                // Speichert im localStorage, dass die Benachrichtigung geschlossen wurde
-                localStorage.setItem(notificationId, 'true');
             }
 
-            // Benachrichtigungen für "Speech-in-Noise" Test
-            fetch('http://localhost:3000/api/check-speech-in-noise-test')
+            function showToast(message) {
+            const toast = document.createElement('div');
+            toast.classList.add('toast-notification');
+            toast.innerText = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 6000); // Toast verschwindet nach 6 Sekunden
+        }
+    
+            // API-Abfragen zur täglichen Überprüfung der Benachrichtigungen
+            fetch('/api/check-speech-in-noise-test')
                 .then(response => response.json())
                 .then(data => {
                     if (data.alert) {
-                        createNotification('Ihr letztes Speech-in-Noise-Ergebnis liegt unter 50%. Bitte buchen Sie einen Termin für eine Überprüfung.', '/booking.html', 'speech_in_noise_test');
+                        createNotification(
+                            'Ihr letztes Speech-in-Noise-Ergebnis liegt unter 50%. Bitte buchen Sie einen Termin für eine Überprüfung.',
+                            '/booking.html',
+                            'speech_in_noise_test'
+                        );
                     }
                 })
-                .catch(error => console.error('Fehler beim Abrufen der Benachrichtigungen:', error));
-
-            // Benachrichtigungen für "Speech-in-Noise" Test 2
-            fetch('http://localhost:3000/api/check-speech-in-noise-test2')
+                .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
+    
+            fetch('/api/check-speech-in-noise-test2')
                 .then(response => response.json())
                 .then(data => {
                     if (data.alert) {
-                        createNotification('Ihre letzten 2 Speech-in-Noise-Ergebnisse liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.', '/booking.html', 'speech_in_noise_test2');
+                        createNotification(
+                            'Ihre letzten 2 Speech-in-Noise-Ergebnisse liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.',
+                            '/booking.html',
+                            'speech_in_noise_test2'
+                        );
                     }
                 })
-                .catch(error => console.error('Fehler beim Abrufen der Benachrichtigungen:', error));
-
-            // Benachrichtigungen für 7 Tage keine Tests
-            fetch('http://localhost:3000/api/check-seven-days-no-test')
+                .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
+    
+            fetch('/api/check-seven-days-no-test')
                 .then(response => response.json())
                 .then(data => {
                     if (data.alert) {
-                        createNotification('Es ist Zeit für einen neuen Test. Der letzte Test war vor mehr als 7 Tagen.', '/hearingtest/sin.html', 'seven_days_no_test');
+                        createNotification(
+                            'Es ist Zeit für einen neuen Test. Der letzte Test war vor mehr als 7 Tagen.',
+                            '/hearingtest/sin.html',
+                            'seven_days_no_test'
+                        );
                     }
                 })
-                .catch(error => console.error('Fehler beim Abrufen der Benachrichtigungen:', error));
-
-            // Anzeige der Benachrichtigungsanzahl
-            const notificationCountElement = document.getElementById('notificationCount');
-            if (notificationCount > 0) {
-                notificationCountElement.style.display = 'inline';
-                notificationCountElement.textContent = notificationCount;
-            }
+                .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
         });
     </script>
+    
+    <script src="notification.js"></script>
+    
 </body>
 </html>

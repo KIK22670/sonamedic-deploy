@@ -1105,15 +1105,18 @@ app.get('/speech-in-noise/results', async (req, res) => {
     }
 });
 
-// Überprüft, ob der letzte Hörtest unter 50% lag
+
+// Überprüft, ob der letzte Speech-in-Noise-Test unter 50% lag
 app.get('/api/check-speech-in-noise-test', async (req, res) => {
+    const userId = req.session.user.id;
+
     try {
         const result = await client.query(`
             SELECT * FROM sin_speech_in_noise_test
-            WHERE sin_p_id = 1
+            WHERE sin_p_id = $1
             ORDER BY sin_datum DESC
             LIMIT 1;
-        `);
+        `, [userId]); // Benutzer-ID verwenden
         const lastResult = result.rows;
         if (lastResult.length === 1 && lastResult.every(r => r.sin_ergebnis < 0.50)) {
             return res.json({
@@ -1127,20 +1130,17 @@ app.get('/api/check-speech-in-noise-test', async (req, res) => {
     }
 });
 
-// Überprüft, ob die letzten 2 Hörtests unter 100% liegen
+// Überprüft, ob die letzten 2 Speech-in-Noise-Tests unter 100% liegen
 app.get('/api/check-speech-in-noise-test2', async (req, res) => {
+    const userId = req.session.user.id;
     try {
-        console.log("Check Speech-in-Noise Test request received");
-        // Holen der letzten 2 Ergebnisse des Speech-in-Noise-Tests
         const result = await client.query(`
             SELECT * FROM sin_speech_in_noise_test
-            WHERE sin_p_id = 1  -- Ersetze 1 mit der aktuellen Patienten-ID
+            WHERE sin_p_id = $1
             ORDER BY sin_datum DESC
             LIMIT 2;
-        `);
-        console.log("Query result:", result.rows);
+        `, [userId]); // Benutzer-ID verwenden
         const lastTwoResults = result.rows;
-        // Wenn beide letzten Ergebnisse unter 50% liegen
         if (lastTwoResults.length === 2 && lastTwoResults.every(r => r.sin_ergebnis < 1.00)) {
             return res.json({
                 alert: true,
@@ -1156,13 +1156,14 @@ app.get('/api/check-speech-in-noise-test2', async (req, res) => {
 
 // Überprüft, ob der letzte Speech-in-Noise-Test mehr als 7 Tage zurückliegt
 app.get('/api/check-seven-days-no-test', async (req, res) => {
+    const userId = req.session.user.id;
     try {
         const result = await client.query(`
             SELECT * FROM sin_speech_in_noise_test
-            WHERE sin_p_id = 1
+            WHERE sin_p_id = $1
             ORDER BY sin_datum DESC
             LIMIT 1;
-        `);
+        `, [userId]); // Benutzer-ID verwenden
         const lastTest = result.rows[0];
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -1178,6 +1179,7 @@ app.get('/api/check-seven-days-no-test', async (req, res) => {
         res.status(500).send('Serverfehler');
     }
 });
+
 
 // Start server
 app.listen(PORT, () => {
