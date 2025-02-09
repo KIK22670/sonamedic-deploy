@@ -193,6 +193,97 @@
         <!-- Benachrichtigungskarten werden hier hinzugefügt -->
     </div>
 </div>
+
+    <!-- Notification Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const notificationsList = document.getElementById('notificationsList');
+            const todayDate = new Date().toISOString().split('T')[0]; // Format: "YYYY-MM-DD"
+    
+            function createNotification(message, redirectUrl, notificationId) {
+                const storageKey = `${notificationId}-${todayDate}`;
+    
+                // Verhindert das erneute Anzeigen der Benachrichtigung, wenn sie heute bereits geschlossen wurde
+                if (localStorage.getItem(storageKey)) return;
+    
+                const alertDiv = document.createElement('div');
+                alertDiv.classList.add('notification-card');
+    
+                alertDiv.innerHTML = `
+                    <h5>Neue Benachrichtigung</h5>
+                    <p>${message}</p>
+                    <button class="notification-button" onclick="window.location.href='${redirectUrl}'">Mehr erfahren</button>
+                    <span class="close-btn" id="close-btn-${notificationId}">&#10006;</span>
+                `;
+    
+                notificationsList.prepend(alertDiv);
+    
+                const closeButton = document.getElementById(`close-btn-${notificationId}`);
+                closeButton.addEventListener('click', function () {
+                    closeNotification(notificationId);
+                });
+                showToast("Neue Benachrichtigung erhalten!");
+            }
+    
+            function closeNotification(notificationId) {
+                const storageKey = `${notificationId}-${todayDate}`;
+                localStorage.setItem(storageKey, 'true'); // Speichert, dass die Benachrichtigung für heute geschlossen wurde
+                const notificationElement = document.getElementById(`close-btn-${notificationId}`).parentElement;
+                notificationElement.remove();
+            }
+
+            function showToast(message) {
+            const toast = document.createElement('div');
+            toast.classList.add('toast-notification');
+            toast.innerText = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 6000); // Toast verschwindet nach 6 Sekunden
+        }
+    
+            // API-Abfragen zur täglichen Überprüfung der Benachrichtigungen
+            fetch('/api/check-speech-in-noise-test')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.alert) {
+                        createNotification(
+                            'Ihr letztes Speech-in-Noise-Ergebnis liegt unter 50%. Bitte buchen Sie einen Termin für eine Überprüfung.',
+                            '/booking.html',
+                            'speech_in_noise_test'
+                        );
+                    }
+                })
+                .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
+    
+            fetch('/api/check-speech-in-noise-test2')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.alert) {
+                        createNotification(
+                            'Ihre letzten 2 Speech-in-Noise-Ergebnisse liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.',
+                            '/booking.html',
+                            'speech_in_noise_test2'
+                        );
+                    }
+                })
+                .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
+    
+            fetch('/api/check-seven-days-no-test')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.alert) {
+                        createNotification(
+                            'Es ist Zeit für einen neuen Test. Der letzte Test war vor mehr als 7 Tagen.',
+                            '/hearingtest/sin.html',
+                            'seven_days_no_test'
+                        );
+                    }
+                })
+                .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
+        });
+    </script>
     
     <script src="notification.js"></script>
     
