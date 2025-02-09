@@ -638,7 +638,31 @@ app.post('/saveTestResult', async (req, res) => {
             return res.status(404).json({ error: 'Benutzer nicht gefunden.' });
         }
 
-        const p_id = userQuery.rows[0].u_p_id;
+        let p_id = userQuery.rows[0].u_p_id;
+
+        // Falls p_id NULL ist, erstelle einen neuen Patienten und aktualisiere u_p_id
+        if (!p_id) {
+            // Setze die Sequenz zurück, um doppelte p_id zu vermeiden
+            await client.query(
+                `SELECT setval('p_patienten_p_id_seq', (SELECT MAX(p_id) FROM p_patienten))`
+            );
+
+            // Füge einen neuen Patienten hinzu (mit Standardwerten)
+            const newPatient = await client.query(
+                `INSERT INTO p_patienten (p_vorname, p_nachname, p_geburtsdatum, p_geschlecht)
+                 VALUES ($1, $2, $3, $4)
+                 RETURNING p_id`,
+                ['Unbekannt', 'Unbekannt', '2000-01-01', 0] // 0 für "unbekannt"
+            );
+
+            p_id = newPatient.rows[0].p_id;
+
+            // Aktualisiere u_p_id für den Benutzer
+            await client.query(
+                'UPDATE u_userverwaltung SET u_p_id = $1 WHERE u_id = $2',
+                [p_id, u_id]
+            );
+        }
 
         // Speichere den übergeordneten Test (falls noch nicht vorhanden)
         const testExists = await client.query(
@@ -667,7 +691,6 @@ app.post('/saveTestResult', async (req, res) => {
         res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
-
 
 // Endpunkt zum Abrufen von Reintonaudiometrie-Ergebnissen
 app.get('/getAudiometrieTests', async (req, res) => {
