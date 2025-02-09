@@ -16,7 +16,7 @@
 
 <body>
     
- 
+    <script src="notification.js"></script>
     <!-- Navbar Start -->
     <div class="container-fluid sticky-top bg-white shadow-sm">
         <div class="container">
@@ -141,151 +141,163 @@
         </div>
     </div>
   
-<script>
+
+    <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Geburtsdatum maximal vor 18 Jahren setzen
-        const dateInput = document.getElementById('p_geburtsdatum');
-        const today = new Date();
-        const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-        dateInput.max = minDate.toISOString().split('T')[0];
-    
-        console.log('DOM ist geladen.');
-    });
-    
-    window.onload = () => {
-        console.log('Alle Ressourcen sind geladen, Stammdaten werden geladen...');
-        ladeStammdaten();
-    };
-    
-    function ladeStammdaten() {
-        console.log('Lade Stammdaten...');
-        fetch('/ladeStammdaten')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.stammdaten) {
-                    console.log('Stammdaten erfolgreich geladen.');
-                    const stammdaten = JSON.parse(data.stammdaten);
-                    Object.keys(stammdaten).forEach(key => {
-                        const input = document.getElementById(`p_${key}`);
-                        if (input) {
-                            input.value = stammdaten[key];
-                        }
-                    });
-                    prüfeStammdaten();  // Stammdaten erst prüfen, nachdem sie geladen wurden
-                } else {
-                    console.warn('Keine Stammdaten gefunden.');
-                    showModal('Ihre Stammdaten sind unvollständig. Bitte füllen Sie das Formular aus.');
-                    toggleEditMode(true);
-                    blockiereNavigationBeiUnvollständigenStammdaten(true);  // Blockiere Navigation direkt hier, wenn keine Stammdaten vorhanden sind
-                }
-            })
-            .catch(error => {
-                console.error('Fehler beim Laden der Stammdaten:', error);
-                showModal('Ein unerwarteter Fehler ist aufgetreten.');
-            });
-    }
-    
-    function prüfeStammdaten() {
-        console.log('Prüfe, ob die Stammdaten vollständig sind...');
-        const stammdatenGefüllt = istFormularVollständig();
-        if (stammdatenGefüllt) {
-            console.log('Stammdaten sind vollständig.');
-            toggleEditMode(false);
-            localStorage.setItem('stammdatenGefüllt', 'true');
-            blockiereNavigationBeiUnvollständigenStammdaten(false);  // Navigation aktivieren, wenn die Daten vollständig sind
-        } else {
-            console.log('Stammdaten sind unvollständig.');
-            showModal('Bitte füllen Sie alle Felder aus.', 'Unvollständige Stammdaten');
-            toggleEditMode(true);
-            localStorage.setItem('stammdatenGefüllt', 'false');
-            blockiereNavigationBeiUnvollständigenStammdaten(true);  // Navigation blockieren bei unvollständigen Stammdaten
-        }
-    }
-    
-    function stammdatenSpeichern() {
-        if (!istFormularVollständig()) {
-            console.warn('Formular ist unvollständig, Stammdaten werden nicht gespeichert.');
-            showModal('Bitte füllen Sie alle Felder aus.');
-            return;
-        }
-    
-        const formData = {};
-        ['vorname', 'nachname', 'email', 'telefonnummer', 'geburtsdatum', 'svnr', 'allergien', 'vorerkrankungen', 'medikamente'].forEach(id => {
-            formData[id] = document.getElementById(`p_${id}`).value;
-        });
-    
-        console.log('Sende Stammdaten zum Speichern:', formData);
-    
-        fetch('/speichereStammdaten', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Stammdaten erfolgreich gespeichert.');
-                localStorage.setItem('stammdatenGefüllt', 'true');
-                toggleEditMode(false);
-                showModal('Ihre Stammdaten wurden erfolgreich gespeichert.', 'Stammdaten gespeichert');
-                blockiereNavigationBeiUnvollständigenStammdaten(false);  // Sicherstellen, dass Links bei vollständigen Daten wieder aktiviert sind
+    const dateInput = document.getElementById('p_geburtsdatum');
+    const today = new Date();
+    const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    dateInput.max = minDate.toISOString().split('T')[0];
+
+    console.log('DOM ist geladen, prüfe Stammdaten...');
+    prüfeStammdaten();
+});
+
+window.onload = () => {
+    console.log('Seite wird geladen, Stammdaten werden geladen...');
+    ladeStammdaten();
+};
+
+function ladeStammdaten() {
+    console.log('Lade Stammdaten...');
+    fetch('/ladeStammdaten')
+        .then(response => response.json().catch(() => {
+            console.error('Antwort ist kein gültiges JSON.');
+            return {}; // Fallback für ungültige JSON-Antwort
+        }))
+        .then(data => {
+            if (data.success && data.stammdaten) {
+                console.log('Stammdaten erfolgreich geladen.');
+                const stammdaten = JSON.parse(data.stammdaten);
+                Object.keys(stammdaten).forEach(key => {
+                    if (document.getElementById(`p_${key}`)) {
+                        console.log(`Setze Wert für ${key}: ${stammdaten[key]}`);
+                        document.getElementById(`p_${key}`).value = stammdaten[key];
+                    }
+                });
+                prüfeStammdaten();
             } else {
-                console.error('Fehler beim Speichern der Stammdaten.');
-                showModal('Fehler beim Speichern der Stammdaten.');
+                console.error('Keine Stammdaten gefunden.');
+                showModal('Ihre Stammdaten sind unvollständig. Bitte füllen Sie das Formular aus.');
             }
         })
         .catch(error => {
-            console.error('Unerwarteter Fehler beim Speichern:', error);
-            showModal('Ein unerwarteter Fehler ist aufgetreten.');
+            console.error('Fehler beim Laden der Stammdaten:', error);
+            showModal('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
         });
+}
+
+function toggleEditMode(editMode) {
+    console.log(`Wechsel in den ${editMode ? 'Bearbeitungsmodus' : 'Anzeigemodus'}.`);
+    document.getElementById('editButton').classList.toggle('d-none', editMode);
+    document.getElementById('saveButton').classList.toggle('d-none', !editMode);
+    document.querySelectorAll('#stammdatenForm input, #stammdatenForm textarea').forEach(el => el.readOnly = !editMode);
+}
+
+function stammdatenSpeichern() {
+    if (!istFormularVollständig()) {
+        console.log('Formular ist unvollständig, speichere nicht.');
+        showModal('Bitte füllen Sie alle Felder aus.');
+        return;
     }
-    
-    function toggleEditMode(editMode) {
-        console.log(`Wechsel in den ${editMode ? 'Bearbeitungsmodus' : 'Anzeigemodus'}.`);
-        document.getElementById('editButton').classList.toggle('d-none', editMode);
-        document.getElementById('saveButton').classList.toggle('d-none', !editMode);
-        document.querySelectorAll('#stammdatenForm input, #stammdatenForm textarea').forEach(el => el.readOnly = !editMode);
-    }
-    
-    function blockiereNavigationBeiUnvollständigenStammdaten(block) {
-        const navItems = document.querySelectorAll('.left-navbar .nav-item');
-    
-        navItems.forEach(navItem => {
-            if (block) {
-                // Blockiert Navigation bei unvollständigen Stammdaten
-                navItem.style.pointerEvents = 'none';  // Deaktiviert den Klick
-                navItem.classList.add('disabled');     // Optional: fügt eine Klasse für visuelle Deaktivierung hinzu
-            } else {
-                // Ermöglicht Navigation bei vollständigen Stammdaten
-                navItem.style.pointerEvents = 'auto';  // Reaktiviert den Klick
-                navItem.classList.remove('disabled');
-            }
-        });
-    }
-    
-    function istFormularVollständig() {
-        const fields = ['p_vorname', 'p_nachname', 'p_email', 'p_telefonnummer', 'p_geburtsdatum', 'p_svnr'];
-        const isComplete = fields.every(id => document.getElementById(id).value.trim() !== '');
-        console.log(`Formular vollständig: ${isComplete}`);
-        return isComplete;
-    }
-    
-    function showModal(message, title = 'Hinweis') {
-        const modalTitle = document.querySelector('#incompleteDataModal .modal-title');
-        const modalBody = document.querySelector('#incompleteDataModal .modal-body');
-        modalTitle.textContent = title;
-        modalBody.textContent = message;
-    
-        console.log(`Zeige Modal: ${title} - ${message}`);
-        const modalInstance = new bootstrap.Modal(document.getElementById('incompleteDataModal'));
-        modalInstance.show();
-    }
-    
-    document.getElementById('editButton').addEventListener('click', () => {
-        console.log('Wechsle in den Bearbeitungsmodus...');
-        toggleEditMode(true);
+
+    const formData = {};
+    ['vorname', 'nachname', 'email', 'telefonnummer', 'geburtsdatum', 'svnr', 'allergien', 'vorerkrankungen', 'medikamente'].forEach(id => {
+        formData[id] = document.getElementById(`p_${id}`).value;
     });
+
+    console.log('Sende Stammdaten zum Speichern:', formData);
+
+    fetch('/speichereStammdaten', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Stammdaten erfolgreich gespeichert.');
+            localStorage.setItem('stammdatenGefüllt', 'true');
+            toggleEditMode(false);
+            showModal('Ihre Stammdaten wurden erfolgreich gespeichert.', 'Stammdaten erfolgreich gespeichert');
+            // Navigation überprüfen, nachdem die Stammdaten gespeichert wurden
+            blockiereNavigationBeiUnvollständigenStammdaten();
+        } else {
+            console.error('Fehler beim Speichern der Stammdaten.');
+            showModal('Fehler beim Speichern der Stammdaten.');
+        }
+    })
+    .catch(() => {
+        console.error('Unerwarteter Fehler beim Speichern.');
+        showModal('Ein unerwarteter Fehler ist aufgetreten.');
+    });
+}
+
+function prüfeStammdaten() {
+    console.log('Prüfe, ob die Stammdaten vollständig sind...');
+    const stammdatenGefüllt = localStorage.getItem('stammdatenGefüllt') === 'true';
     
+    if (!stammdatenGefüllt) {
+        console.log('Stammdaten sind unvollständig. Zeige Popup.');
+        showModal('Bitte füllen Sie alle Felder aus.', 'Unvollständige Stammdaten');
+        toggleEditMode(true); // Wechsel in den Bearbeitungsmodus
+    } else {
+        console.log('Stammdaten sind vollständig.');
+        toggleEditMode(false); // Wechsel in den Anzeigemodus
+    }
+    // Navigation nach dem Prüfen der Stammdaten blockieren
+    blockiereNavigationBeiUnvollständigenStammdaten();
+}
+
+function blockiereNavigationBeiUnvollständigenStammdaten() {
+    const stammdatenGefüllt = localStorage.getItem('stammdatenGefüllt') === 'true';
+    console.log(`Überprüfe Navigation: Stammdaten sind ${stammdatenGefüllt ? 'vollständig' : 'unvollständig'}`);
+
+    document.querySelectorAll('.left-navbar .nav-item').forEach(navItem => {
+        navItem.removeEventListener('click', navigationClickListener); // Entferne bestehende Event-Listener
+        navItem.addEventListener('click', navigationClickListener); // Füge den Listener immer wieder hinzu
+    });
+
+    // Listener-Funktion für die Navigation
+    function navigationClickListener(event) {
+        if (!stammdatenGefüllt) {
+            console.log('Navigation blockiert wegen unvollständiger Stammdaten.');
+            event.preventDefault();
+            $('#incompleteDataModal').modal('show');
+        }
+    }
+}
+
+function istFormularVollständig() {
+    const fields = ['p_vorname', 'p_nachname', 'p_email', 'p_telefonnummer', 'p_geburtsdatum', 'p_svnr', 'p_allergien', 'p_vorerkrankungen', 'p_medikamente'];
+    const isComplete = fields.every(id => document.getElementById(id).value.trim() !== '');
+    console.log(`Formular vollständig: ${isComplete}`);
+    return isComplete;
+}
+
+function showModal(message, title = 'Unvollständige Stammdaten') {
+    const modalTitle = document.querySelector('#incompleteDataModal .modal-title');
+    modalTitle.textContent = title;
+    const modalBody = document.querySelector('#incompleteDataModal .modal-body');
+    modalBody.textContent = message;
+    console.log(`Zeige Modal: ${title} - ${message}`);
+    $('#incompleteDataModal').modal('show');
+
+    // EventListener für das Schließen des Modals hinzufügen
+    $('#incompleteDataModal').on('hidden.bs.modal', function () {
+        console.log('Modal wurde geschlossen.');
+        // Überprüfe die Navigation nach dem Schließen des Modals
+        prüfeStammdaten();
+    });
+}
+
+document.getElementById('editButton').addEventListener('click', () => {
+    console.log('Wechsle in den Bearbeitungsmodus...');
+    toggleEditMode(true);
+});
+
+
     </script>
+    
     
 </body>
 
