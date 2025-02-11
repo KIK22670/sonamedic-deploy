@@ -29,11 +29,20 @@ async function loadAvailableSlots() {
         const response = await fetch(`${API_URL}/slots`, { credentials: 'include' });
         let slots = await response.json();
 
+        // Filter für Monat und Wochentag anwenden
+        slots = slots.filter(slot => {
+            const slotDate = new Date(slot.t_datum);
+            const matchesMonth = selectedMonth ? slotDate.getMonth() + 1 === selectedMonth : true;
+            const matchesDay = selectedDay !== null ? slotDate.getDay() === selectedDay : true;
+            return matchesMonth && matchesDay;
+        });
+
         const bookedResponse = await fetch(`${API_URL}/termine`, { credentials: 'include' });
         const bookedAppointments = await bookedResponse.json();
 
         console.log("📌 API Antwort für eigene gebuchte Termine:", bookedAppointments);
 
+        // Set mit bereits gebuchten Terminen erstellen
         const bookedSlots = new Set(bookedAppointments.map(slot => `${slot.t_datum} ${slot.t_uhrzeit}`));
 
         const container = document.getElementById('termine-container');
@@ -44,33 +53,39 @@ async function loadAvailableSlots() {
             return;
         }
 
-        slots.forEach(slot => {
-            const slotDiv = document.createElement('div');
-            slotDiv.className = 'termin m-2 p-2 border rounded';
-            slotDiv.style.backgroundColor = '#866a67';
+        // Termin-Gruppen für das Karussell (jeweils 6 Termine pro Slide)
+        let slides = "";
+        for (let i = 0; i < slots.length; i += 6) {
+            let activeClass = i === 0 ? "active" : "";
+            slides += `<div class="carousel-item ${activeClass}"><div class="row">`;
 
-            const timeText = document.createElement('p');
-            timeText.textContent = `${slot.t_datum} um ${slot.t_uhrzeit}`;
-            timeText.style.color = 'white';
-            slotDiv.appendChild(timeText);
+            for (let j = i; j < i + 6 && j < slots.length; j++) {
+                let slot = slots[j];
+                let slotKey = `${slot.t_datum} ${slot.t_uhrzeit}`; // Eindeutiger Schlüssel für Termin
+                let isBooked = bookedSlots.has(slotKey);
 
-            const isBooked = bookedSlots.has(`${slot.t_datum} ${slot.t_uhrzeit}`);
-
-            if (!isBooked) {
-                const button = document.createElement('button');
-                button.style.color = 'white';
-                button.className = 'btn btn-custom';
-                button.textContent = 'Termin wählen';
-                button.addEventListener('click', () => selectSlot(slot.t_datum, slot.t_uhrzeit));
-                slotDiv.appendChild(button);
+                slides += `
+                    <div class="col-md-4">
+                        <div class="termin" style="color: white;">
+                            <p style="color: white;"><strong>${slot.t_datum}</strong></p>
+                            <p style="color: white;">${slot.t_uhrzeit}</p>
+                            ${isBooked ? 
+                                `<p class="text-warning">Bereits gebucht</p>` : 
+                                `<button class="btn btn-light" style="color: black; font-weight: bold;" onclick="selectSlot('${slot.t_datum}', '${slot.t_uhrzeit}')">Termin wählen</button>`}
+                        </div>
+                    </div>`;
             }
 
-            container.appendChild(slotDiv);
-        });
+            slides += `</div></div>`;
+        }
+
+        // **Setze die innerHTML für das Karussell**
+        container.innerHTML = slides;
     } catch (err) {
         console.error('❌ Fehler beim Laden der Zeitfenster:', err);
     }
 }
+
 
 // Funktion: Zeitfenster auswählen
 function selectSlot(t_datum, t_uhrzeit) {
