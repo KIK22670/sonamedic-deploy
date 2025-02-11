@@ -26,66 +26,49 @@ function selectTermintyp(termintyp, buttonElement) {
 // Funktion: Verfügbare Zeitfenster laden
 async function loadAvailableSlots() {
     try {
-        const response = await fetch(`${API_URL}/slots`);
+        const response = await fetch(`${API_URL}/slots`, { credentials: 'include' });
         let slots = await response.json();
 
-        // Filter für Monat und Wochentag anwenden
-        slots = slots.filter(slot => {
-            const slotDate = new Date(slot.t_datum);
-            const matchesMonth = selectedMonth ? slotDate.getMonth() + 1 === selectedMonth : true;
-            const matchesDay = selectedDay !== null ? slotDate.getDay() === selectedDay : true;
-            return matchesMonth && matchesDay;
-        });
+        const bookedResponse = await fetch(`${API_URL}/termine`, { credentials: 'include' });
+        const bookedAppointments = await bookedResponse.json();
+
+        console.log("📌 API Antwort für eigene gebuchte Termine:", bookedAppointments);
+
+        const bookedSlots = new Set(bookedAppointments.map(slot => `${slot.t_datum} ${slot.t_uhrzeit}`));
 
         const container = document.getElementById('termine-container');
-        container.innerHTML = ''; // Alte Inhalte löschen
+        container.innerHTML = '';
 
         if (slots.length === 0) {
-            container.innerHTML = `<p class="text-center text-danger">Keine Termine gefunden. Bitte passen Sie Ihre Filter an.</p>`;
+            container.innerHTML = `<p class="text-center text-danger">Keine Termine gefunden.</p>`;
             return;
         }
 
-        const slotsPerPage = 6;
-        const pages = Math.ceil(slots.length / slotsPerPage);
+        slots.forEach(slot => {
+            const slotDiv = document.createElement('div');
+            slotDiv.className = 'termin m-2 p-2 border rounded';
+            slotDiv.style.backgroundColor = '#866a67';
 
-        for (let i = 0; i < pages; i++) {
-            const div = document.createElement('div');
-            div.className = `carousel-item ${i === 0 ? 'active' : ''}`;
-            const pageSlots = slots.slice(i * slotsPerPage, (i + 1) * slotsPerPage);
+            const timeText = document.createElement('p');
+            timeText.textContent = `${slot.t_datum} um ${slot.t_uhrzeit}`;
+            timeText.style.color = 'white';
+            slotDiv.appendChild(timeText);
 
-            const innerDiv = document.createElement('div');
-            innerDiv.className = 'd-flex flex-wrap justify-content-center';
+            const isBooked = bookedSlots.has(`${slot.t_datum} ${slot.t_uhrzeit}`);
 
-            pageSlots.forEach(slot => {
-                const slotDiv = document.createElement('div');
-                slotDiv.className = 'termin m-2 p-2 border rounded';
-                slotDiv.style.backgroundColor = '#866a67';
-
-                const dayText = document.createElement('p');
-                dayText.textContent = new Date(slot.t_datum).toLocaleDateString('de-DE', { weekday: 'long' });
-                slotDiv.appendChild(dayText);
-                dayText.style.color = 'white';
-
-                const timeText = document.createElement('p');
-                timeText.textContent = `${slot.t_datum} um ${slot.t_uhrzeit}`;
-                timeText.style.color = 'white';
-                slotDiv.appendChild(timeText);
-
+            if (!isBooked) {
                 const button = document.createElement('button');
                 button.style.color = 'white';
                 button.className = 'btn btn-custom';
                 button.textContent = 'Termin wählen';
                 button.addEventListener('click', () => selectSlot(slot.t_datum, slot.t_uhrzeit));
                 slotDiv.appendChild(button);
+            }
 
-                innerDiv.appendChild(slotDiv);
-            });
-
-            div.appendChild(innerDiv);
-            container.appendChild(div);
-        }
+            container.appendChild(slotDiv);
+        });
     } catch (err) {
-        console.error('Fehler beim Laden der Zeitfenster:', err);
+        console.error('❌ Fehler beim Laden der Zeitfenster:', err);
     }
 }
 
@@ -152,7 +135,6 @@ function showBookingError(message) {
     bookingErrorContainer.style.display = 'block';
     bookingErrorContainer.innerHTML = `<p class="text-danger">${message}</p>`;
 }
-
 
 
 

@@ -798,7 +798,6 @@ async function insertTimeSlotsIntoDatabase(openingHours) {
 // Funktion aufrufen
 insertTimeSlotsIntoDatabase(openingHours);
 
-
 // Funktion zur Generierung von Zeitfenstern
 function generateTimeSlots(openingHours) {
     const slots = [];
@@ -837,18 +836,28 @@ function generateTimeSlots(openingHours) {
 let slots = generateTimeSlots(openingHours);
 
 // Endpunkt: Verfügbare Slots abrufen (nur noch freie Termine anzeigen)
+// Endpunkt: Verfügbare Slots abrufen (nur eigene und freie Termine)
 app.get('/slots', async (req, res) => {
+    const t_p_id = req.session.user?.id; // Benutzer-ID aus der Session
+
+    if (!t_p_id) {
+        return res.status(401).json({ error: 'Nicht autorisiert. Bitte einloggen.' });
+    }
+
     try {
         // Alle gebuchten Termine aus der Datenbank holen
-        const bookedAppointments = await client.query('SELECT t_datum, t_uhrzeit FROM t_termine');
+        const bookedAppointments = await client.query(
+            'SELECT t_datum, t_uhrzeit, t_p_id FROM t_termine WHERE t_p_id != $1',
+            [t_p_id]
+        );
         const bookedSlots = bookedAppointments.rows.map(slot => `${slot.t_datum} ${slot.t_uhrzeit}`);
 
-        // Filtert nur die Slots heraus, die noch nicht gebucht wurden
+        // Filtert nur die Slots heraus, die noch nicht von anderen Benutzern gebucht wurden
         const availableSlots = slots.filter(slot => 
             !bookedSlots.includes(`${slot.t_datum} ${slot.t_uhrzeit}`)
         );
 
-        res.json(availableSlots); // Nur verfügbare Termine zurückgeben
+        res.json(availableSlots);
     } catch (error) {
         console.error('Fehler beim Abrufen der verfügbaren Slots:', error);
         res.status(500).json({ error: 'Interner Serverfehler' });
@@ -859,6 +868,7 @@ app.get('/slots', async (req, res) => {
 
 
 // Endpunkt: Termin buchen
+// Endpunkt: Termin BUCHEN (Benutzerspezifisch)
 app.post('/termine', async (req, res) => {
     const { t_datum, t_uhrzeit, t_termintyp } = req.body;
     const t_p_id = req.session.user?.id; // Patienten-ID aus der Session
@@ -868,7 +878,7 @@ app.post('/termine', async (req, res) => {
     }
 
     try {
-        // Prüfen, ob der Termin bereits gebucht wurde
+        // Prüfen, ob der Termin bereits für einen Benutzer vergeben ist
         const existingAppointment = await client.query(
             'SELECT * FROM t_termine WHERE t_datum = $1 AND t_uhrzeit = $2',
             [t_datum, t_uhrzeit]
@@ -902,7 +912,7 @@ app.post('/termine', async (req, res) => {
 
         const z_zeitslots_z_id = zeitslotResult.rows[0].z_id;
 
-        // Termin in die Datenbank einfügen
+        // Termin in die Datenbank einfügen mit Benutzer-ID
         const result = await client.query(
             'INSERT INTO t_termine (t_datum, t_uhrzeit, t_termintyp, t_p_id, tt_termintyp_tt_id, z_zeitslots_z_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
             [t_datum, t_uhrzeit, t_termintyp, t_p_id, tt_termintyp_tt_id, z_zeitslots_z_id]
@@ -919,12 +929,19 @@ app.post('/termine', async (req, res) => {
 
 
 // Endpunkt: Alle gebuchten Termine abrufen
+// Endpunkt: Alle gebuchten Termine ABRUFEN (nur für den eingeloggten Benutzer)
 app.get('/termine', async (req, res) => {
+    const t_p_id = req.session.user?.id; // Patienten-ID aus der Session
+
+    if (!t_p_id) {
+        return res.status(401).json({ error: 'Nicht autorisiert. Bitte einloggen.' });
+    }
+
     try {
-        const result = await client.query('SELECT * FROM t_termine');
+        const result = await client.query('SELECT * FROM t_termine WHERE t_p_id = $1', [t_p_id]);
         res.json(result.rows);
     } catch (error) {
-        console.error('Fehler beim Abrufen der Termine:', error);
+        console.error('Fehler beim Abrufen der Benutzer-Termine:', error);
         res.status(500).send('Interner Serverfehler');
     }
 });
@@ -977,6 +994,7 @@ app.put('/termine/:id', async (req, res) => {
         res.status(500).send('Interner Serverfehler');
     }
 });
+
 
 //-----------------------------------------------------
 
