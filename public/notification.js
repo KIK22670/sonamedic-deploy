@@ -1,42 +1,163 @@
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('DOMContentLoaded Event fired');
+    
     const notificationBadge = document.getElementById('notificationBadge');
-    const userId = document.body.getAttribute('data-user-id'); // Benutzer-ID vom Backend übergeben
-    console.log('User ID:', userId); // Logge die Benutzer-ID
+    const notificationsList = document.getElementById('notificationsList');
+    const todayDate = new Date().toISOString().split('T')[0]; // Format: "YYYY-MM-DD"
+    console.log('notificationBadge:', notificationBadge);
+    console.log('notificationsList:', notificationsList);
 
-    // Funktion zur Überprüfung der Benachrichtigungen
-    function checkNotifications() {
-        console.log('Starte Überprüfung der Benachrichtigungen...');
-        Promise.all([
-            fetch(`/api/check-speech-in-noise-test?userId=${userId}`).then(res => res.json()),
-            fetch(`/api/check-speech-in-noise-test2?userId=${userId}`).then(res => res.json()),
-            fetch(`/api/check-seven-days-no-test?userId=${userId}`).then(res => res.json())
-        ]).then(results => {
-            console.log('Ergebnisse der Benachrichtigungsabfragen:', results); // Logge die Ergebnisse der API-Abfragen
-            const activeNotifications = results.filter(result => result.alert);
-            console.log('Aktive Benachrichtigungen (mit Alert):', activeNotifications); // Logge nur die Benachrichtigungen mit Alert
-            const notificationCount = activeNotifications.length;
+    // Funktion zum Aktualisieren des Badge-Zählers
+    function updateBadgeCount() {
+        console.log("updateBadgeCount called");
 
-            // Setzen der Badge-Anzeige
-            if (notificationCount > 0) {
-                notificationBadge.textContent = notificationCount;
-                notificationBadge.style.display = 'inline';
+        // Nur auf notification.html: Benachrichtigungen zählen
+        if (notificationsList) {
+            console.log("Auf notification.html Seite");
+
+            const remainingNotifications = document.querySelectorAll('.notification-card').length;
+            console.log("remainingNotifications (notification.html):", remainingNotifications);
+    
+            // Badge aktualisieren, falls es Benachrichtigungen gibt
+            if (remainingNotifications > 0) {
+                notificationBadge.innerText = remainingNotifications;
+                notificationBadge.style.display = 'inline-block';
+                console.log("Badge angezeigt mit Anzahl:", remainingNotifications);
             } else {
                 notificationBadge.style.display = 'none';
+                console.log("Badge versteckt, keine Benachrichtigungen");
             }
-        }).catch(error => {
-            console.error('Fehler beim Überprüfen der Benachrichtigungen:', error);
-        });
+        } else {
+            console.log("Auf einer anderen Seite als notification.html");
+    
+            // Auf anderen Seiten (z. B. stammdaten.html) den Zähler aus localStorage verwenden
+            const storedNotifications = Object.keys(localStorage).filter(key => key.endsWith(todayDate) && !localStorage.getItem(key)).length;
+            console.log("storedNotifications (localStorage):", storedNotifications);
+    
+            // Badge-Zähler aus localStorage verwenden
+            if (storedNotifications > 0) {
+                notificationBadge.innerText = storedNotifications;
+                notificationBadge.style.display = 'inline-block';
+                console.log("Badge angezeigt mit Anzahl:", storedNotifications);
+            } else {
+                notificationBadge.style.display = 'none';
+                console.log("Badge versteckt, keine gespeicherten Benachrichtigungen");
+            }
+        }
     }
 
-     // Beobachter, um Benachrichtigungen automatisch zu erkennen und die Anzeige zu aktualisieren
-     const notificationsList = document.getElementById('notificationsList');
-     const observer = new MutationObserver(() => {
-         checkNotifications();
-     });
- 
-     observer.observe(notificationsList, { childList: true });
+    // API-Abfragen zur täglichen Überprüfung der Benachrichtigungen
+    fetch('/api/check-speech-in-noise-test')
+        .then(response => response.json())
+        .then(data => {
+            console.log('API check-speech-in-noise-test:', data);
+            if (data.alert) {
+                createNotification(
+                    'Ihr letztes Speech-in-Noise-Ergebnis liegt unter 50%. Bitte buchen Sie einen Termin für eine Überprüfung.',
+                    '/booking.html',
+                    'speech_in_noise_test'
+                );
+            }
+        })
+        .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
 
-   
-    // Erste Prüfung beim Laden der Seite
-    checkNotifications();
+    fetch('/api/check-speech-in-noise-test2')
+        .then(response => response.json())
+        .then(data => {
+            console.log('API check-speech-in-noise-test2:', data);
+            if (data.alert) {
+                createNotification(
+                    'Ihre letzten 2 Speech-in-Noise-Ergebnisse liegen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.',
+                    '/booking.html',
+                    'speech_in_noise_test2'
+                );
+            }
+        })
+        .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
+
+    fetch('/api/check-seven-days-no-test')
+        .then(response => response.json())
+        .then(data => {
+            console.log('API check-seven-days-no-test:', data);
+            if (data.alert) {
+                createNotification(
+                    'Es ist Zeit für einen neuen Test. Der letzte Test war vor mehr als 7 Tagen.',
+                    '/hearingtest/sin.html',
+                    'seven_days_no_test'
+                );
+            }
+        })
+        .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
+
+    // Badge-Zähler initial aktualisieren
+    setTimeout(() => {
+        console.log("Initial Badge update");
+        updateBadgeCount();
+    }, 100); // Zähler nach kurzer Verzögerung aktualisieren, um sicherzustellen, dass alle Benachrichtigungen geladen sind
+
+    // Wenn 'notificationsList' nicht existiert, Badge-Zähler trotzdem aktualisieren
+    if (!notificationsList && notificationBadge) {
+        console.log('notificationsList nicht gefunden, nur Badge-Zähler aktualisieren');
+        updateBadgeCount();
+    }
+
+    // Die createNotification-Funktion
+    function createNotification(message, redirectUrl, notificationId) {
+        const storageKey = `${notificationId}-${todayDate}`;
+
+        // Verhindert das erneute Anzeigen der Benachrichtigung, wenn sie heute bereits geschlossen wurde
+        if (localStorage.getItem(storageKey)) return;
+
+        const alertDiv = document.createElement('div');
+        alertDiv.classList.add('notification-card');
+        alertDiv.setAttribute('data-notification-id', notificationId); // Einfache Zuordnung für spätere Manipulation
+
+        alertDiv.innerHTML = `
+            <h5>Neue Benachrichtigung</h5>
+            <p>${message}</p>
+            <button class="notification-button" onclick="window.location.href='${redirectUrl}'">Mehr erfahren</button>
+            <span class="close-btn" id="close-btn-${notificationId}">&#10006;</span>
+        `;
+
+        notificationsList.prepend(alertDiv);
+
+        const closeButton = document.getElementById(`close-btn-${notificationId}`);
+        closeButton.addEventListener('click', function () {
+            closeNotification(notificationId);
+        });
+
+        // Sicherstellen, dass der Zähler nach der Benachrichtigung aktualisiert wird
+        setTimeout(() => {
+            console.log('updateBadgeCount after notification');
+            updateBadgeCount();
+        }, 0); // Zähler aktualisieren, nachdem die Benachrichtigung hinzugefügt wurde
+
+        showToast("Neue Benachrichtigung erhalten!");
+    }
+
+    // Funktion zum Schließen der Benachrichtigung
+    function closeNotification(notificationId) {
+        const storageKey = `${notificationId}-${todayDate}`;
+        localStorage.setItem(storageKey, 'true'); // Speichert, dass die Benachrichtigung geschlossen wurde
+
+        const notificationElement = document.querySelector(`[data-notification-id="${notificationId}"]`);
+        if (notificationElement) {
+            notificationElement.remove();
+        }
+
+        // Aktualisiert den Badge-Zähler nach dem Schließen der Benachrichtigung
+        updateBadgeCount();
+    }
+
+    // Zeigt Toast-Benachrichtigung an
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.classList.add('toast-notification');
+        toast.innerText = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 6000); // Toast verschwindet nach 6 Sekunden
+    }
 });
