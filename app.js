@@ -1223,6 +1223,89 @@ app.get('/api/check-seven-days-no-test', async (req, res) => {
     }
 });
 
+// Überprüft, ob der letzte Reintonaudiometrie-Test unter einem Schwellenwert (z.B. 50%) lag
+app.get('/api/check-reintonaudiometrie-test', async (req, res) => {
+    const userId = req.session.user.id;
+
+    try {
+        const result = await client.query(`
+            SELECT * FROM reintonaudiometrie
+            WHERE rt_p_id = $1
+            ORDER BY rt_datum DESC
+            LIMIT 1;
+        `, [userId]); // Benutzer-ID verwenden
+
+        const lastResult = result.rows;
+        if (lastResult.length === 1 && lastResult[0].rt_gehoert < 0.50) {
+            return res.json({
+                alert: true,
+                message: 'Ihr letztes Reintonaudiometrie-Ergebnis liegt unter 50%. Bitte buchen Sie einen Termin für eine Überprüfung.'
+            });
+        }
+        res.json({ alert: false });
+    } catch (err) {
+        res.status(500).send('Serverfehler');
+    }
+});
+
+// Überprüft, ob der letzte Reintonaudiometrie-Test mehr als 7 Tage zurückliegt
+app.get('/api/check-seven-days-no-reintonaudiometrie-test', async (req, res) => {
+    const userId = req.session.user.id;
+
+    try {
+        const result = await client.query(`
+            SELECT * FROM reintonaudiometrie
+            WHERE rt_p_id = $1
+            ORDER BY rt_datum DESC
+            LIMIT 1;
+        `, [userId]);
+
+        const lastTest = result.rows[0];
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        if (lastTest && new Date(lastTest.rt_datum) < sevenDaysAgo) {
+            return res.json({
+                alert: true,
+                message: 'Es ist Zeit für einen neuen Reintonaudiometrie-Test. Der letzte Test war vor mehr als 7 Tagen.'
+            });
+        }
+
+        res.json({ alert: false });
+    } catch (err) {
+        res.status(500).send('Serverfehler');
+    }
+});
+
+// Überprüft, ob die letzten 2 Reintonaudiometrie-Tests unter 100% lagen
+app.get('/api/check-two-reintonaudiometrie-tests-under-100', async (req, res) => {
+    const userId = req.session.user.id;
+
+    try {
+        const result = await client.query(`
+            SELECT * FROM reintonaudiometrie
+            WHERE rt_p_id = $1
+            ORDER BY rt_datum DESC
+            LIMIT 2;
+        `, [userId]);
+
+        const lastTwoResults = result.rows;
+
+        if (lastTwoResults.length === 2 &&
+            lastTwoResults.every(r => r.rt_gehoert < 1.00)) {
+            return res.json({
+                alert: true,
+                message: 'Ihre letzten 2 Reintonaudiometrie-Ergebnisse lagen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.'
+            });
+        }
+
+        res.json({ alert: false });
+    } catch (err) {
+        res.status(500).send('Serverfehler');
+    }
+});
+
+
 
 // Start server
 app.listen(PORT, () => {
