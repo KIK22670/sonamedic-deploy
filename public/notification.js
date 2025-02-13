@@ -89,38 +89,69 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
 
-        // API-Abfragen zur täglichen Überprüfung der Reintonaudiometrie-Ergebnisse
+      // Überprüft, ob der letzte Reintonaudiometrie-Test unter 50% lag
+fetch('/api/check-reintonaudiometrie-test')
+.then(response => response.json())
+.then(data => {
+    console.log('API check-reintonaudiometrie-test:', data);
+    if (data.alert) {
+        createNotification(
+            data.message,
+            '/hearingtest/reintonaudiometrie.html',
+            'reintonaudiometrie_test_under_50'
+        );
+    }
+})
+.catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
+
+// Überprüft, ob der letzte Reintonaudiometrie-Test mehr als 7 Tage zurückliegt
 fetch('/api/check-seven-days-no-reintonaudiometrie-test')
-.then(response => response.json())
-.then(data => {
-    console.log('API check-seven-days-no-reintonaudiometrie-test:', data);
-    if (data.alert) {
-        createNotification(
-            'Es ist Zeit für einen neuen Reintonaudiometrie-Test. Der letzte Test war vor mehr als 7 Tagen.',
-            '/hearingtest/reintonaudiometrie.html',
-            'seven_days_no_reintonaudiometrie_test'
-        );
-    }
-})
-.catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
+    .then(response => response.json())
+    .then(data => {
+        console.log('API check-seven-days-no-reintonaudiometrie-test:', data);
+        if (data.alert) {
+            createNotification(
+                data.message,
+                '/hearingtest/reintonaudiometrie.html',
+                'seven_days_no_reintonaudiometrie_test'
+            );
+        }
+    })
+    .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
 
-// Überprüft, ob die letzten 2 Reintonaudiometrie-Tests unter 100% lagen
+let displayedNotifications = new Set();
+
 fetch('/api/check-two-reintonaudiometrie-tests-under-100')
-.then(response => response.json())
-.then(data => {
-    console.log('API check-two-reintonaudiometrie-tests-under-100:', data);
-    if (data.alert) {
-        createNotification(
-            'Ihre letzten 2 Reintonaudiometrie-Ergebnisse lagen unter 100%. Bitte buchen Sie einen Termin für eine Überprüfung.',
-            '/hearingtest/reintonaudiometrie.html',
-            'two_reintonaudiometrie_tests_under_100'
-        );
-    }
-})
-.catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
+    .then(response => response.json())
+    .then(data => {
+        console.log('API check-two-reintonaudiometrie-tests-under-100:', data);
+        if (data.alert && !displayedNotifications.has('two_reintonaudiometrie_tests_under_100')) {
+            createNotification(
+                data.message,
+                '/hearingtest/reintonaudiometrie.html',
+                'two_reintonaudiometrie_tests_under_100'
+            );
+            displayedNotifications.add('two_reintonaudiometrie_tests_under_100');
+        }
+    })
+    .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
 
+fetch('/api/check-reintonaudiometrie-test')
+    .then(response => response.json())
+    .then(data => {
+        console.log('API check-reintonaudiometrie-test:', data);
+        if (data.alert && !displayedNotifications.has('reintonaudiometrie_test_under_50')) {
+            createNotification(
+                data.message,
+                '/hearingtest/reintonaudiometrie.html',
+                'reintonaudiometrie_test_under_50'
+            );
+            displayedNotifications.add('reintonaudiometrie_test_under_50');
+        }
+    })
+    .catch(error => console.error('Fehler beim Abrufen der Benachrichtigung:', error));
 
-
+    
     // Badge-Zähler initial aktualisieren
     setTimeout(() => {
         console.log("Initial Badge update");
