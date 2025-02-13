@@ -13,72 +13,128 @@
     <link href="../css/stylehome.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js für Diagramme -->
     <style>
-        .result-card {
+        .card.card-header bg-primary text-white{
+            color: #866a67
+        }
+        .card{
+            margin-top: 50px;
+            margin-left: 10px;
+            margin-right: 10px;
+
+        }
+        .card.results-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center; /* Inhalte mittig ausrichten */
             margin-bottom: 20px;
             border: 1px solid #ddd;
             border-radius: 10px;
-            padding: 15px;
-            background-color: #f9f9f9;
+            padding: 20px;
+            background-color: #fefefe;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-left: 150px;
+            margin-right: 50px;
+            margin-top: -10px;
         }
-
-        .result-card h5 {
-            color: #866a67;
-            font-weight: bold;
-        }
-
-        .result-card p {
-            margin: 5px 0;
-        }
-
-        .chart-container {
-            margin-top: 20px;
-            height: 500px; /* Größeres Diagramm */
-        }
-
-        .filter-section {
+    
+        .card.results-card .filter-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             margin-bottom: 20px;
-        }
-
-        .filter-section label {
+            margin-left: 10px;
             margin-right: 10px;
         }
-
-        .filter-section select {
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
+    
+        .card.results-card .filter-section label,
+        .card.results-card .filter-section select,
+        .card.results-card .filter-section input {
+            width: 90%; /* Breitere Elemente, zentriert */
+            max-width: 300px;
+            margin-bottom: 10px;
+            margin-left: 10px;
+            margin-right: 10px;
         }
-
-        .details-section {
+    
+        .chart-container {
+            width: 90%; /* Begrenze die Breite */
+            max-width: 800px;
+            margin: 0 auto;
+            margin-left: 10px;
+            margin-right: 10px;
+            padding: 20px;
+        }
+    
+        #testList {
+            width: 100%;
+            max-width: 800px;
+            margin: -10 auto;
+            margin-left: 10px;
+            margin-right: 10px;
+            list-style: none;
+            padding: 0;
+        }
+    
+        #testList .result-card {
+            margin-bottom: 10px;
+            margin-left: 10px;
+            margin-right: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            background-color: #f8f8f8;
+            text-align: center;
+        }
+    
+        #testList .result-card strong {
+            font-size: 16px;
+            color: #333;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    
+        #testList .result-card .toggle-details {
+            display: block;
+            margin-top: 10px;
+            margin-right: 10px;
+            margin-left: 10px;
+            color: #866a67;
+            cursor: pointer;
+        }
+    
+        #testList .details-section {
             display: none;
             margin-top: 10px;
             padding: 10px;
             background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 5px;
+            margin-left: 10px;
+            margin-right: 10px;
         }
-
-        .details-section.active {
+    
+        #testList .details-section.active {
             display: block;
         }
-
-        .toggle-details {
-            color: #866a67;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        .test-detail {
+    
+        #testList .test-detail {
             margin-bottom: 10px;
             padding: 10px;
-            background-color: #f1f1f1;
+            background-color: #f9f9f9;
             border-radius: 5px;
+            text-align: left;
         }
-
-        .test-detail p {
-            margin: 0;
+    
+        #testList .test-detail p {
+            margin: 5px 0;
+            font-size: 14px;
         }
+        
     </style>
+    
 </head>
 
 <body>
@@ -139,17 +195,22 @@
     <div class="container">
         <h2 class="text-center mb-4">Reintonaudiometrie-Test Ergebnisse</h2>
 
+
+        <div class="row">
+            <!-- Ergebnisse Card -->
+            <div class="col-lg-12">
+    <div class="card results-card mb-4">
         <!-- Filter-Sektion -->
         <div class="filter-section">
             <label for="filterQuality">Testqualität:</label>
-            <select id="filterQuality">
+            <select id="filterQuality" class="form-select">
                 <option value="all">Alle</option>
                 <option value="good">Gute Tests (≥ 50%)</option>
                 <option value="bad">Schlechte Tests (< 50%)</option>
             </select>
 
             <label for="filterDate">Datum:</label>
-            <input type="date" id="filterDate">
+            <input type="date" id="filterDate" class="form-control">
         </div>
 
         <!-- Diagramm-Sektion -->
@@ -159,7 +220,7 @@
 
         <!-- Ergebnisse -->
         <div class="card">
-            <div class="card-header">Ihre Tests</div>
+            <div class="card-header bg-primary text-white"'>Ihre Tests</div>
             <div class="card-body">
                 <ul id="testList" class="result-list">
                     <!-- Ergebnisse werden dynamisch geladen -->
@@ -167,6 +228,16 @@
             </div>
         </div>
     </div>
+</div>
+
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+       
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
