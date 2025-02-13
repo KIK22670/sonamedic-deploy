@@ -1,3 +1,35 @@
+/* Stile für die Termin-Details (Datum und Uhrzeit) */
+.termin-details {
+    color: #333; /* Dunkelgrau für bessere Lesbarkeit */
+    background-color: #f8f9fa; /* Heller Hintergrund */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.termin-details .date,
+.termin-details .time {
+    color: #333; /* Dunkelgrau für bessere Lesbarkeit */
+    font-size: 16px; /* Größere Schrift für bessere Lesbarkeit */
+    margin: 5px 0; /* Abstand zwischen Datum und Uhrzeit */
+}
+
+/* Stile für den "Termin wählen"-Button */
+.termin button {
+    background-color: #4d4d4d; /* Dunkler Hintergrund */
+    color: #fff; /* Weiße Schrift */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.termin button:hover {
+    background-color: #333; /* Dunklerer Hintergrund beim Hover */
+}
+
 body {
     font-family: 'Lato', sans-serif;
     background-color: #f8f9fa;

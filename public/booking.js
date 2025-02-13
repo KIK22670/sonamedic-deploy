@@ -85,13 +85,15 @@ function selectSlot(slotId, slotDatum, slotZeit) {
         showErrorMessage('❗ Bitte zuerst einen Termintyp auswählen');
         return;
     }
-    
+
     selectedSlotId = slotId;
 
+    // Datum und Uhrzeit anzeigen
     document.getElementById('selected-datum').textContent = new Date(slotDatum).toLocaleDateString('de-DE');
-    document.getElementById('selected-uhrzeit').textContent = slotZeit;
+    document.getElementById('selected-uhrzeit').textContent = slotZeit.substring(0, 5) + ' Uhr'; // Formatierung der Uhrzeit
     document.getElementById('selected-termintyp').textContent = selectedTermintyp;
-    
+
+    // Formular anzeigen
     document.getElementById('create-termin-form').style.display = 'block';
 }
 
