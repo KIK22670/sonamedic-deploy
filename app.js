@@ -754,112 +754,118 @@ const openingHours = {
 async function insertTimeSlotsIntoDatabase(openingHours) {
     const today = new Date();
     const endDate = new Date();
-    endDate.setMonth(endDate.getMonth() + 3); // Bis zu 3 Monate in die Zukunft
+    endDate.setMonth(endDate.getMonth() + 3);
 
-    const slots = [];
-    while (today <= endDate) {
-        const dayName = today.toLocaleDateString('de-DE', { weekday: 'long' });
-        if (openingHours[dayName]) {
-            openingHours[dayName].forEach(({ start, end }) => {
-                let current = new Date(today);
-                const [startHour, startMinute] = start.split(':').map(Number);
-                current.setHours(startHour, startMinute, 0, 0);
-
-                const endTime = new Date(today);
-                const [endHour, endMinute] = end.split(':').map(Number);
-                endTime.setHours(endHour, endMinute, 0, 0);
-
-                while (current < endTime) {
-                    const slotStart = current.toTimeString().split(' ')[0]; // HH:MM:SS
-                    current.setMinutes(current.getMinutes() + 30);
-                    const slotEnd = current.toTimeString().split(' ')[0];
-
-                    slots.push({ start: slotStart, end: slotEnd });
-                }
-            });
-        }
-        today.setDate(today.getDate() + 1);
-    }
-
-    // Einfügen in die Datenbank
     try {
-        for (const slot of slots) {
-            await client.query(
-                'INSERT INTO z_zeitslots (z_startzeit, z_endzeit) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-                [slot.start, slot.end]
-            );
+        while (today <= endDate) {
+            const dayName = today.toLocaleDateString('de-DE', { weekday: 'long' });
+
+            if (openingHours[dayName]) {
+                for (const { start, end } of openingHours[dayName]) {
+                    let current = new Date(today);
+                    const [startHour, startMinute] = start.split(':').map(Number);
+                    current.setHours(startHour, startMinute, 0, 0);
+
+                    const endTime = new Date(today);
+                    const [endHour, endMinute] = end.split(':').map(Number);
+                    endTime.setHours(endHour, endMinute, 0, 0);
+
+                    while (current < endTime) {
+                        const slotDate = current.toISOString().split('T')[0];
+                        const slotStart = current.toTimeString().substring(0, 5);
+                        current.setMinutes(current.getMinutes() + 30);
+                        const slotEnd = current.toTimeString().substring(0, 5);
+
+                        //console.log(`📅 Slot generiert: ${slotDate} | ${slotStart} - ${slotEnd}`);
+
+                        await client.query(
+                            `INSERT INTO z_zeitslots (z_datum, z_startzeit, z_endzeit) 
+                             VALUES ($1, $2, $3) 
+                             ON CONFLICT DO NOTHING`,
+                            [slotDate, slotStart, slotEnd]
+                        );
+                    }
+                }
+            }
+            today.setDate(today.getDate() + 1);
         }
-        console.log('Zeitfenster erfolgreich in die Datenbank eingefügt.');
+        console.log('✅ Alle Zeitfenster erfolgreich eingefügt.');
     } catch (error) {
-        console.error('Fehler beim Einfügen der Zeitfenster:', error);
+        console.error('❌ Fehler beim Einfügen der Zeitfenster:', error);
     }
 }
+
 
 // Funktion aufrufen
 insertTimeSlotsIntoDatabase(openingHours);
 
-// Funktion zur Generierung von Zeitfenstern
-function generateTimeSlots(openingHours) {
-    const slots = [];
-    const today = new Date();
-    today.setDate(today.getDate() + 3); // Starte 3 Tage in der Zukunft
-    const endDate = new Date();
-    endDate.setMonth(endDate.getMonth() + 3); // Bis zu 3 Monate in die Zukunft
+// // Funktion zur Generierung von Zeitfenstern
+// async function generateTimeSlots() {
+//     const today = new Date();
+//     const endDate = new Date();
+//     endDate.setMonth(endDate.getMonth() + 3);
 
-    while (today <= endDate) {
-        const dayName = today.toLocaleDateString('de-DE', { weekday: 'long' });
-        if (openingHours[dayName]) {
-            openingHours[dayName].forEach(({ start, end }) => {
-                let current = new Date(today);
-                const [startHour, startMinute] = start.split(':').map(Number);
-                current.setHours(startHour, startMinute, 0, 0);
+//     while (today <= endDate) {
+//         const dayName = today.toLocaleDateString('de-DE', { weekday: 'long' });
+//         if (openingHours[dayName]) {
+//             for (const { start, end } of openingHours[dayName]) {
+//                 let current = new Date(today);
+//                 current.setHours(...start.split(':'));
+                
+//                 const endTime = new Date(today);
+//                 endTime.setHours(...end.split(':'));
 
-                const endTime = new Date(today);
-                const [endHour, endMinute] = end.split(':').map(Number);
-                endTime.setHours(endHour, endMinute, 0, 0);
+//                 while (current < endTime) {
+//                     await client.query(`
+//                         INSERT INTO z_zeitslots (z_datum, z_startzeit, z_endzeit)
+//                         VALUES ($1, $2, $3)
+//                         ON CONFLICT DO NOTHING`,
+//                         [
+//                             today.toISOString().split('T')[0],
+//                             current.toTimeString().substring(0, 5),
+//                             new Date(current.getTime() + 30*60000).toTimeString().substring(0, 5)
+//                         ]
+//                     );
+//                     current.setMinutes(current.getMinutes() + 30);
+//                 }
+//             }
+//         }
+//         today.setDate(today.getDate() + 1);
+//     }
+// }
 
-                while (current < endTime) {
-                    slots.push({
-                        day: dayName,
-                        t_datum: current.toISOString().split('T')[0],
-                        t_uhrzeit: current.toTimeString().substring(0, 5),
-                    });
-                    current.setMinutes(current.getMinutes() + 30);
-                }
-            });
-        }
-        today.setDate(today.getDate() + 1); // Zum nächsten Tag wechseln
-    }
-    return slots;
-}
-
-let slots = generateTimeSlots(openingHours);
+// let slots = generateTimeSlots(openingHours);
 
 // Endpunkt: Verfügbare Slots abrufen (nur noch freie Termine anzeigen)
 // Endpunkt: Verfügbare Slots abrufen (nur eigene und freie Termine)
+// Ändern Sie den /slots-Endpoint:
 app.get('/slots', async (req, res) => {
-    const t_p_id = req.session.user?.id; // Benutzer-ID aus der Session
-
-    if (!t_p_id) {
-        return res.status(401).json({ error: 'Nicht autorisiert. Bitte einloggen.' });
-    }
-
     try {
-        // Alle gebuchten Termine aus der Datenbank holen
-        const bookedAppointments = await client.query(
-            'SELECT t_datum, t_uhrzeit, t_p_id FROM t_termine WHERE t_p_id != $1',
-            [t_p_id]
-        );
-        const bookedSlots = bookedAppointments.rows.map(slot => `${slot.t_datum} ${slot.t_uhrzeit}`);
+        const { month, day } = req.query;
+        let query = `
+            SELECT z_id, z_datum, z_startzeit 
+            FROM z_zeitslots
+            WHERE z_datum > CURRENT_DATE  -- 🚀 NUR zukünftige Termine abrufen
+              AND z_id NOT IN (SELECT z_zeitslots_z_id FROM t_termine)
+        `;
 
-        // Filtert nur die Slots heraus, die noch nicht von anderen Benutzern gebucht wurden
-        const availableSlots = slots.filter(slot => 
-            !bookedSlots.includes(`${slot.t_datum} ${slot.t_uhrzeit}`)
-        );
+        let params = [];
 
-        res.json(availableSlots);
+        if (month) {
+            query += ` AND EXTRACT(MONTH FROM z_datum) = $${params.length + 1}`;
+            params.push(month);
+        }
+
+        if (day) {
+            const dayMapping = { 2: 2, 3: 3, 4: 4 }; // Dienstag = 2, Mittwoch = 3, Donnerstag = 4
+            query += ` AND EXTRACT(DOW FROM z_datum) = $${params.length + 1}`;
+            params.push(dayMapping[day]);
+        }
+
+        const availableSlots = await client.query(query, params);
+        res.json(availableSlots.rows);
     } catch (error) {
-        console.error('Fehler beim Abrufen der verfügbaren Slots:', error);
+        console.error('❌ Fehler beim Abrufen der Slots:', error);
         res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
@@ -867,30 +873,34 @@ app.get('/slots', async (req, res) => {
 
 
 
+
+
 // Endpunkt: Termin buchen
 // Endpunkt: Termin BUCHEN (Benutzerspezifisch)
+// POST /termine Endpoint überarbeiten
 app.post('/termine', async (req, res) => {
-    const { t_datum, t_uhrzeit, t_termintyp } = req.body;
-    const t_p_id = req.session.user?.id; // Patienten-ID aus der Session
+    const { z_id, t_termintyp } = req.body;
+    const t_p_id = req.session.user?.id;
 
-    if (!t_p_id || !t_termintyp || !t_datum || !t_uhrzeit) {
-        return res.status(400).json({ error: 'Fehlende Daten. Bitte überprüfen Sie die Eingabe.' });
-    }
+    console.log('ℹ️ Buchungsanfrage:', { z_id, t_termintyp, t_p_id });
+
+    if (!t_p_id) return res.status(401).json({ error: 'Nicht angemeldet' });
+    if (!z_id || !t_termintyp) return res.status(400).json({ error: 'Fehlende Daten' });
 
     try {
-        // Prüfen, ob der Termin bereits für einen Benutzer vergeben ist
-        const existingAppointment = await client.query(
-            'SELECT * FROM t_termine WHERE t_datum = $1 AND t_uhrzeit = $2',
-            [t_datum, t_uhrzeit]
+        // Prüfe ob Slot verfügbar ist
+        const slotCheck = await client.query(
+            `SELECT 1 FROM t_termine WHERE z_zeitslots_z_id = $1`,
+            [z_id]
         );
-
-        if (existingAppointment.rows.length > 0) {
-            return res.status(400).json({ error: 'Dieser Termin ist bereits vergeben.' });
+        
+        if (slotCheck.rowCount > 0) {
+            return res.status(400).json({ error: 'Termin bereits vergeben' });
         }
 
-        // Termintyp-ID abrufen
+        // Termintyp-ID ermitteln
         const termintypResult = await client.query(
-            'SELECT tt_id FROM tt_termintyp WHERE tt_bezeichnung = $1',
+            `SELECT tt_id FROM tt_termintyp WHERE tt_bezeichnung = $1`,
             [t_termintyp]
         );
 
@@ -898,50 +908,51 @@ app.post('/termine', async (req, res) => {
             return res.status(400).json({ error: 'Ungültiger Termintyp' });
         }
 
-        const tt_termintyp_tt_id = termintypResult.rows[0].tt_id;
-
-        // Zeitslot-ID abrufen
-        const zeitslotResult = await client.query(
-            'SELECT z_id FROM z_zeitslots WHERE z_startzeit = $1',
-            [t_uhrzeit]
-        );
-
-        if (zeitslotResult.rows.length === 0) {
-            return res.status(400).json({ error: 'Ungültiges Zeitfenster' });
-        }
-
-        const z_zeitslots_z_id = zeitslotResult.rows[0].z_id;
-
-        // Termin in die Datenbank einfügen mit Benutzer-ID
+        // Buchung speichern
         const result = await client.query(
-            'INSERT INTO t_termine (t_datum, t_uhrzeit, t_termintyp, t_p_id, tt_termintyp_tt_id, z_zeitslots_z_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-            [t_datum, t_uhrzeit, t_termintyp, t_p_id, tt_termintyp_tt_id, z_zeitslots_z_id]
+            `INSERT INTO t_termine 
+            (t_p_id, tt_termintyp_tt_id, z_zeitslots_z_id)
+            VALUES ($1, $2, $3)
+            RETURNING *`,
+            [t_p_id, termintypResult.rows[0].tt_id, z_id]
         );
 
-        res.status(201).json(result.rows[0]); // Erfolgreiche Buchung
+        console.log('✅ Termin gespeichert:', result.rows[0]);
+        res.status(201).json(result.rows[0]);
     } catch (error) {
-        console.error('Fehler beim Buchen:', error);
+        console.error('❌ Datenbankfehler:', error);
         res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
 
 
 
-
 // Endpunkt: Alle gebuchten Termine abrufen
 // Endpunkt: Alle gebuchten Termine ABRUFEN (nur für den eingeloggten Benutzer)
 app.get('/termine', async (req, res) => {
-    const t_p_id = req.session.user?.id; // Patienten-ID aus der Session
+    const t_p_id = req.session.user?.id; // Patienten-ID aus Session
 
     if (!t_p_id) {
         return res.status(401).json({ error: 'Nicht autorisiert. Bitte einloggen.' });
     }
 
     try {
-        const result = await client.query('SELECT * FROM t_termine WHERE t_p_id = $1', [t_p_id]);
+        const result = await client.query(`
+            SELECT 
+                t.t_id, 
+                t.tt_termintyp_tt_id, 
+                z.z_datum, 
+                z.z_startzeit
+            FROM t_termine t
+            JOIN z_zeitslots z ON t.z_zeitslots_z_id = z.z_id
+            WHERE t.t_p_id = $1
+            ORDER BY z.z_datum ASC
+        `, [t_p_id]);
+
+        console.log("📡 Neue Termin-Datenbank-Antwort:", result.rows);
         res.json(result.rows);
     } catch (error) {
-        console.error('Fehler beim Abrufen der Benutzer-Termine:', error);
+        console.error('❌ Fehler beim Abrufen der Benutzer-Termine:', error);
         res.status(500).send('Interner Serverfehler');
     }
 });
@@ -977,20 +988,25 @@ app.get('/termintypen', async (req, res) => {
 // Endpunkt: Termin bearbeiten
 app.put('/termine/:id', async (req, res) => {
     const { id } = req.params;
-    const { t_termintyp } = req.body; // Nur den Termintyp verwenden (ID)
+    const { tt_termintyp_tt_id } = req.body; // Nur die Termintyp-ID updaten
+
     try {
         const result = await client.query(
-            'UPDATE t_termine SET t_termintyp = $1 WHERE t_id = $2 RETURNING *',
-            [t_termintyp, id]
+            `UPDATE t_termine 
+             SET tt_termintyp_tt_id = $1 
+             WHERE t_id = $2 
+             RETURNING *`,
+            [tt_termintyp_tt_id, id]
         );
+
         if (result.rowCount > 0) {
-            console.log(`Termin mit ID ${id} wurde aktualisiert:`, result.rows[0]);
+            console.log(`✅ Termin mit ID ${id} wurde aktualisiert:`, result.rows[0]);
             res.status(200).json(result.rows[0]);
         } else {
-            res.status(404).send('Termin nicht gefunden');
+            res.status(404).json({ error: 'Termin nicht gefunden' });
         }
     } catch (error) {
-        console.error('Fehler beim Bearbeiten eines Termins:', error);
+        console.error('❌ Fehler beim Bearbeiten eines Termins:', error);
         res.status(500).send('Interner Serverfehler');
     }
 });

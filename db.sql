@@ -72,7 +72,8 @@ CREATE TABLE IF NOT EXISTS tt_termintyp (
 CREATE TABLE IF NOT EXISTS z_zeitslots (
   z_id SERIAL PRIMARY KEY,
   z_startzeit TIME NULL,
-  z_endzeit VARCHAR(45) NULL
+  z_endzeit VARCHAR(45) NULL,
+  z_datum DATE NOT NULL
 );
 
 -- -----------------------------------------------------
@@ -80,8 +81,6 @@ CREATE TABLE IF NOT EXISTS z_zeitslots (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS t_termine (
   t_id SERIAL PRIMARY KEY,
-  t_datum DATE NULL,
-  t_uhrzeit TIME NULL,
   t_termintyp VARCHAR(45) NULL,
   t_p_id INT NOT NULL,
   tt_termintyp_tt_id INT NOT NULL,
