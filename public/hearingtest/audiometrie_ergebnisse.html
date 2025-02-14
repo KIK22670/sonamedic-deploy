@@ -13,9 +13,28 @@
     <link href="../css/stylehome.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js für Diagramme -->
     <style>
-        .card.card-header bg-primary text-white{
-            color: #866a67
+        .card-header1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #866a67;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+            margin-top: -20px;
+            width: 104%; /* Setze die Breite auf 104% */
+            max-width: 104%; /* Verhindert, dass sie größer wird */
+            min-width: 104%; /* Setzt eine Mindestbreite */
+            overflow: hidden; /* Verhindert das Überlaufen des Inhalts */
         }
+
+
+        .card-header.bg-primary.text-white {
+            background-color: #866a67 !important; 
+            color: white !important;
+            margin-top:10px;
+        }
+
         .card{
             margin-top: 50px;
             margin-left: 10px;
@@ -132,7 +151,18 @@
             margin: 5px 0;
             font-size: 14px;
         }
-        
+        /* Ändert die Farbe der Testqualität- und Datumsfelder */
+        .filter-section label {
+            color: #866a67 !important;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+
+        .filter-section select,
+        .filter-section input {
+            border-color: #866a67 !important;
+        }
+
     </style>
     
 </head>
@@ -200,6 +230,7 @@
             <!-- Ergebnisse Card -->
             <div class="col-lg-12">
     <div class="card results-card mb-4">
+        <div class="card-header1">Ihre Testergebnisse</div>
         <!-- Filter-Sektion -->
         <div class="filter-section">
             <label for="filterQuality">Testqualität:</label>
