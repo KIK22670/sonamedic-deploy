@@ -8,6 +8,11 @@
     <title>FAQ</title>
 
     <style>
+        .nav-item.active {
+            color: #6c757d; /* Brauner Ton */
+            background-color: #f8f9fa; /* Optional: Hintergrundfarbe */
+        }
+
       
         .accordion-body {
             transition: 0.3s ease-out;
@@ -228,6 +233,21 @@
             transition: transform 0.3s ease;
         }
     </style>
+
+<script>
+    window.onload = function() {
+        const path = window.location.pathname; // Holt den Pfad der aktuellen URL
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-item'); // Alle Navigationslinks
+    
+        navLinks.forEach(link => {
+            if (link.href.includes(path)) {
+                link.classList.add('active'); // Fügt der passenden Seite die Klasse 'active' hinzu
+            } else {
+                link.classList.remove('active'); // Entfernt die 'active'-Klasse von den anderen Links
+            }
+        });
+    };
+</script>
     
 
    <!-- Footer Start -->

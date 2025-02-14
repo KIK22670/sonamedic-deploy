@@ -5,6 +5,11 @@
      background-color: #f0f4fa;
      /* Hintergrundfarbe */
  }
+ .nav-item.active {
+    color: #6c757d; /* Brauner Ton */
+    background-color: #f8f9fa; /* Optional: Hintergrundfarbe */
+}
+
 
  .login-container {
      display: flex;

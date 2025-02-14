@@ -369,3 +369,8 @@
     width: 5%;
     /* Breite der Schaltflächen */
 }
+
+.nav-item.active {
+    color: #6c757d; /* Brauner Ton */
+    background-color: #f8f9fa; /* Optional: Hintergrundfarbe */
+}

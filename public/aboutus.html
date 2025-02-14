@@ -15,9 +15,11 @@
             margin-bottom: 30px;
         }
 
-        .nav-item:hover {
-            color: #6c757d !important;
+        .nav-item.active {
+            color: #6c757d; /* Brauner Ton */
+            background-color: #f8f9fa; /* Optional: Hintergrundfarbe */
         }
+
 
             .team-member {
             text-align: center;
@@ -130,6 +132,20 @@
             </div>
         </div>
     </div>
+<script>
+    window.onload = function() {
+        const path = window.location.pathname; // Holt den Pfad der aktuellen URL
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-item'); // Alle Navigationslinks
+    
+        navLinks.forEach(link => {
+            if (link.href.includes(path)) {
+                link.classList.add('active'); // Fügt der passenden Seite die Klasse 'active' hinzu
+            } else {
+                link.classList.remove('active'); // Entfernt die 'active'-Klasse von den anderen Links
+            }
+        });
+    };
+</script>
 
 
    <!-- Footer Start -->

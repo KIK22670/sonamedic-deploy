@@ -124,18 +124,21 @@
         </div>
     </div>
     <!-- Footer End -->
+    
     <script>
-       window.onload = function () {
-    const params = new URLSearchParams(window.location.search);
-    const errorMessage = params.get('error');
-    if (errorMessage) {
-        const errorDiv = document.getElementById('error');
-        errorDiv.style.display = 'block';  // Make error message visible
-        errorDiv.innerHTML = errorMessage;  // Display the error message
-    }
-};
-
-        </script>
+        window.onload = function() {
+            const path = window.location.pathname; // Holt den Pfad der aktuellen URL
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-item'); // Alle Navigationslinks
+        
+            navLinks.forEach(link => {
+                if (link.href.includes(path)) {
+                    link.classList.add('active'); // Fügt der passenden Seite die Klasse 'active' hinzu
+                } else {
+                    link.classList.remove('active'); // Entfernt die 'active'-Klasse von den anderen Links
+                }
+            });
+        };
+    </script>
 
 </body>
 
