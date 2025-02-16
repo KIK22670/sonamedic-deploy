@@ -105,7 +105,7 @@ const emailVerificationTemplate = (verificationToken) => `
             <div class="card-body">
                 <p>Bitte klicken Sie auf den folgenden Link, um Ihre E-Mail-Adresse zu verifizieren:</p>
                 <div class="verification-link">
-                    <a href="http://localhost:3000/verify-email/${verificationToken}">Verify Email</a>
+                    <a href="https://sonamedic.onrender.com/verify-email/${verificationToken}">Verify Email</a>
                 </div>
             </div>
         </div>
@@ -196,7 +196,7 @@ const resetPasswordTemplate = (token) => `
             <div class="card-body">
                 <p>Bitte klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen</p>
                 <div class="verification-link">
-                <a href="http://localhost:3000/reset-password/${token}">Zurücksetzen</a>
+                <a href="https://sonamedic.onrender.com/reset-password/${token}">Zurücksetzen</a>
                 </div>
             </div>
         </div>
@@ -1357,5 +1357,5 @@ app.get('/api/check-seven-days-no-reintonaudiometrie-test', async (req, res) => 
 
 // Start server
 app.listen(PORT, () => {
-    console.log(`Server läuft auf http://localhost:${PORT}`);
+    console.log(`Server läuft auf https://sonamedic.onrender.com/:${PORT}`);
 });
