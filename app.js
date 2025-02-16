@@ -24,6 +24,8 @@ app.use(session({
     cookie: { secure: false } // Use secure: true if using HTTPS
 }));
 
+const PORT = process.env.PORT || 3000;
+
 
 // Set SendGrid API key
 sgMail.setApiKey(process.env.MY_API_KEY);
@@ -1313,6 +1315,6 @@ app.get('/api/check-seven-days-no-reintonaudiometrie-test', async (req, res) => 
 
 
 // Start server
-app.listen(() => {
-    console.log(`Server läuft auf https://sonamedic.onrender.com/`);
+app.listen(PORT, () => {
+    console.log(`Server läuft auf Port ${PORT}`);
 });
