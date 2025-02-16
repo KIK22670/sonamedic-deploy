@@ -10,7 +10,6 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const app = express();
-const PORT = 3000;
 
 // Middleware setup
 app.use(cors());
@@ -799,42 +798,6 @@ async function insertTimeSlotsIntoDatabase(openingHours) {
 // Funktion aufrufen
 insertTimeSlotsIntoDatabase(openingHours);
 
-// // Funktion zur Generierung von Zeitfenstern
-// async function generateTimeSlots() {
-//     const today = new Date();
-//     const endDate = new Date();
-//     endDate.setMonth(endDate.getMonth() + 3);
-
-//     while (today <= endDate) {
-//         const dayName = today.toLocaleDateString('de-DE', { weekday: 'long' });
-//         if (openingHours[dayName]) {
-//             for (const { start, end } of openingHours[dayName]) {
-//                 let current = new Date(today);
-//                 current.setHours(...start.split(':'));
-                
-//                 const endTime = new Date(today);
-//                 endTime.setHours(...end.split(':'));
-
-//                 while (current < endTime) {
-//                     await client.query(`
-//                         INSERT INTO z_zeitslots (z_datum, z_startzeit, z_endzeit)
-//                         VALUES ($1, $2, $3)
-//                         ON CONFLICT DO NOTHING`,
-//                         [
-//                             today.toISOString().split('T')[0],
-//                             current.toTimeString().substring(0, 5),
-//                             new Date(current.getTime() + 30*60000).toTimeString().substring(0, 5)
-//                         ]
-//                     );
-//                     current.setMinutes(current.getMinutes() + 30);
-//                 }
-//             }
-//         }
-//         today.setDate(today.getDate() + 1);
-//     }
-// }
-
-// let slots = generateTimeSlots(openingHours);
 
 // Endpunkt: Verfügbare Slots abrufen (nur noch freie Termine anzeigen)
 // Endpunkt: Verfügbare Slots abrufen (nur eigene und freie Termine)
@@ -871,13 +834,7 @@ app.get('/slots', async (req, res) => {
 });
 
 
-
-
-
-
 // Endpunkt: Termin buchen
-// Endpunkt: Termin BUCHEN (Benutzerspezifisch)
-// POST /termine Endpoint überarbeiten
 app.post('/termine', async (req, res) => {
     const { z_id, t_termintyp } = req.body;
     const t_p_id = req.session.user?.id;
@@ -1357,5 +1314,5 @@ app.get('/api/check-seven-days-no-reintonaudiometrie-test', async (req, res) => 
 
 // Start server
 app.listen(PORT, () => {
-    console.log(`Server läuft auf https://sonamedic.onrender.com/:${PORT}`);
+    console.log(`Server läuft auf https://sonamedic.onrender.com/`);
 });
