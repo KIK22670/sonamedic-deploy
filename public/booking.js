@@ -1,6 +1,6 @@
 console.log('🎉 Booking-Skript erfolgreich geladen.');
 
-
+const API_URL = 'https://sonamedic.onrender.com'; 
 let selectedSlotId = null;
 let selectedTermintyp = null;
 let selectedMonth = null;
@@ -24,13 +24,13 @@ async function loadAvailableSlots() {
     console.log('🔄 Lade verfügbare Termine...');
 
     try {
-        let url = `https://sonamedic.onrender.com/slots?`;
+        let url = `${API_URL}/slots?`;
         if (selectedMonth) url += `month=${selectedMonth}&`;
         if (selectedDay) url += `day=${selectedDay}&`;
 
         const [slotsResponse, bookedResponse] = await Promise.all([
             fetch(url, { credentials: 'include' }),
-            fetch(`https://sonamedic.onrender.com/termine`, { credentials: 'include' })
+            fetch(`${API_URL}/termine`, { credentials: 'include' })
         ]);
 
         const slots = await slotsResponse.json();
