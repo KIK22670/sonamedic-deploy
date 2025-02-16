@@ -24,13 +24,13 @@ async function loadAvailableSlots() {
     console.log('🔄 Lade verfügbare Termine...');
 
     try {
-        let url = `${API_URL}/slots?`;
+        let url = `https://sonamedic.onrender.com/slots?`;
         if (selectedMonth) url += `month=${selectedMonth}&`;
         if (selectedDay) url += `day=${selectedDay}&`;
 
         const [slotsResponse, bookedResponse] = await Promise.all([
             fetch(url, { credentials: 'include' }),
-            fetch(`${API_URL}/termine`, { credentials: 'include' })
+            fetch(`https://sonamedic.onrender.com/termine`, { credentials: 'include' })
         ]);
 
         const slots = await slotsResponse.json();
