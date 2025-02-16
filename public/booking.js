@@ -1,6 +1,6 @@
 console.log('🎉 Booking-Skript erfolgreich geladen.');
 
-const API_URL = 'https://sonamedic.onrender.com'; 
+
 let selectedSlotId = null;
 let selectedTermintyp = null;
 let selectedMonth = null;
