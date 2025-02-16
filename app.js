@@ -1313,6 +1313,6 @@ app.get('/api/check-seven-days-no-reintonaudiometrie-test', async (req, res) => 
 
 
 // Start server
-app.listen(PORT, () => {
+app.listen(() => {
     console.log(`Server läuft auf https://sonamedic.onrender.com/`);
 });
