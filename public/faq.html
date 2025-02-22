@@ -9,11 +9,11 @@
 
     <style>
         .nav-item.active {
-            color: #6c757d; /* Brauner Ton */
-            background-color: #f8f9fa; /* Optional: Hintergrundfarbe */
+            box-shadow: none !important; /* Schatten entfernen */
+            text-shadow: none !important; /* Falls ein Text-Schatten vorhanden ist */
+            background: none !important; /* Falls ein anderes Styling aktiv ist */
         }
-
-      
+              
         .accordion-body {
             transition: 0.3s ease-out;
 
@@ -168,6 +168,19 @@
                 icon.classList.add("fa-chevron-up");
             }
         }
+    window.onload = function() {
+        const path = window.location.pathname; // Holt den Pfad der aktuellen URL
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-item'); // Alle Navigationslinks
+    
+        navLinks.forEach(link => {
+            if (link.href.includes(path)) {
+                link.classList.add('active'); // Fügt der passenden Seite die Klasse 'active' hinzu
+            } else {
+                link.classList.remove('active'); // Entfernt die 'active'-Klasse von den anderen Links
+            }
+        });
+    };
+
     </script>
     
     <!-- CSS für das Styling -->
@@ -234,21 +247,6 @@
         }
     </style>
 
-<script>
-    window.onload = function() {
-        const path = window.location.pathname; // Holt den Pfad der aktuellen URL
-        const navLinks = document.querySelectorAll('.navbar-nav .nav-item'); // Alle Navigationslinks
-    
-        navLinks.forEach(link => {
-            if (link.href.includes(path)) {
-                link.classList.add('active'); // Fügt der passenden Seite die Klasse 'active' hinzu
-            } else {
-                link.classList.remove('active'); // Entfernt die 'active'-Klasse von den anderen Links
-            }
-        });
-    };
-</script>
-    
 
    <!-- Footer Start -->
 <div class="container-fluid text-light border-top border-secondary py-4" style="background-color: #9a9385; margin-top: 50px;">

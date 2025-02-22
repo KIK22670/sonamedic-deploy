@@ -96,6 +96,13 @@
     }
 }
 
+.nav-item.active {
+    box-shadow: none !important; /* Schatten entfernen */
+    text-shadow: none !important; /* Falls ein Text-Schatten vorhanden ist */
+    background: none !important; /* Falls ein anderes Styling aktiv ist */
+}
+
+
 .hero-header {
     background: url(../img/hintergrundhno.png) top right no-repeat;
     background-size: cover;
@@ -368,9 +375,4 @@
 .carousel-control-next {
     width: 5%;
     /* Breite der Schaltflächen */
-}
-
-.nav-item.active {
-    color: #6c757d; /* Brauner Ton */
-    background-color: #f8f9fa; /* Optional: Hintergrundfarbe */
 }

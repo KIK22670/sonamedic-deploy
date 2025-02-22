@@ -1,201 +1,203 @@
- body {
-     margin: 0;
-     padding: 0;
-     font-family: 'Arial', sans-serif;
-     background-color: #f0f4fa;
-     /* Hintergrundfarbe */
- }
- .nav-item.active {
-    color: #6c757d; /* Brauner Ton */
-    background-color: #f8f9fa; /* Optional: Hintergrundfarbe */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4fa;
+    /* Hintergrundfarbe */
+}
+.nav-item.active {
+    box-shadow: none !important; /* Schatten entfernen */
+    text-shadow: none !important; /* Falls ein Text-Schatten vorhanden ist */
+    background: none !important; /* Falls ein anderes Styling aktiv ist */
 }
 
 
- .login-container {
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     height: 100vh;
- }
 
- .login-box {
-     display: flex;
-     background-color: #fff;
-     border-radius: 12px;
-     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-     overflow: hidden;
-     max-width: 900px;
-     width: 100%;
- }
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
- /* Linker Bereich mit Bild */
- .login-left {
-     position: relative;
-     width: 50%;
-     overflow: hidden;
-     /* Überlauf des Bildes verstecken */
- }
+.login-box {
+    display: flex;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-width: 900px;
+    width: 100%;
+}
 
- .login-left img {
-     width: 100%;
-     /* Bild nimmt die volle Breite ein */
-     height: 100%;
-     /* Bild nimmt die volle Höhe ein */
-     object-fit: cover;
-     /* Bild bleibt im Verhältnis */
-     transition: transform 0.5s ease;
-     /* Übergangseffekt */
- }
+/* Linker Bereich mit Bild */
+.login-left {
+    position: relative;
+    width: 50%;
+    overflow: hidden;
+    /* Überlauf des Bildes verstecken */
+}
 
-
- .login-right {
-     padding: 40px;
-     width: 50%;
-     display: flex;
-     flex-direction: column;
-     justify-content: center;
- }
-
- /* Eingabefelder und Icons */
- .login-right label {
-     color: #4e5560;
-     margin-bottom: 5px;
-     font-size: 14px;
-     display: block;
- }
-
- .input-icon {
-     position: relative;
-     margin-bottom: 20px;
- }
-
- .input-icon input {
-     width: calc(100% - 40px);
-     /* Breite der Eingabefelder anpassen */
-     padding: 12px;
-     border: 1px solid #ccc;
-     border-radius: 8px;
-     font-size: 14px;
-     padding-left: 40px;
-     /* Platz für das Icon */
-     background-color: #f5f6fa;
- }
-
- /* Icons */
- .input-icon i {
-     position: absolute;
-     left: 10px;
-     top: 50%;
-     transform: translateY(-50%);
-     font-size: 18px;
-     color: #4e5560;
- }
-
- .remember-forgot {
-     display: flex;
-     justify-content: space-between;
-     /* Abstand zwischen den Elementen */
-     align-items: center;
-     /* Vertikale Ausrichtung */
-     margin-bottom: 20px;
-     /* Abstand nach unten */
- }
-
- 
-
- .forgot-password {
-     color: #4e5560;
-     text-decoration: none;
-     font-size: 12px;
- }
-
- /* Buttons */
- .login-right button {
-     width: 100%;
-     padding: 12px;
-     background-color: #4e5560;
-     color: white;
-     border: none;
-     border-radius: 8px;
-     cursor: pointer;
-     font-size: 16px;
-     margin-bottom: 20px;
- }
-
- .login-right button:hover {
-     background-color: #3e464f;
- }
+.login-left img {
+    width: 100%;
+    /* Bild nimmt die volle Breite ein */
+    height: 100%;
+    /* Bild nimmt die volle Höhe ein */
+    object-fit: cover;
+    /* Bild bleibt im Verhältnis */
+    transition: transform 0.5s ease;
+    /* Übergangseffekt */
+}
 
 
- /* Anmelde-Link */
- .signup-link {
-     text-align: center;
-     font-size: 12px;
-     color: #4e5560;
-     margin-top: 20px;
- }
+.login-right {
+    padding: 40px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
- .signup-link a {
-     color: #866a67;
-     text-decoration: none;
- }
+/* Eingabefelder und Icons */
+.login-right label {
+    color: #4e5560;
+    margin-bottom: 5px;
+    font-size: 14px;
+    display: block;
+}
 
- .signup-link a:hover {
-     text-decoration: underline;
- }
+.input-icon {
+    position: relative;
+    margin-bottom: 20px;
+}
 
- /* Übergangseffekt zwischen den beiden Bereichen */
- .login-box:hover .login-left img {
-     transform: scale(1.1);
-     /* Bild leicht vergrößern bei Hover */
- }
+.input-icon input {
+    width: calc(100% - 40px);
+    /* Breite der Eingabefelder anpassen */
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    padding-left: 40px;
+    /* Platz für das Icon */
+    background-color: #f5f6fa;
+}
 
- .password-strength-indicator {
-     margin-top: 5px;
-     font-size: 12px;
-     height: 5px;
-     border-radius: 2px;
-     background-color: transparent;
-     overflow: hidden;
-     transition: width 0.3s ease-in-out;
- }
+/* Icons */
+.input-icon i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #4e5560;
+}
 
- .password-strength-weak {
-     background-color: #ff6347;
-     /* Rot für schwach */
-     width: 33.33%;
- }
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    /* Abstand zwischen den Elementen */
+    align-items: center;
+    /* Vertikale Ausrichtung */
+    margin-bottom: 20px;
+    /* Abstand nach unten */
+}
 
- .password-strength-normal {
-     background-color: #ffd700;
-     /* Gelb für normal */
-     width: 66.66%;
- }
 
- .password-strength-strong {
-     background-color: #32cd32;
-     /* Grün für stark */
-     width: 100%;
- }
 
- .password-match-indicator {
-     font-size: 12px;
-     color: #6c757d;
- }
+.forgot-password {
+    color: #4e5560;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+/* Buttons */
+.login-right button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4e5560;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.login-right button:hover {
+    background-color: #3e464f;
+}
+
+
+/* Anmelde-Link */
+.signup-link {
+    text-align: center;
+    font-size: 12px;
+    color: #4e5560;
+    margin-top: 20px;
+}
+
+.signup-link a {
+    color: #866a67;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Übergangseffekt zwischen den beiden Bereichen */
+.login-box:hover .login-left img {
+    transform: scale(1.1);
+    /* Bild leicht vergrößern bei Hover */
+}
+
+.password-strength-indicator {
+    margin-top: 5px;
+    font-size: 12px;
+    height: 5px;
+    border-radius: 2px;
+    background-color: transparent;
+    overflow: hidden;
+    transition: width 0.3s ease-in-out;
+}
+
+.password-strength-weak {
+    background-color: #ff6347;
+    /* Rot für schwach */
+    width: 33.33%;
+}
+
+.password-strength-normal {
+    background-color: #ffd700;
+    /* Gelb für normal */
+    width: 66.66%;
+}
+
+.password-strength-strong {
+    background-color: #32cd32;
+    /* Grün für stark */
+    width: 100%;
+}
+
+.password-match-indicator {
+    font-size: 12px;
+    color: #6c757d;
+}
 
 /* Stil der Fehlermeldung */
 .error-message {
-    width: calc(100% - 40px);
-    background-color: #f8d7da;  /* Helles Rot für den Hintergrund */
-    color: #721c24;  /* Dunkelroter Text */
-    padding: 12px;
-    margin-top: 10px;  /* Weniger Abstand zum Passwortfeld */
-    border-radius: 8px;  /* Abgerundete Ecken für ein weicheres Aussehen */
-    font-size: 14px;
-    display: none;  /* Anfangs ausgeblendet */
-    border: 1px solid #f5c6cb;  /* Helle rote Grenze */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);  /* Weicher Schatten für mehr Tiefe */
-    text-align: center;
-    margin-bottom: 20px;
+   width: calc(100% - 40px);
+   background-color: #f8d7da;  /* Helles Rot für den Hintergrund */
+   color: #721c24;  /* Dunkelroter Text */
+   padding: 12px;
+   margin-top: 10px;  /* Weniger Abstand zum Passwortfeld */
+   border-radius: 8px;  /* Abgerundete Ecken für ein weicheres Aussehen */
+   font-size: 14px;
+   display: none;  /* Anfangs ausgeblendet */
+   border: 1px solid #f5c6cb;  /* Helle rote Grenze */
+   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);  /* Weicher Schatten für mehr Tiefe */
+   text-align: center;
+   margin-bottom: 20px;
 }
 
